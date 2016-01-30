@@ -1,0 +1,15 @@
+%meta{:charset => "utf-8"}
+%title Marmalade
+%meta{:name => 'description', :content => "Blog and portfolio site of Thom Bruce. I'm a full stack web and app developer, experienced in PHP, WordPress, Ruby on Rails, JavaScript, and iOS and Android app development and design."}
+%meta{:property => 'og:title', :content => 'Thom Bruce | Web Designer, Full Stack Developer'}
+/%meta{:property => 'og:description', :content => 'Writer, coder, faster, stronger.'}
+%meta{:property => 'og:type', :content => 'website'}
+%meta{:property => 'og:url', :content => 'http://thombruce.com/'}
+/%meta{:property => 'og:image', :content => User.first.avatar.url}
+
+= stylesheet_link_tag 'site', media: 'all', 'data-turbolinks-track' => true
+= javascript_include_tag "site", "data-turbolinks-track" => true
+%meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
+= csrf_meta_tags
+
+= render 'layouts/shared/shim'

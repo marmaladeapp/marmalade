@@ -1,0 +1,22 @@
+!!!
+%html{:lang => 'en', :prefix => 'og: http://ogp.me/ns#', :class => 'no-js'}
+  %head
+    = render 'layouts/site/head'
+
+  %body
+    %div.site
+      %div.row
+        %header.site-header.medium-8.medium-offset-2.columns
+          %h1.text-center Marmalade
+      %div.row
+        %main.medium-8.medium-offset-1.columns
+          = yield
+        %aside.medium-2.columns
+
+    %div.site-footer
+      .row
+        %footer.medium-8.medium-offset-2.columns
+          %p.text-center
+            %small Copyright &copy; Marmalade 2016
+
+    = render 'layouts/site/analytics'
