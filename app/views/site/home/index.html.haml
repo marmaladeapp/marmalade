@@ -1,2 +1,8 @@
-%h2 home#index
-%p Hey, it works.
+%div.row.full-width.bg-burnt-toast
+  %div.small-12.medium-8.medium-offset-2.columns.bg-ice-cream{:style => 'margin-top:-75px;margin-bottom:-75px;'}
+    %section#about.text-center
+      = render 'about'
+
+%div.row.full-width
+  %section#pricing.small-12.columns.text-center
+    = render 'pricing'

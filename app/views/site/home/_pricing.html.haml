@@ -1,0 +1,60 @@
+%div.small-12.medium-8.medium-offset-2.columns{:style => ''}
+  %h3.give-you-glory Act now for our early adopter prices
+  %p Register now and take advantage of our early-adopter prices. Pay annually for up to 25% off the total cost.
+  .switch.large#monthly-yearly-switch
+    %input.switch-input#monthly-yearly{:type => "checkbox", :name => "planSwitch", :checked => true}
+    %label.switch-paddle{:for => 'monthly-yearly'}
+      %span.show-for-sr
+      %span.switch-active{'aria-hidden' => "true"} Monthly
+      %span.switch-inactive{'aria-hidden' => "true"} Yearly
+
+.small-12.medium-10.medium-offset-1.columns
+  .row.full-width
+    - @plans.each do |plan|
+      .small-12.medium-6.large-3.columns{:style => 'padding-bottom:550px;'}
+        - if plan[:monthly].present? && plan[:yearly].present?
+          .flippable-container.flipit{'ontouchstart' => "this.classList.toggle('hover');"}
+            .flippable
+              .flippable-front
+                %article.plan.burnt-toast.bg-ice-cream
+                  %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
+                    %h4.pacifico= plan[:name]
+                  %section.pricing{:style => 'background-color:#fff;border-color:#F8F9F3 !important;border-right:solid 1px;border-left:solid 1px;'}
+                    %h5.stat= humanized_money_with_symbol Money.new(plan[:monthly][:price],'GBP')
+                    %p per month
+                    %p.lead Early adopter
+                  %hr{:style => 'margin:0 0 10px 0;'}
+                  - plan[:features].each do |feature|
+                    = feature[:description]
+                    %hr{:style => 'margin:10px 0;'}
+                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up
+              .flippable-back
+                %article.plan.burnt-toast.bg-ice-cream
+                  %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
+                    %h4.pacifico= plan[:name]
+                  %section.pricing{:style => 'background-color:#fff;border-color:#F8F9F3 !important;border-right:solid 1px;border-left:solid 1px;'}
+                    %h5.stat= humanized_money_with_symbol Money.new(plan[:yearly][:price],'GBP')
+                    %p per year
+                    %p.lead Early adopter
+                  %hr{:style => 'margin:0 0 10px 0;'}
+                  - plan[:features].each do |feature|
+                    = feature[:description]
+                    %hr{:style => 'margin:10px 0;'}
+                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up
+
+        - if !plan[:monthly].present? && !plan[:yearly].present?
+          .flippable-container
+            .flippable
+              .flippable-front
+                %article.plan.burnt-toast.bg-ice-cream
+                  %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
+                    %h4.pacifico= plan[:name]
+                  %section.pricing{:style => 'background-color:#fff;border-color:#F8F9F3 !important;border-right:solid 1px;border-left:solid 1px;'}
+                    %h5.stat Free
+                    %p.lead Forever
+                    %p ...and ever.
+                  %hr{:style => 'margin:0 0 10px 0;'}
+                  - plan[:features].each do |feature|
+                    = feature[:description]
+                    %hr{:style => 'margin:10px 0;'}
+                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up

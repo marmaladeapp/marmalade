@@ -4,8 +4,11 @@
 //
 //= require foundation-sites
 //
-//= require_tree .
+//= require shared/flippable
+//
 //= require turbolinks
 
 Turbolinks.enableProgressBar();
-$(document).foundation();
+$(function() {
+  $(document).foundation();
+});

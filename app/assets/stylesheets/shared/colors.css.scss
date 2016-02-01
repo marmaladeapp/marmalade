@@ -1,0 +1,111 @@
+$marmalade: #ffc90d;
+$orange-juice: #fe9900;
+$strawberry-jam: #ef5322;
+$avocado: #98cb00;
+$blueberry: #0ba5d7;
+$burnt-toast: #2a2a2a;
+$ice-cream:#F8F9F3;
+
+// Font Color
+.marmalade{
+  color:$marmalade !important;
+  border-color:$marmalade !important;
+}
+.orange-juice{
+  color:$orange-juice !important;
+  border-color:$orange-juice !important;
+}
+.strawberry-jam{
+  color:$strawberry-jam !important;
+  border-color:$strawberry-jam !important;
+}
+.avocado{
+  color:$avocado !important;
+  border-color:$avocado !important;
+}
+.blueberry{
+  color:$blueberry !important;
+  border-color:$blueberry !important;
+}
+.burnt-toast{
+  color:$burnt-toast !important;
+  border-color:$burnt-toast !important;
+}
+.ice-cream{
+  color:$ice-cream !important;
+  border-color:$ice-cream !important;
+}
+
+a.marmalade:hover{
+  color:darken($marmalade,10%) !important;
+}
+a.avocado:hover{
+  color:darken($avocado,10%) !important;
+}
+a.blueberry:hover{
+  color:darken($blueberry,10%) !important;
+}
+a.orange-juice:hover{
+  color:darken($orange-juice,10%) !important;
+}
+a.strawberry-jam:hover{
+  color:darken($strawberry-jam,10%) !important;
+}
+a.burnt-toast:hover{
+  color:darken($burnt-toast,10%) !important;
+}
+a.ice-cream:hover{
+  color:darken($ice-cream,10%) !important;
+}
+
+// Background Color
+.bg-marmalade{
+  background-color:$marmalade !important;
+}
+.bg-avocado{
+  background-color:$avocado !important;
+}
+.bg-blueberry{
+  background-color:$blueberry !important;
+}
+.bg-orange-juice{
+  background-color:$orange-juice !important;
+}
+.bg-strawberry-jam{
+  background-color:$strawberry-jam !important;
+}
+.bg-burnt-toast{
+  background-color:$burnt-toast !important;
+}
+.bg-ice-cream{
+  background-color:$ice-cream !important;
+}
+
+a.bg-marmalade:hover{
+  background-color:darken($marmalade,10%) !important;
+}
+a.bg-avocado:hover{
+  background-color:darken($avocado,10%) !important;
+}
+a.bg-blueberry:hover{
+  background-color:darken($blueberry,10%) !important;
+}
+a.bg-orange-juice:hover{
+  background-color:darken($orange-juice,10%) !important;
+}
+a.bg-strawberry-jam:hover{
+  background-color:darken($strawberry-jam,10%) !important;
+}
+a.bg-burnt-toast:hover{
+  background-color:darken($burnt-toast,10%) !important;
+}
+a.bg-ice-cream:hover{
+  background-color:darken($ice-cream,10%) !important;
+}
+
+// Cocktails - Gradients
+.bg-sex-on-the-beach{
+  background: $marmalade;
+  //background: linear-gradient($orange-juice 0%, $marmalade 50%);
+  background: linear-gradient($marmalade 60%, $orange-juice 100%);
+}

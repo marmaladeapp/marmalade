@@ -1,1 +1,25 @@
-
+!!!
+%html{:lang => "en", 'ng-app' => "application"}
+  %head
+    = render "layouts/app/head"
+  %body
+    .grid-frame.vertical
+      .grid-block.shrink.wrap
+        .grid-content.collapse.small-12.medium-3
+          %ul.marmalade-menu-bar
+            %li
+              %a.pacifico{:href => "#"} Marmalade
+        .grid-content.collapse.small-12.medium-9
+          %ul.marmalade-menu-bar
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item1"} Item 1
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item2"} Item 2
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item3"} Item 3
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item4"} Item 4
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item5"} Item 5
+      .grid-content.small-12
+        = yield

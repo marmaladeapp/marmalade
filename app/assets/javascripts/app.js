@@ -4,7 +4,6 @@
 //
 //= require foundation-apps
 //
-//= require_tree .
 //= require turbolinks
 
 Turbolinks.enableProgressBar();

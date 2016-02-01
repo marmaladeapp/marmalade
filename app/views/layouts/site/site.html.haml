@@ -5,18 +5,22 @@
 
   %body
     %div.site
-      %div.row
-        %header.site-header.medium-8.medium-offset-2.columns
-          %h1.text-center Marmalade
-      %div.row
-        %main.medium-8.medium-offset-1.columns
-          = yield
-        %aside.medium-2.columns
+      %div.row.full-width
+        %header.site-header.small-12.columns.bg-sex-on-the-beach
+          %h1#site-title.text-center Marmalade
+          %h2.text-center.give-you-glory Management made easy
+          #take-action.text-center
+            %a.large.button.bg-burnt-toast{:href => '#pricing'} Pricing
+            %a.large.button.bg-strawberry-jam{:href => new_user_registration_path} Sign up
+            %p
+              %a.button.hollow.burnt-toast{'data-open' => 'loginForm', :style => 'padding:10px;'} Sign in
+              = render 'layouts/site/login'
+      = yield
 
-    %div.site-footer
+    %div
       .row
-        %footer.medium-8.medium-offset-2.columns
+        %footer.site-footer.medium-8.medium-offset-2.columns
           %p.text-center
-            %small Copyright &copy; Marmalade 2016
+            %small Copyright &copy; <span class="pacifico">Marmalade</span> #{Date.today.strftime("%Y")}
 
     = render 'layouts/site/analytics'

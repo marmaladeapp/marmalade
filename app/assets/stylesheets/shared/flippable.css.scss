@@ -1,0 +1,54 @@
+.flippable-container {
+  perspective: 1000;
+}
+//.flippable-container:hover .flippable, .flippable-container.flip .flippable {
+//  transform: rotateY(180deg);
+//}
+.flippable-container.flip .flippable {
+  transform: rotateY(180deg);
+}
+.flippable-container, .flippable-container .flippable-front, .flippable-container .flippable-back {
+  width: 100%;
+}
+.flippable-container .flippable {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  //padding-top: 530px; // 536 if non-flipping is non-flippable, 535 by proper math (but the damn thing breaks).
+  //Fixed by giving even non-flippable the flippable classes.
+  // now set in respective stylesheets
+
+  position: relative;
+}
+.flippable-container .flippable-front, .flippable-container .flippable-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height:100%;
+}
+.flippable-container .flippable-front {
+  z-index: 2;
+  /* for firefox 31 */
+  transform: rotateY(0deg);
+}
+.flippable-container .flippable-back {
+  transform: rotateY(180deg);
+}
+
+.flippable-container .panel {
+  margin-bottom: 0;
+}
+
+.spin:hover {
+  cursor: pointer;
+}
+
+/* Usage:
+.flippable-container
+  .flippable
+    .flippable-front
+      [FRONT CONTENTS]
+    .flippable-back
+      [BACK CONTENTS]
+Note: Add your additional classes to the flippable-container element.
+*/

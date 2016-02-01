@@ -1,0 +1,16 @@
+%h3.give-you-glory Work together, from one global dashboard.
+%p Manage your time, your household and your business from one global dashboard. Collaborate with family, friends and colleagues to tame the chaos of your day to day workflow and lifestyle.
+
+.row
+  - @features.each do |feature|
+    .small.reveal{'data-reveal' => true, :id => feature[:id]}
+      %i.fa.fa-4x{:class => feature[:icon]}
+      %h2.give-you-glory= feature[:name]
+      %p.lead= feature[:lead]
+      - if feature[:description].present?
+        %p= feature[:description]
+      %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
+        %span{'aria-hidden' => "true"} &times;
+    .small-6.medium-4.columns{:style => 'z-index:100;',:class => feature[:hide_for_small] ? 'hide-for-small-only' : ''}
+      %a.large.button.bg-blueberry.expanded{'data-open' => feature[:id], :style => 'padding:30px 0;'}
+        %i.fa.fa-3x{:class => feature[:icon]}

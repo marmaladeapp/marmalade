@@ -10,6 +10,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 
 gem 'pg'
+gem 'redis'
+
 gem "haml"
 gem 'nokogiri'
 gem 'premailer-rails'
@@ -27,6 +29,25 @@ gem "cancancan"
 gem 'friendly_id'
 gem 'paperclip'
 gem "kaminari"
+
+gem 'possessive'
+
+gem "timepiece"
+
+#gem "stripe"
+gem "braintree"
+
+gem "ancestry"
+gem "ice_cube"
+
+gem 'money-rails'
+gem 'countries'
+gem 'country_select'
+gem 'tzinfo'
+gem 'tzinfo-data'
+
+gem 'eu_central_bank', git: 'https://github.com/mainio/eu_central_bank.git', branch: 'fix/money_recent'
+
 
 group :development, :test do
   gem "dotenv-rails"
@@ -48,4 +69,3 @@ group :production do
   gem "rails_12factor"
   gem "puma"
 end
-
