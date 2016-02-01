@@ -6,24 +6,24 @@
       = f.text_field :username, autofocus: true
     .field.text-left
       = f.label :email
-      %br/
       = f.email_field :email
     .field.text-left
       = f.label :password
       - if @minimum_password_length
         %em
           (#{@minimum_password_length} characters minimum)
-      %br/
       = f.password_field :password, autocomplete: "off"
     .field.text-left
       = f.label :password_confirmation
-      %br/
       = f.password_field :password_confirmation, autocomplete: "off"
-      %button.button.expanded.bg-strawberry-jam Sign up
-      .text-center
-        %a{'data-open' => 'loginForm'} Login
-        |
-        %a{'data-open' => 'resendConfirmation'} Didn't receive confirmation instructions?
+    %button.button.expanded.bg-strawberry-jam Sign up
+    %p.text-left.help-text
+      By clicking "Sign up", you agree to adhere to our
+      %a{:href => terms_of_service_path} Terms of Service
+    .text-center
+      %a{'data-open' => 'loginForm'} Login
+      |
+      %a{'data-open' => 'resendConfirmation'} Didn't receive confirmation instructions?
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
     %span{'aria-hidden' => "true"} &times;
 
