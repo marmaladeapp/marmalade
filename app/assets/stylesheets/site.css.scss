@@ -46,10 +46,10 @@ h1#site-title{
 
 
 input ~ .switch-paddle {
-    background: $strawberry-jam;
+    background: $blueberry;
 }
 input:checked ~ .switch-paddle {
-    background: $blueberry;
+    background: $strawberry-jam;
 }
 #monthly-yearly-switch{
   @include switch-size(1rem, 7rem, 2rem, 1.5rem, 0.25rem);

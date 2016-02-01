@@ -27,7 +27,7 @@
                   - plan[:features].each do |feature|
                     = feature[:description]
                     %hr{:style => 'margin:10px 0;'}
-                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up
+                  %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up
               .flippable-back
                 %article.plan.burnt-toast.bg-ice-cream
                   %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
@@ -40,7 +40,7 @@
                   - plan[:features].each do |feature|
                     = feature[:description]
                     %hr{:style => 'margin:10px 0;'}
-                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up
+                  %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up
 
         - if !plan[:monthly].present? && !plan[:yearly].present?
           .flippable-container
@@ -57,4 +57,4 @@
                   - plan[:features].each do |feature|
                     = feature[:description]
                     %hr{:style => 'margin:10px 0;'}
-                  %a.button.bg-blueberry{:href => new_user_registration_path} Sign up
+                  %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up

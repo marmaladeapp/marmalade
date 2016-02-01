@@ -9,7 +9,11 @@ module VanitizeUrl
   end
 
   def path
-    url_helpers.send :"rails/generators/app_generator_path", self.slug
+    if self.class.name == "User"
+      url_helpers.send :"#{self.class.name.underscore}_path", self.username
+    else
+      url_helpers.send :"#{self.class.name.underscore}_path", self.slug
+    end
   end
 
   def vanitize_url

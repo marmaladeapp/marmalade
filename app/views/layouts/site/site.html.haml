@@ -11,10 +11,11 @@
           %h2.text-center.give-you-glory Management made easy
           #take-action.text-center
             %a.large.button.bg-burnt-toast{:href => '#pricing'} Pricing
-            %a.large.button.bg-strawberry-jam{:href => new_user_registration_path} Sign up
+            %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up
             %p
               %a.button.hollow.burnt-toast{'data-open' => 'loginForm', :style => 'padding:10px;'} Sign in
-              = render 'layouts/site/login'
+            = render 'layouts/site/sign_up'
+            = render 'layouts/site/login'
       = yield
 
     %div

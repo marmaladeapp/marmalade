@@ -2,13 +2,13 @@
   %h3 Login
   .text-left
     = form_tag session_path(:user) do
-      = label_tag "Email"
-      = text_field_tag 'user[email]'
+      = label_tag "Login"
+      = text_field_tag 'user[login'
       = label_tag "Password"
       = password_field_tag 'user[password]'
       = check_box_tag 'user[remember_me]'
       = label_tag 'user[remember_me]', 'Remember me'
-      %button.button.expanded Sign in
+      %button.button.expanded.bg-strawberry-jam Sign in
       .text-center
         %a{'data-open' => 'resetPassword'} Forgot your password?
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
@@ -21,4 +21,6 @@
       = f.label :email
       = f.email_field :email, autofocus: true
     .actions
-      = f.submit "Send me reset password instructions", :class => 'button expanded'
+      = f.submit "Send me reset password instructions", :class => 'button expanded bg-strawberry-jam'
+  %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
+    %span{'aria-hidden' => "true"} &times;

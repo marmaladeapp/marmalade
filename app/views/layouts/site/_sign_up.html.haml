@@ -1,0 +1,40 @@
+.tiny.reveal{'data-reveal' => true, :id => 'signUpForm'}
+  %h3 Sign up
+  = form_for(:user, url: registration_path(:user)) do |f|
+    .field.text-left
+      = f.label :username
+      = f.text_field :username, autofocus: true
+    .field.text-left
+      = f.label :email
+      %br/
+      = f.email_field :email
+    .field.text-left
+      = f.label :password
+      - if @minimum_password_length
+        %em
+          (#{@minimum_password_length} characters minimum)
+      %br/
+      = f.password_field :password, autocomplete: "off"
+    .field.text-left
+      = f.label :password_confirmation
+      %br/
+      = f.password_field :password_confirmation, autocomplete: "off"
+      %button.button.expanded.bg-strawberry-jam Sign up
+      .text-center
+        %a{'data-open' => 'loginForm'} Login
+        |
+        %a{'data-open' => 'resendConfirmation'} Didn't receive confirmation instructions?
+  %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
+    %span{'aria-hidden' => "true"} &times;
+
+.tiny.reveal{'data-reveal' => true, :id => 'resendConfirmation'}
+  %h3 Resend confirmation instructions
+  = form_for(:user, url: confirmation_path(:user), html: { method: :post }) do |f|
+    .field.text-left
+      = f.label :email
+      %br/
+      = f.email_field :email, autofocus: true
+    .actions
+      = f.submit "Resend confirmation instructions", :class => 'button expanded bg-strawberry-jam'
+  %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
+    %span{'aria-hidden' => "true"} &times;
