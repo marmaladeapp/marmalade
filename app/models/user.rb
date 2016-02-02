@@ -18,6 +18,10 @@ class User < ActiveRecord::Base
   validates :username, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
   # validates :username, format: { without: /\A(?:admin|about|users|staff|login|signin|signup|register|edit|profile)\Z/i, message: "restricted." }
 
+  has_many :emails, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Email'
+  has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'
+  has_many :telephones, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Telephone'
+
   def should_generate_new_friendly_id?
     username_changed?
   end

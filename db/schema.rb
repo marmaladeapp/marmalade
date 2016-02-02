@@ -11,10 +11,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160130201523) do
+ActiveRecord::Schema.define(version: 20160202003849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "contact_details_addresses", force: :cascade do |t|
+    t.string   "line_1"
+    t.string   "line_2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.string   "country"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "contact_details_addresses", ["owner_type", "owner_id"], name: "index_contact_details_addresses_on_owner_type_and_owner_id", using: :btree
+
+  create_table "contact_details_emails", force: :cascade do |t|
+    t.string   "address"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "contact_details_emails", ["address"], name: "index_contact_details_emails_on_address", using: :btree
+  add_index "contact_details_emails", ["owner_type", "owner_id"], name: "index_contact_details_emails_on_owner_type_and_owner_id", using: :btree
+
+  create_table "contact_details_telephones", force: :cascade do |t|
+    t.string   "number"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "contact_details_telephones", ["owner_type", "owner_id"], name: "index_contact_details_telephones_on_owner_type_and_owner_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -41,18 +77,18 @@ ActiveRecord::Schema.define(version: 20160130201523) do
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",      null: false
+    t.string   "encrypted_password",     default: "",      null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,       null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -66,6 +102,13 @@ ActiveRecord::Schema.define(version: 20160130201523) do
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
     t.string   "username"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.text     "bio"
+    t.string   "currency",               default: "USD",   null: false
+    t.string   "time_zone",              default: "UTC",   null: false
+    t.string   "country",                default: "US",    null: false
+    t.string   "language",               default: "en-US", null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

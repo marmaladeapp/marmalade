@@ -1,6 +1,21 @@
 .tiny.reveal{'data-reveal' => true, :id => 'signUpForm'}
   %h3 Sign up
   = form_for(:user, url: registration_path(:user)) do |f|
+    = f.hidden_field :currency, :value => 'USD'
+    = f.hidden_field :time_zone, :value => 'UTC'
+    = f.hidden_field :country, :value => 'US'
+    = f.hidden_field :language, :value => request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}(?:-[a-zA-Z]{2})?/).first
+    :javascript
+      $(document).ready(function(){
+        time_zone = jstz.determine().name();
+        $("#user_time_zone").val(time_zone);
+        $.getJSON("http://freegeoip.net/json/", function (data) {
+          var country = data.country_code;
+          $("#user_country").val(country);
+          var currency = iso.countries[country].currency;
+          $("#user_currency").val(currency);
+        });
+      });
     .field.text-left
       = f.label :username
       = f.text_field :username, autofocus: true
@@ -18,8 +33,7 @@
       = f.password_field :password_confirmation, autocomplete: "off"
     %button.button.expanded.bg-strawberry-jam Sign up
     %p.text-left.help-text
-      By clicking "Sign up", you agree to adhere to our
-      %a{:href => terms_of_service_path} Terms of Service
+      By clicking "Sign up", you agree to adhere to our <a href=#{terms_of_service_path}>Terms of Service</a>.
     .text-center
       %a{'data-open' => 'loginForm'} Login
       |

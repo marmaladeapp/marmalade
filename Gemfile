@@ -45,6 +45,7 @@ gem 'countries'
 gem 'country_select'
 gem 'tzinfo'
 gem 'tzinfo-data'
+gem 'phony_rails'
 
 gem 'eu_central_bank', git: 'https://github.com/mainio/eu_central_bank.git', branch: 'fix/money_recent'
 
