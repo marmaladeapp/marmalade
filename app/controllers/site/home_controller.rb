@@ -88,10 +88,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Light',
         :monthly => {
-          :price => 500
+          :gb_price => 500,
+          :us_price => 900
         },
         :yearly => {
-          :price => 4500
+          :gb_price => 4500,
+          :us_price => 8100
         },
         :features => [
           {:icon => 'fa-group',:description => 'Up to 3 collaborators'},
@@ -104,10 +106,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Pro',
         :monthly => {
-          :price => 1500
+          :gb_price => 1500,
+          :us_price => 2000
         },
         :yearly => {
-          :price => 13500
+          :gb_price => 13500,
+          :us_price => 18000
         },
         :features => [
           {:icon => 'fa-group',:description => 'Up to 10 collaborators'},
@@ -120,10 +124,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Plus',
         :monthly => {
-          :price => 2500
+          :gb_price => 2500,
+          :us_price => 3500
         },
         :yearly => {
-          :price => 22500
+          :gb_price => 22500,
+          :us_price => 31500
         },
         :features => [
           {:icon => 'fa-group',:description => 'Unlimited collaborators'},

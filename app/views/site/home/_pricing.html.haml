@@ -20,7 +20,8 @@
                   %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
                     %h4.pacifico= plan[:name]
                   %section.pricing{:style => 'background-color:#fff;border-color:#F8F9F3 !important;border-right:solid 1px;border-left:solid 1px;'}
-                    %h5.stat= humanized_money_with_symbol Money.new(plan[:monthly][:price],'GBP')
+                    %h5.plan-pricing.stat= humanized_money_with_symbol Money.new(plan[:monthly][:gb_price],'GBP')
+                    %h5.plan-pricing.stat.hidden= humanized_money_with_symbol Money.new(plan[:monthly][:us_price], 'USD')
                     %p per month
                     %p.lead Early adopter
                   %hr{:style => 'margin:0 0 10px 0;'}
@@ -33,7 +34,8 @@
                   %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
                     %h4.pacifico= plan[:name]
                   %section.pricing{:style => 'background-color:#fff;border-color:#F8F9F3 !important;border-right:solid 1px;border-left:solid 1px;'}
-                    %h5.stat= humanized_money_with_symbol Money.new(plan[:yearly][:price],'GBP')
+                    %h5.plan-pricing.stat= humanized_money_with_symbol Money.new(plan[:yearly][:gb_price],'GBP')
+                    %h5.plan-pricing.stat.hidden= humanized_money_with_symbol Money.new(plan[:yearly][:us_price], 'USD')
                     %p per year
                     %p.lead Early adopter
                   %hr{:style => 'margin:0 0 10px 0;'}
