@@ -5,11 +5,11 @@
   %body
     .grid-frame.vertical
       .grid-block.shrink.wrap
-        .grid-content.collapse.small-12.medium-3
+        .grid-content.collapse.small-12.medium-3.large-2
           %ul.marmalade-menu-bar
             %li
               %a.pacifico{:href => "#"} Marmalade
-        .grid-content.collapse.small-12.medium-9
+        .grid-content.collapse.small-12.medium-9.large-10
           %ul.marmalade-menu-bar
             %li{'ui-sref-active' => "is-active"}
               %a{'ui-sref' => "item1"} Item 1
@@ -21,5 +21,8 @@
               %a{'ui-sref' => "item4"} Item 4
             %li{'ui-sref-active' => "is-active"}
               %a{'ui-sref' => "item5"} Item 5
-      .grid-content.small-12
-        = yield
+      .grid-block.small-12
+        .grid-block.show-for-medium.medium-3.large-2
+          %iframe{:frameborder => "0", :height => "1200px", :src => "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12697.758051669445!2d-121.95161!3d37.284716!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xe18714a9ccfec34d!2sZURB!5e0!3m2!1sen!2sus!4v1417659982534", :style => "border:0", :width => "100%"}
+        .grid-content.small-12.medium-9.large-10.main-content{"ng-class" => "['ui-animation']", "ui-view" => ""}
+          = yield
