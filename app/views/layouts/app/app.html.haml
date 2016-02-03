@@ -9,18 +9,36 @@
           %ul.marmalade-menu-bar
             %li
               %a.pacifico{:href => "#"} Marmalade
-        .grid-content.collapse.small-12.medium-9.large-10
+        .grid-content.collapse.small-12.hide-for-medium
           %ul.marmalade-menu-bar
             %li{'ui-sref-active' => "is-active"}
-              %a{'ui-sref' => "item1"} Item 1
+              %a{'ui-sref' => "item1"} Company Name
+        .grid-content.collapse.small-12.medium-9.large-10
+          %ul.marmalade-menu-bar
+            %li.active{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item1"}
+                %i.fa.fa-dashboard.fa-fw
+                %span.show-for-large Dashboard
             %li{'ui-sref-active' => "is-active"}
-              %a{'ui-sref' => "item2"} Item 2
+              %a{'ui-sref' => "item1"}
+                %i.fa.fa-user.fa-fw
+                %span.show-for-large Contacts
             %li{'ui-sref-active' => "is-active"}
-              %a{'ui-sref' => "item3"} Item 3
+              %a{'ui-sref' => "item2"}
+                %i.fa.fa-calendar.fa-fw
+                %span.show-for-large Calendar
             %li{'ui-sref-active' => "is-active"}
-              %a{'ui-sref' => "item4"} Item 4
+              %a{'ui-sref' => "item3"}
+                %i.fa.fa-clock-o.fa-fw
+                %span.show-for-large Time
             %li{'ui-sref-active' => "is-active"}
-              %a{'ui-sref' => "item5"} Item 5
+              %a{'ui-sref' => "item4"}
+                %i.fa.fa-usd.fa-fw
+                %span.show-for-large Finances
+            %li{'ui-sref-active' => "is-active"}
+              %a{'ui-sref' => "item5"}
+                %i.fa.fa-folder-open.fa-fw
+                %span.show-for-large Projects
       .grid-block.small-12
         .grid-block.show-for-medium.medium-3.large-2
           %iframe{:frameborder => "0", :height => "1200px", :src => "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12697.758051669445!2d-121.95161!3d37.284716!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xe18714a9ccfec34d!2sZURB!5e0!3m2!1sen!2sus!4v1417659982534", :style => "border:0", :width => "100%"}
