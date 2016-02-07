@@ -1,0 +1,17 @@
+%script{:src => "https://js.braintreegateway.com/v2/braintree.js"}
+.grid-content
+  %h2 Your subscription is the bombest, most tope mother-ferr in the land, d!
+  = form_for @user do |f|
+    = f.label :first_name
+    = f.text_field :first_name
+    = f.label :last_name
+    = f.text_field :last_name
+    = f.label :plan
+    = f.collection_select :plan, @plans, :id, :blurb
+    %div#braintree-dropin
+    %button.button.bg-blueberry Subscribe
+
+:javascript
+  braintree.setup(gon.client_token, "dropin", {
+    container: "braintree-dropin"
+  });

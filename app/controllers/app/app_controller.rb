@@ -5,6 +5,7 @@ class App::AppController < ActionController::Base
   layout 'app/app'
 
   before_action :authenticate_user!
+  before_action :subscribe_user!
   before_filter :set_locale
 
   def set_locale
@@ -12,5 +13,11 @@ class App::AppController < ActionController::Base
   end
 
   private
+
+  def subscribe_user!
+    if !current_user.subscribed? && !request.fullpath.include?(user_subscription_path(current_user))
+      redirect_to user_subscription_path(current_user)
+    end
+  end
 
 end

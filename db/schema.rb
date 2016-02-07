@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202003849) do
+ActiveRecord::Schema.define(version: 20160207020314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,17 @@ ActiveRecord::Schema.define(version: 20160202003849) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
+  create_table "plans", force: :cascade do |t|
+    t.string   "slug"
+    t.string   "name"
+    t.text     "description"
+    t.decimal  "price"
+    t.string   "currency"
+    t.integer  "billing_frequency"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -109,6 +120,7 @@ ActiveRecord::Schema.define(version: 20160202003849) do
     t.string   "time_zone",              default: "UTC",   null: false
     t.string   "country",                default: "US",    null: false
     t.string   "language",               default: "en-US", null: false
+    t.integer  "plan_id"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -116,6 +128,7 @@ ActiveRecord::Schema.define(version: 20160202003849) do
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
+  add_index "users", ["plan_id"], name: "index_users_on_plan_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
@@ -136,4 +149,5 @@ ActiveRecord::Schema.define(version: 20160202003849) do
   add_index "vanity_urls", ["owner_type", "owner_id"], name: "index_vanity_urls_on_owner_type_and_owner_id", using: :btree
   add_index "vanity_urls", ["slug"], name: "index_vanity_urls_on_slug", unique: true, using: :btree
 
+  add_foreign_key "users", "plans"
 end

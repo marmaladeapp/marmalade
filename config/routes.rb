@@ -3,7 +3,13 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", invitations: "users/invitations" }
 
   scope module: 'app' do
-    resources :users, only: [:index, :show]
+    resources :users, only: [:show,:edit,:update]
+
+    scope '/:user_id', as: 'user' do
+      get '/subscription', to: 'users#subscription'
+    end
+
+    match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
     authenticated :user do
       root :to => "dashboard#index", as: :authenticated
     end
@@ -12,7 +18,7 @@ Rails.application.routes.draw do
   scope module: 'site' do
     get '/terms-of-service', to: "home#terms_of_service"
     get '/privacy-policy', to: "home#privacy_policy"
-    match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
+    #match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
     #scope '/:resource_id', as: 'resource' do
     #  match '/edit', to: Constraints::EditDispatcher.new(self), :via => 'get'
     #end

@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   validates :username, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
   # validates :username, format: { without: /\A(?:admin|about|users|staff|login|signin|signup|register|edit|profile)\Z/i, message: "restricted." }
 
+  belongs_to :plan
+
   has_many :emails, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Email'
   has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'
   has_many :telephones, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Telephone'
@@ -33,6 +35,10 @@ class User < ActiveRecord::Base
     else
       where(conditions.to_hash).first
     end
+  end
+
+  def subscribed?
+    plan
   end
 
   private

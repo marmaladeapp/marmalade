@@ -22,6 +22,8 @@ gem "sprockets"
 gem "autoprefixer-rails"
 gem 'font-awesome-sass'
 
+gem 'gon'
+
 gem "devise"
 gem "devise_invitable"
 gem "rolify"
