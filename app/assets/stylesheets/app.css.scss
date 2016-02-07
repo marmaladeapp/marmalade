@@ -6,6 +6,11 @@
 @import "shared/colors";
 @import "shared/fonts";
 
+body{
+  @include breakpoint(small only){
+    background-color:$ice-cream;
+  }
+}
 
 .marmalade-menu-bar {
   // This placeholder selector gets you the core structural styles for the menu
