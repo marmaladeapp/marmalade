@@ -1,24 +1,37 @@
 .tiny.reveal{'data-reveal' => true, :id => 'signUpForm'}
   %h3 Sign up
   = form_for(:user, url: registration_path(:user)) do |f|
-    = f.hidden_field :currency, :value => 'USD'
-    = f.hidden_field :time_zone, :value => 'UTC'
-    = f.hidden_field :country, :value => 'US'
-    = f.hidden_field :language, :value => request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}(?:-[a-zA-Z]{2})?/).first
-    :javascript
-      $(document).ready(function(){
-        time_zone = jstz.determine().name();
-        $("#user_time_zone").val(time_zone);
-        $.getJSON("http://freegeoip.net/json/", function (data) {
-          var country = data.country_code;
-          $("#user_country").val(country);
-          var currency = iso.countries[country].currency;
-          $("#user_currency").val(currency);
-          if(currency == "USD"){
-            $(".plan-pricing").toggleClass('hidden');
-          }
-        });
-      });
+
+    = f.hidden_field :currency, :value => @user_currency
+    = f.hidden_field :time_zone, :value => @user_time_zone
+    = f.hidden_field :country, :value => @user_country
+    = f.hidden_field :language, :value => @user_language
+
+    - if false
+      /:javascript
+      /  $(document).ready(function(){
+      /    time_zone = jstz.determine().name();
+      /    $("#user_time_zone").val(time_zone);
+      /    $.getJSON("http://freegeoip.net/json/", function (data) {
+      /      // FreeGeoIP has a 10,000 ph limit and is allegedly inaccurate. LOOKINTO
+      /      //
+      /      // Keep in mind that FreeGeoIP and other services use client IP address.
+      /      // We can also look that up in Ruby, meaning we should be able to shimmy some of this
+      /      // into the controller. Good plan. Totally gonna do that. :)
+      /      var country = data.country_code;
+      /      $("#user_country").val(country);
+      /      var currency = iso.countries[country].currency;
+      /      $("#user_currency").val(currency);
+      /      
+      /      if(false){
+      /        // Setup Braintree for multiple currencies first.
+      /        if(currency == "USD"){
+      /          $(".plan-pricing").toggleClass('hidden');
+      /        }
+      /      }
+      /    });
+      /  });
+
     .field.text-left
       = f.label :username
       = f.text_field :username, autofocus: true

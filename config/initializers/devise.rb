@@ -3,7 +3,7 @@
 Devise.setup do |config|
   # ==> Controller Configuration
   # Use app module controller.
-  config.parent_controller = 'App::AppController'
+  config.parent_controller = 'Site::SiteController'
 
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
