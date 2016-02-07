@@ -6,9 +6,9 @@ class Plan < ActiveRecord::Base
   def blurb
     case billing_frequency
     when 1
-      name + " (Monthly)"
+      name + " - £" + price.to_i.to_s + " per month"
     when 12
-      name + " (Yearly)"
+      name + " - £" + price.to_i.to_s + " per year"
     else
       name
     end
