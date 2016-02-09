@@ -59,7 +59,7 @@ group :development, :test do
   gem "dotenv-rails"
   gem 'byebug'
   gem 'web-console', '~> 2.0'
-  gem 'spring'
+  gem 'spring', '1.6.2'
 end
 
 group :doc do

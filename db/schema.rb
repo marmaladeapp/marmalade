@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160207020314) do
+ActiveRecord::Schema.define(version: 20160209020041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,18 +88,18 @@ ActiveRecord::Schema.define(version: 20160207020314) do
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",      null: false
-    t.string   "encrypted_password",     default: "",      null: false
+    t.string   "email",                     default: "",      null: false
+    t.string   "encrypted_password",        default: "",      null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,       null: false
+    t.integer  "sign_in_count",             default: 0,       null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 20160207020314) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",      default: 0
+    t.integer  "invitations_count",         default: 0
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
@@ -116,11 +116,13 @@ ActiveRecord::Schema.define(version: 20160207020314) do
     t.string   "first_name"
     t.string   "last_name"
     t.text     "bio"
-    t.string   "currency",               default: "USD",   null: false
-    t.string   "time_zone",              default: "UTC",   null: false
-    t.string   "country",                default: "US",    null: false
-    t.string   "language",               default: "en-US", null: false
+    t.string   "currency",                  default: "USD",   null: false
+    t.string   "time_zone",                 default: "UTC",   null: false
+    t.string   "country",                   default: "US",    null: false
+    t.string   "language",                  default: "en-US", null: false
     t.integer  "plan_id"
+    t.string   "braintree_customer_id"
+    t.string   "braintree_subscription_id"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

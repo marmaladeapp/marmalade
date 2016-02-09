@@ -8,7 +8,7 @@
 
 body{
   @include breakpoint(small only){
-    background-color:$ice-cream;
+    //background-color:$ice-cream;
   }
 }
 

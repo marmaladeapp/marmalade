@@ -1,0 +1,59 @@
+%script{:src => "https://js.braintreegateway.com/v2/braintree.js"}
+.grid-container.small-12.medium-9
+  .grid-content
+    %h2 Payment
+    = form_for @user, :url => user_payment_path do |f|
+      %section.block-list
+        %header Subscription
+        %ul
+          %li.with-dropdown
+            = f.collection_select :plan_id, @plans, :id, :blurb, {:selected => @user.plan.id}
+      %section.block-list
+        %header Payment
+        %ul
+          %li
+            #card-number{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}
+          %li
+            #cvv{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}
+          %li
+            #expiration-date{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}
+
+      #braintree-dropin
+      %button.button.bg-blueberry Pay with card
+
+:javascript
+  braintree.setup(gon.client_token, "custom", {
+    id: #{"edit_user_" + @user.id.to_s},
+    hostedFields: {
+      styles: {
+        // Style all elements
+        "input": {
+          "font-size": "1rem",
+          "font-weight": "300",
+          "font-family": "'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif"
+        },
+        // Styling element state
+        ":focus": {
+          "color": "black"
+        },
+        ".valid": {
+          "color": "#3D9970"
+        },
+        ".invalid": {
+          "color": "#ef5322"
+        }
+      },
+      number: {
+        selector: "#card-number",
+        placeholder: "Card number"
+      },
+      cvv: {
+        selector: "#cvv",
+        placeholder: "CVV"
+      },
+      expirationDate: {
+        selector: "#expiration-date",
+        placeholder: "Expiration date"
+      }
+    }
+  });

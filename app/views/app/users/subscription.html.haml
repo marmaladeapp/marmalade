@@ -1,17 +1,31 @@
-%script{:src => "https://js.braintreegateway.com/v2/braintree.js"}
-.grid-content
-  %h2 Your subscription is the bombest, most tope mother-ferr in the land, d!
-  = form_for @user do |f|
-    = f.label :first_name
-    = f.text_field :first_name
-    = f.label :last_name
-    = f.text_field :last_name
-    = f.label :plan
-    = f.collection_select :plan, @plans, :id, :blurb
-    %div#braintree-dropin
-    %button.button.bg-blueberry Subscribe
+.grid-container.small-12.medium-9
+  .grid-content
+    - if @user.braintree_subscription_id
+      %h2 Edit subscription
+      = form_for @user, :url => user_update_subscription_path do |f|
+        %section.block-list
+          %header Subscription
+          %ul
+            %li.with-dropdown
+              = f.collection_select :plan_id, @plans, :id, :blurb
 
-:javascript
-  braintree.setup(gon.client_token, "dropin", {
-    container: "braintree-dropin"
-  });
+        #braintree-dropin
+        %button.button.expanded.bg-blueberry Update subscription
+    - else
+      %h2 Subscription
+      = form_for @user, :url => user_subscribe_path do |f|
+        %section.block-list
+          %header About you
+          %ul
+            %li
+              = f.text_field :first_name, {:placeholder => 'First name'}
+            %li
+              = f.text_field :last_name, {:placeholder => 'Last name'}
+        %section.block-list
+          %header Subscription
+          %ul
+            %li.with-dropdown
+              = f.collection_select :plan_id, @plans, :id, :blurb
+
+        #braintree-dropin
+        %button.button.expanded.bg-blueberry Subscribe

@@ -15,8 +15,14 @@ class App::AppController < ActionController::Base
   private
 
   def subscribe_user!
-    if !current_user.subscribed? && !request.fullpath.include?(user_subscription_path(current_user))
-      redirect_to user_subscription_path(current_user)
+    unless request.fullpath.include?(user_subscribe_path(current_user)) || request.fullpath.include?(user_payment_path(current_user))
+      if !current_user.subscribed? && !(request.fullpath.include?(user_subscription_path(current_user)) || request.fullpath.include?(user_payment_path(current_user)))
+        if !(current_user.first_name && current_user.last_name && current_user.plan)
+          redirect_to user_subscription_path(current_user)
+        else
+          redirect_to user_payment_path(current_user)
+        end
+      end
     end
   end
 

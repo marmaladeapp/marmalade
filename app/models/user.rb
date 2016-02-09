@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
   end
 
   def subscribed?
-    plan
+    first_name && last_name && plan && (plan.price.blank? || braintree_subscription_id) # last detail required = do they have braintree creds?
   end
 
   private
