@@ -72,7 +72,9 @@ class App::UsersController < App::AppController
   def update_subscription
     @user = User.find(params[:user_id])
     plan = Plan.find(params[:user][:plan_id])
-    if @user.plan.billing_frequency == plan.billing_frequency
+    if !@user.braintree_subscription_id
+      # nothing to do; flow continues
+    elsif @user.plan.billing_frequency == plan.billing_frequency
       Braintree::Subscription.update(
         @user.braintree_subscription_id,
         :price => plan.price.to_s,
@@ -83,12 +85,16 @@ class App::UsersController < App::AppController
       # But what if our users downgrade from a yearly to monthly plan? We'll be charging them
       # even though they ought to have credit in their account?
       r = Braintree::Subscription.cancel(@user.braintree_subscription_id)
-      result = Braintree::Subscription.create(
-        :payment_method_token => r.subscription.payment_method_token,
-        :plan_id => plan.slug,
-        :merchant_account_id => ENV["BRAINTREE_MERCHANT_ACCOUNT_ID"]
-      )
-      @user.braintree_subscription_id = result.subscription.id
+      if plan.slug == "free"
+        @user.braintree_subscription_id = nil
+      else
+        result = Braintree::Subscription.create(
+          :payment_method_token => r.subscription.payment_method_token,
+          :plan_id => plan.slug,
+          :merchant_account_id => ENV["BRAINTREE_MERCHANT_ACCOUNT_ID"]
+        )
+        @user.braintree_subscription_id = result.subscription.id
+      end
     end
     @user.plan = plan
     if @user.update_attributes(user_params)
