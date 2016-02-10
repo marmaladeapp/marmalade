@@ -1,3 +1,7 @@
 %ul.marmalade-menu-bar
   %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item1"} Company Name
+    %a{'ui-sref' => "item1", :href => contexts_path}
+      - if @context
+        Company Name
+      - else
+        %strong= t(:organizations).capitalize

@@ -1,4 +1,13 @@
 - if @user == current_user
+
+  - supported_currencies = $redis.smembers("supported_currencies")
+  - @currencies_for_select = []
+  - Money::Currency.each do |currency|
+    - if supported_currencies.include? currency.iso_code
+      - @currencies_for_select << currency
+
+  - @languages_for_select = [['en-US','English (US)'],['en-GB','English (UK)']]
+
   .grid-container.small-12.medium-10
 
     .grid-content.small-12
@@ -14,5 +23,25 @@
               = f.text_field :last_name, {:placeholder => 'Last name'}
             %li
               = f.text_area :bio, {:placeholder => 'Bio'}
+        %section.block-list
+          %header Country
+          %ul
+            %li.with-dropdown
+              = f.country_select :country
+        %section.block-list
+          %header Language
+          %ul
+            %li.with-dropdown
+              = f.collection_select :language, @languages_for_select, :first, :last, {selected: current_user.language}
+        %section.block-list
+          %header Time zone
+          %ul
+            %li.with-dropdown
+              = f.time_zone_select :time_zone
+        %section.block-list
+          %header Currency
+          %ul
+            %li.with-dropdown
+              = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: current_user.currency}
 
         %button.button.expanded.bg-blueberry Update profile

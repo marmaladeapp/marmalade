@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   scope module: 'app' do
     resources :users, only: [:show,:edit,:update]
 
+    get '/contexts', to: 'contexts#index'
     scope '/:user_id', as: 'user' do
       get '/profile', to: 'users#profile'
       get '/password', to: 'users#password', as: 'pass'

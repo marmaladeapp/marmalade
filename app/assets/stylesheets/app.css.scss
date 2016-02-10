@@ -12,6 +12,12 @@ body{
   }
 }
 
+.bg-ice-cream-small{
+  @include breakpoint(small only){
+    background-color:$ice-cream !important;
+  }
+}
+
 .marmalade-menu-bar {
   // This placeholder selector gets you the core structural styles for the menu
   @extend %menu-bar;
