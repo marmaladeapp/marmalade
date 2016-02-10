@@ -1,14 +1,14 @@
 //= require jquery
-//= require jquery.turbolinks
+// require jquery.turbolinks
 //= require jquery_ujs
 //
 //= require foundation-apps
 //= require_tree ../../../vendor/assets/javascripts/services/.
 //= require_tree ../../../vendor/assets/javascripts/components/.
 //
-//= require turbolinks
+// require turbolinks
 
-Turbolinks.enableProgressBar();
+//Turbolinks.enableProgressBar();
 
 //angular.module('modalMarmalade', ['ui.router','ngAnimate','foundation','foundation.dynamicRouting','foundation.dynamicRouting.animations']);
 
