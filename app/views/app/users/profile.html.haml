@@ -1,0 +1,25 @@
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %ul.menu-bar{:style => 'margin-top:20px;'}
+      %li
+        %a{:href => user_profile_path(@user)}
+          %i.fa.fa-user
+          Edit profile
+      %li
+        %a{:href => user_subscription_path(@user)}
+          %i.fa.fa-usd
+          Edit subscription
+    %h2 Edit profile
+    = form_for @user do |f|
+      %section.block-list
+        %header About you
+        %ul
+          %li
+            = f.text_field :first_name, {:placeholder => 'First name'}
+          %li
+            = f.text_field :last_name, {:placeholder => 'Last name'}
+          %li
+            = f.text_area :bio, {:placeholder => 'Bio'}
+
+      %button.button.expanded.bg-blueberry Update

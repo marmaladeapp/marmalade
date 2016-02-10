@@ -24,6 +24,12 @@ class User < ActiveRecord::Base
   has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'
   has_many :telephones, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Telephone'
 
+  before_destroy :unsubscribe
+
+  def full_name
+    first_name + " " + last_name
+  end
+
   def should_generate_new_friendly_id?
     username_changed?
   end
@@ -42,5 +48,9 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def unsubscribe
+    Braintree::Customer.delete(braintree_customer_id)
+  end
 
 end

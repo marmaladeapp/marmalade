@@ -1,2 +1,10 @@
-.grid-content.medium-12.text-center
-  %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;margin-top:20px;'}
+.grid-content.collapse.medium-12.text-center{:style => ''}
+  - if current_user.subscribed?
+    %div{:style => 'margin-top:20px;margin-bottom:20px;'}
+      %a{:href => vanity_path(current_user)}
+        %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+    %ul.vertical.menu-bar{:style => 'background:#e9e9e9 !important;'}
+      %li
+        %a{:href => vanity_path(current_user)}= current_user.full_name
+  - else
+    Please choose a plan and complete your subscription.

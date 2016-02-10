@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :users, only: [:show,:edit,:update]
 
     scope '/:user_id', as: 'user' do
+      get '/profile', to: 'users#profile'
       get '/subscription', to: 'users#subscription'
       patch '/subscribe', to: 'users#subscribe'
       patch '/update_subscription', to: 'users#update_subscription'

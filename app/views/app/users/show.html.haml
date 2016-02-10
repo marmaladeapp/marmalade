@@ -1,0 +1,12 @@
+.grid-container.small-12.medium-10
+  .grid-block.small-12
+    .grid-content.small-6
+      %div.text-right{:style => 'margin-top:20px;margin-bottom:20px;'}
+        %a{:href => vanity_path(current_user)}
+          %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+    .grid-content.small-6
+      %div{:style => 'margin-top:20px;margin-bottom:20px;'}
+        %h3= @user.full_name
+        %p= @user.bio
+        - if @user == current_user
+          %a{:href => user_profile_path(@user)} Edit profile

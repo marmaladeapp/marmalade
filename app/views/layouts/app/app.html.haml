@@ -8,20 +8,21 @@
         .grid-content.collapse.small-12.medium-3.large-2
           %ul.marmalade-menu-bar
             %li
-              %a.pacifico{:href => "#"} Marmalade
+              %a.pacifico{:href => root_path} Marmalade
 
-        .grid-content.collapse.small-12.hide-for-medium
-          = render "layouts/app/context_menu"
+        - if current_user.subscribed?
+          .grid-content.collapse.small-12.hide-for-medium
+            = render "layouts/app/context_menu"
 
         .grid-content.collapse.small-12.medium-9.large-10
           = render "layouts/app/module_menu"
 
 
-      .grid-block.small-12
+      .grid-block
         .grid-block.show-for-medium.medium-3.large-2.bg-ice-cream
           = render "layouts/app/sidebar"
         .grid-block.small-12.medium-9.large-8.main-content{"ng-class" => "['ui-animation']", "ui-view" => ""}
           = yield
         .grid-block.show-for-large.large-2.bg-ice-cream
-          = render "layouts/app/sidebar"
+          = render "layouts/app/right_sidebar"
           / Thing is, this is gonna be... very context specific.. and absolutely must not be essential... unless we duplicate its functionality elsewhere for smaller screens. Yes. Yes, that will do. Muahahahahahahahahahahah!!
