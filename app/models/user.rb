@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   # validates :username, format: { without: /\A(?:admin|about|users|staff|login|signin|signup|register|edit|profile)\Z/i, message: "restricted." }
 
   belongs_to :plan
+  has_many :payment_methods, :dependent => :destroy
 
   has_many :emails, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Email'
   has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'

@@ -1,0 +1,17 @@
+%ul.menu-bar{:style => 'margin-top:20px;'}
+  %li
+    %a{:href => user_profile_path(@user)}
+      %i.fa.fa-user
+      Profile
+  %li
+    %a{:href => user_pass_path(@user)}
+      %i.fa.fa-lock
+      Password
+  %li
+    %a{:href => user_subscription_path(@user)}
+      %i.fa.fa-usd
+      Subscription
+  %li
+    %a{:href => user_billing_path(@user)}
+      %i.fa.fa-credit-card
+      Billing

@@ -1,16 +1,19 @@
 - if @user == current_user
   %script{:src => "https://js.braintreegateway.com/v2/braintree.js"}
-  .grid-container.small-12.medium-9
+  .grid-container.small-12.medium-10
     .grid-content
-      %h2 Payment
+      = render 'edit_menu'
+      %h3 Edit billing
       = form_for @user, :url => user_payment_path do |f|
         %section.block-list
-          %header Subscription
+          %header Current payment method
           %ul
-            %li.with-dropdown
-              = f.collection_select :plan_id, @plans, :id, :blurb, {:selected => @user.plan.id}
+            %li
+              .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @card.card_type
+            %li
+              .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= '#### #### #### ' + @card.last_4
         %section.block-list
-          %header Payment
+          %header New payment method
           %ul
             %li
               #card-number{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}
@@ -19,8 +22,12 @@
             %li
               #expiration-date{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}
 
-        #braintree-dropin
-        %button.button.bg-blueberry Pay with card
+        %button.button.bg-blueberry Update
+
+        %p
+          %strong Note:
+          Adding a new payment method will replace your current payment method. Marmalade currently only stores one payment method per customer.
+
 
   :javascript
     braintree.setup(gon.client_token, "custom", {

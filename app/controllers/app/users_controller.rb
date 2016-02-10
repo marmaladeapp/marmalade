@@ -4,12 +4,29 @@ class App::UsersController < App::AppController
   end
   def edit
     @user = User.find(params[:id])
+    redirect_to root_path if current_user != @user
   end
   def profile
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
+  end
+  def password
+    @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
+  end
+  def billing
+    @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
+    if @user.payment_methods.any?
+      @card = Braintree::PaymentMethod.find(@user.payment_methods.first.braintree_payment_method_token)
+    end
+    gon.client_token = Braintree::ClientToken.generate(
+      :customer_id => @user.braintree_customer_id
+    )
   end
   def update
     @user = User.find(params[:id])
+    redirect_to root_path if current_user != @user
     if !(@user.first_name || @user.last_name) && (params[:user][:first_name] && params[:user][:last_name])
       result = Braintree::Customer.create(
         :first_name => params[:user][:first_name],
@@ -23,6 +40,7 @@ class App::UsersController < App::AppController
         :customer_id => @user.braintree_customer_id,
         :payment_method_nonce => params[:payment_method_nonce]
       )
+      @user.payment_methods.create(:braintree_payment_method_token => r.payment_method.token)
       result = Braintree::Subscription.create(
         :payment_method_token => r.payment_method.token,
         :plan_id => Plan.find(params[:user][:plan_id]).slug,
@@ -36,8 +54,20 @@ class App::UsersController < App::AppController
       render 'edit'
     end
   end
+  def update_password
+    @user = User.find(current_user.id)
+    redirect_to root_path if current_user != @user
+    if @user.update_with_password(user_params)
+      # Sign in the user by passing validation in case their password changed
+      sign_in @user, :bypass => true
+      redirect_to root_path
+    else
+      render "password"
+    end
+  end
   def subscription
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
     if @user.plan
       @plan = @user.plan
     end
@@ -48,6 +78,7 @@ class App::UsersController < App::AppController
   end
   def payment
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
     if @user.braintree_subscription_id
       redirect_to root_path
     end
@@ -58,9 +89,31 @@ class App::UsersController < App::AppController
     # @plans = Plan.where(:billing_frequency => 1).all
     # the idea being... we sorta just want to show a selection of the plans... and select duration separately. And have like.. an interactive price update-a-majig!
   end
+  def update_payment
+    @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
+    if params[:payment_method_nonce]
+      r = Braintree::PaymentMethod.create(
+        :customer_id => @user.braintree_customer_id,
+        :payment_method_nonce => params[:payment_method_nonce]
+      )
+      Braintree::Subscription.update(
+        @user.braintree_subscription_id,
+        :payment_method_token => r.payment_method.token
+      )
+      Braintree::PaymentMethod.delete(@user.payment_methods.first.braintree_payment_method_token)
+      @user.payment_methods.first.update_attributes(:braintree_payment_method_token => r.payment_method.token)
+    end
+    if @user.update_attributes(user_params)
+      redirect_to root_path
+    else
+      render 'billing'
+    end
+  end
 
   def subscribe
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
     if (params[:user][:first_name] && params[:user][:last_name])
       result = Braintree::Customer.create(
         :first_name => params[:user][:first_name],
@@ -77,6 +130,7 @@ class App::UsersController < App::AppController
   end
   def update_subscription
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
     plan = Plan.find(params[:user][:plan_id])
     unless @user.plan == plan
       if !@user.braintree_subscription_id
@@ -114,11 +168,13 @@ class App::UsersController < App::AppController
 
   def pay_subscription
     @user = User.find(params[:user_id])
+    redirect_to root_path if current_user != @user
     if params[:payment_method_nonce]
       r = Braintree::PaymentMethod.create(
         :customer_id => @user.braintree_customer_id,
         :payment_method_nonce => params[:payment_method_nonce]
       )
+      @user.payment_methods.create(:braintree_payment_method_token => r.payment_method.token)
       result = Braintree::Subscription.create(
         :payment_method_token => r.payment_method.token,
         :plan_id => Plan.find(params[:user][:plan_id]).slug,
@@ -135,6 +191,6 @@ class App::UsersController < App::AppController
 
   private
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :bio, :plan_id, :payment_method_nonce)
+    params.require(:user).permit(:first_name, :last_name, :bio, :plan_id, :payment_method_nonce, :password, :password_confirmation, :current_password)
   end
 end

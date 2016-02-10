@@ -7,11 +7,15 @@ Rails.application.routes.draw do
 
     scope '/:user_id', as: 'user' do
       get '/profile', to: 'users#profile'
+      get '/password', to: 'users#password', as: 'pass'
+      patch '/password', to: 'users#update_password', as: 'update_pass'
       get '/subscription', to: 'users#subscription'
       patch '/subscribe', to: 'users#subscribe'
       patch '/update_subscription', to: 'users#update_subscription'
       get '/payment', to: 'users#payment'
       patch '/payment', to: 'users#pay_subscription'
+      get '/billing', to: 'users#billing'
+      patch '/billing', to: 'users#update_payment'
     end
 
     match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'

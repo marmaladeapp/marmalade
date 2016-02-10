@@ -1,76 +1,69 @@
-.grid-container.small-12.medium-10
-  - if @user.subscribed?
-    .grid-content.small-12
-      %ul.menu-bar{:style => 'margin-top:20px;'}
-        %li
-          %a{:href => user_profile_path(@user)}
-            %i.fa.fa-user
-            Edit profile
-        %li
-          %a{:href => user_subscription_path(@user)}
-            %i.fa.fa-usd
-            Edit subscription
-      %h2 Edit subscription
-    .grid-block.wrap
-      .grid-content.small-6.large-3.text-center
-        .card
-          .card-section
-            %h6
-              Collaborators
-            %h3
-              #{@user.collaborators_count.to_s}/#{@plan.collaborator_limit ? @plan.collaborator_limit.to_s : "&infin;".html_safe}
-      .grid-content.small-6.large-3.text-center
-        .card
-          .card-section
-            %h6
-              Organizations
-            %h3
-              #{@user.organizations_count.to_s}/#{@plan.organization_limit ? @plan.organization_limit.to_s : "&infin;".html_safe}
-      .grid-content.small-6.large-3.text-center
-        .card
-          .card-section
-            %h6
-              Wallets
-            %h3
-              #{@user.wallets_count.to_s}/#{@plan.wallet_limit ? @plan.wallet_limit.to_s : "&infin;".html_safe}
-      .grid-content.small-6.large-3.text-center
-        .card
-          .card-section
-            %h6
-              Projects
-            %h3
-              #{@user.projects_count.to_s}/#{@plan.project_limit ? @plan.project_limit.to_s : "&infin;".html_safe}
-    .grid-content.small-12
-      = form_for @user, :url => user_update_subscription_path do |f|
-        %section.block-list
-          %header Subscription
-          %ul
-            %li.with-dropdown
-              = f.collection_select :plan_id, @plans, :id, :blurb
+- if @user == current_user
+  .grid-container.small-12.medium-10
+    - if @user.subscribed?
+      .grid-content.small-12
+        = render 'edit_menu'
+        %h3 Edit subscription
+      .grid-block.wrap
+        .grid-content.small-6.large-3.text-center
+          .card
+            .card-section
+              %h6
+                Collaborators
+              %h3
+                #{@user.collaborators_count.to_s}/#{@plan.collaborator_limit ? @plan.collaborator_limit.to_s : "&infin;".html_safe}
+        .grid-content.small-6.large-3.text-center
+          .card
+            .card-section
+              %h6
+                Organizations
+              %h3
+                #{@user.organizations_count.to_s}/#{@plan.organization_limit ? @plan.organization_limit.to_s : "&infin;".html_safe}
+        .grid-content.small-6.large-3.text-center
+          .card
+            .card-section
+              %h6
+                Wallets
+              %h3
+                #{@user.wallets_count.to_s}/#{@plan.wallet_limit ? @plan.wallet_limit.to_s : "&infin;".html_safe}
+        .grid-content.small-6.large-3.text-center
+          .card
+            .card-section
+              %h6
+                Projects
+              %h3
+                #{@user.projects_count.to_s}/#{@plan.project_limit ? @plan.project_limit.to_s : "&infin;".html_safe}
+      .grid-content.small-12
+        = form_for @user, :url => user_update_subscription_path do |f|
+          %section.block-list
+            %header Subscription
+            %ul
+              %li.with-dropdown
+                = f.collection_select :plan_id, @plans, :id, :blurb
 
-        %button.button.expanded.bg-blueberry Update subscription
+          %button.button.expanded.bg-blueberry Update subscription
 
-        %p
-          %strong Note:
-          If you are upgrading or downgrading from one monthly plan to another, or from one yearly plan to another, the price will be prorated to account for unspent time. So, if you downgrade from our Plus plan to the Light plan we'll take the prorated value for whatever time you haven't yet used and add that towards your next invoice(s).
-          %br
-          %strong If you are updating from a monthly plan to a yearly plan, or downgrading from yearly to monthly, you will be billed immediately at the new plan's rate.
+          %p
+            %strong Note:
+            If you are upgrading or downgrading from one monthly plan to another, or from one yearly plan to another, the price will be prorated to account for unspent time. So, if you downgrade from our Plus plan to the Light plan we'll take the prorated value for whatever time you haven't yet used and add that towards your next invoice(s).
+            %br
+            %strong If you are updating from a monthly plan to a yearly plan, or downgrading from yearly to monthly, you will be billed immediately at the new plan's rate.
 
-  - else
-    .grid-content.small-12
-      %h2 Subscription
-      = form_for @user, :url => user_subscribe_path do |f|
-        %section.block-list
-          %header About you
-          %ul
-            %li
-              = f.text_field :first_name, {:placeholder => 'First name'}
-            %li
-              = f.text_field :last_name, {:placeholder => 'Last name'}
-        %section.block-list
-          %header Subscription
-          %ul
-            %li.with-dropdown
-              = f.collection_select :plan_id, @plans, :id, :blurb
+    - else
+      .grid-content.small-12
+        %h3 Subscription
+        = form_for @user, :url => user_subscribe_path do |f|
+          %section.block-list
+            %header About you
+            %ul
+              %li
+                = f.text_field :first_name, {:placeholder => 'First name'}
+              %li
+                = f.text_field :last_name, {:placeholder => 'Last name'}
+          %section.block-list
+            %header Subscription
+            %ul
+              %li.with-dropdown
+                = f.collection_select :plan_id, @plans, :id, :blurb
 
-        %button.button.expanded.bg-blueberry Subscribe
+          %button.button.expanded.bg-blueberry Subscribe
