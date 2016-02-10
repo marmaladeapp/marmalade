@@ -2,8 +2,8 @@
   .grid-block.small-12
     .grid-content.small-6
       %div.text-right{:style => 'margin-top:20px;margin-bottom:20px;'}
-        %a{:href => vanity_path(current_user)}
-          %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+        %a{:href => vanity_path(@user)}
+          %img.medium-12{:src => avatar_url(@user), :style => 'border-radius:50%;'}
     .grid-content.small-6
       %div{:style => 'margin-top:20px;margin-bottom:20px;'}
         %h3= @user.full_name
