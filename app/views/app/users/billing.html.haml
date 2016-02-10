@@ -4,7 +4,8 @@
     .grid-content
       = render 'edit_menu'
       %h3 Edit billing
-      = form_for @user, :url => user_payment_path do |f|
+      = form_for @user, :url => user_billing_path(@user) do |f|
+        = f.hidden_field :user, :value => @user
         %section.block-list
           %header Current payment method
           %ul
