@@ -134,7 +134,16 @@ class App::UsersController < App::AppController
     plan = Plan.find(params[:user][:plan_id])
     unless @user.plan == plan
       if !@user.braintree_subscription_id
-        # nothing to do; flow continues
+        if @user.payment_methods.any?
+          result = Braintree::Subscription.create(
+            :payment_method_token => @user.payment_methods.first.braintree_payment_method_token,
+            :plan_id => plan.slug,
+            :merchant_account_id => ENV["BRAINTREE_MERCHANT_ACCOUNT_ID"]
+          )
+          @user.braintree_subscription_id = result.subscription.id
+        else
+          # nothing to do; flow continues
+        end
       elsif @user.plan.billing_frequency == plan.billing_frequency
         Braintree::Subscription.update(
           @user.braintree_subscription_id,
