@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160210035632) do
+ActiveRecord::Schema.define(version: 20160211021650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,32 @@ ActiveRecord::Schema.define(version: 20160210035632) do
   add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+
+  create_table "ownership_ancestries", force: :cascade do |t|
+    t.integer  "ownership_id"
+    t.string   "ancestry"
+    t.integer  "ancestry_depth", default: 0
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "item_class"
+  end
+
+  add_index "ownership_ancestries", ["ancestry"], name: "index_ownership_ancestries_on_ancestry", using: :btree
+  add_index "ownership_ancestries", ["item_class"], name: "index_ownership_ancestries_on_item_class", using: :btree
+  add_index "ownership_ancestries", ["ownership_id"], name: "index_ownership_ancestries_on_ownership_id", using: :btree
+
+  create_table "ownerships", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.decimal  "equity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "ownerships", ["item_type", "item_id"], name: "index_ownerships_on_item_type_and_item_id", using: :btree
+  add_index "ownerships", ["owner_type", "owner_id"], name: "index_ownerships_on_owner_type_and_owner_id", using: :btree
 
   create_table "payment_methods", force: :cascade do |t|
     t.integer  "user_id"
@@ -168,6 +194,7 @@ ActiveRecord::Schema.define(version: 20160210035632) do
   add_index "vanity_urls", ["owner_type", "owner_id"], name: "index_vanity_urls_on_owner_type_and_owner_id", using: :btree
   add_index "vanity_urls", ["slug"], name: "index_vanity_urls_on_slug", unique: true, using: :btree
 
+  add_foreign_key "ownership_ancestries", "ownerships"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "users", "plans"
 end
