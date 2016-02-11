@@ -1,7 +1,7 @@
 %ul.marmalade-menu-bar
   %li{'ui-sref-active' => "is-active"}
     - if @context
-      %a{'ui-sref' => "item1", :href => vanity_path(@context)}
+      %a{'ui-sref' => "item1", :href => contexts_path}
         %strong= @context.name
     - else
       %a{'ui-sref' => "item1", :href => contexts_path}
