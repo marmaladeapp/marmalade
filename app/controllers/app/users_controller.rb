@@ -1,21 +1,28 @@
 class App::UsersController < App::AppController
   def show
     @user = User.find(params[:id])
+    if @user == current_user
+      @context = @user
+    end
   end
   def edit
     @user = User.find(params[:id])
+    @context = @user
     redirect_to root_path if current_user != @user
   end
   def profile
     @user = User.find(params[:user_id])
+    @context = @user
     redirect_to root_path if current_user != @user
   end
   def password
     @user = User.find(params[:user_id])
+    @context = @user
     redirect_to root_path if current_user != @user
   end
   def billing
     @user = User.find(params[:user_id])
+    @context = @user
     redirect_to root_path if current_user != @user
     if @user.payment_methods.any?
       @card = Braintree::PaymentMethod.find(@user.payment_methods.first.braintree_payment_method_token)
@@ -67,6 +74,7 @@ class App::UsersController < App::AppController
   end
   def subscription
     @user = User.find(params[:user_id])
+    @context = @user
     redirect_to root_path if current_user != @user
     if @user.plan
       @plan = @user.plan

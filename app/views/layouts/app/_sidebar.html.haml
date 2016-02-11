@@ -1,10 +1,59 @@
-.grid-content.collapse.medium-12.text-center{:style => ''}
+.grid-block.vertical
   - if current_user.subscribed?
-    %div{:style => 'margin-top:20px;margin-bottom:20px;'}
-      %a{:href => vanity_path(current_user)}
-        %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
-    %ul.vertical.menu-bar{:style => 'background:#e9e9e9 !important;'}
-      %li
-        %a{:href => vanity_path(current_user)}= current_user.full_name
+    .grid-block.shrink
+      .grid-content.collapse.medium-12.text-center{:style => ''}
+        %div{:style => ''}
+          %ul.menu-bar.vertical.icon-top{:style => 'background:#f9f9f9 !important;'}
+            %li{}
+              %a{:href => vanity_path(current_user)}
+                %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+                %strong= current_user.full_name
+    .grid-block
+      .grid-content.collapse.medium-12.text-center{:style => ''}
+        %ul.menu-bar{:style => 'background:#f9f9f9 !important;'}
+          %li{}
+            %a{:href => vanity_path(current_user)}
+              %i.fa.fa-user
+          %li{}
+            - if true #current_user.household
+              %a{:href => contexts_path}
+                %i.fa.fa-home
+            - else
+              %a{:href => contexts_path}
+                %i.fa.fa-home
+        %ul.menu-bar.vertical{:style => 'background:#f9f9f9 !important;'}
+          %li.title Businesses
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 1
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 2
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 3
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 4
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 5
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 6
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 7
+          %li{}
+            %a{:href => contexts_path}
+              Company Name 8
+    .grid-block.shrink
+      .grid-content.collapse
+        %ul.menu-bar.icon-top{:style => 'background:#f9f9f9 !important;'}
+          %li{}
+            %a{:href => contexts_path}
+              %i.fa.fa-fw.fa-briefcase
+              New business
   - else
-    Please choose a plan and complete your subscription.
+    .grid-content.collapse.medium-12.text-center{:style => ''}
+      Please choose a plan and complete your subscription.

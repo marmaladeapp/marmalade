@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
   def full_name
     first_name + " " + last_name
   end
+  def name
+    full_name
+  end
 
   def should_generate_new_friendly_id?
     username_changed?

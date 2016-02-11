@@ -1,51 +1,50 @@
-.grid-content.small-12.collapse
-  %ul.menu-bar.vertical
-    %li.title
-      Your Profile
-    %li{}
-      %a{:href => user_path(current_user)}
-        = current_user.full_name
-    %li.title Household
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 4
-    %li.title Businesses
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 7
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 8
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 9
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 10
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 11
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 12
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 13
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 14
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 15
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 16
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 17
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 18
-    %li{}
-      %a{:href => contexts_path}
-        Company Name 19
+.grid-block.vertical
+  .grid-block
+    .grid-content.small-12.collapse
+      %ul.menu-bar.vertical
+        %li.title
+          Your Profile
+        %li{}
+          %a{:href => user_path(current_user)}
+            = current_user.full_name
+        %li.title Household
+        %li{}
+          / this
+          %a{:href => contexts_path}
+            Household Name
+        %li.title Businesses
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 1
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 2
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 3
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 4
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 5
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 6
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 7
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 8
+  .grid-block.shrink
+    .grid-content.collapse
+      %ul.menu-bar.icon-top
+        %li{}
+          %a{:href => contexts_path}
+            %i.fa.fa-fw.fa-home
+            Add household
+        %li{}
+          %a{:href => contexts_path}
+            %i.fa.fa-fw.fa-briefcase
+            New business

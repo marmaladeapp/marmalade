@@ -109,3 +109,223 @@ a.bg-ice-cream:hover{
   //background: linear-gradient($orange-juice 0%, $marmalade 50%);
   background: linear-gradient($marmalade 60%, $orange-juice 100%);
 }
+
+
+
+
+
+
+
+
+// From colors.css :
+/* COLOR VARIABLES */
+
+$aqua:  #7FDBFF;
+$blue:  #0074D9;
+$navy:  #001F3F;
+$teal:  #39CCCC;
+$green: #2ECC40;
+$olive: #3D9970;
+$lime:  #01FF70;
+$yellow:  #FFDC00;
+$orange:  #FF851B;
+$red:     #FF4136;
+$maroon:  #85144B;
+$fuchsia: #F012BE;
+$cerise:  #F400A1;
+$purple:  #B10DC9;
+$white:  #fff;
+$silver: #ddd;
+//$gray:   #aaa;
+$gray:   #555;
+$black:  #111;
+
+$facebook: #3b5998;
+$twitter:  #00aced;
+$youtube:  #bb0000;
+$linkedin: #007bb6;
+$github:   #333333; // Add as 'charcoal' above too?
+
+//$javascript: #F0DB4F; // Yellow
+$javascript: #FF851B; // Orange : Yellow is more standard but unreadable - resolve.
+$rubyonrails: #981a21; // Maroon
+$ruby: #CC342D; // Red
+$php: #4F5B93; // Blue / Temporary - see image in Wiki for nicer color, maybe.
+
+$yellowmountain: #efc918;
+$panther: darken($teal, 15%);
+
+/* SKINS */
+
+// Backgrounds
+.bg-navy {    background-color: $navy !important; border-color: darken($navy, 5%) !important; }
+.bg-blue {    background-color: $blue !important; border-color: darken($blue, 5%) !important; }
+.bg-aqua {    background-color: $aqua !important; border-color: darken($aqua, 5%) !important; }
+.bg-teal {    background-color: $teal !important; border-color: darken($teal, 5%) !important; }
+.bg-olive {   background-color: $olive !important; border-color: darken($olive, 5%) !important; }
+.bg-green {   background-color: $green !important; border-color: darken($green, 5%) !important; }
+.bg-lime {    background-color: $lime !important; border-color: darken($lime, 5%) !important; }
+.bg-yellow {  background-color: $yellow !important; border-color: darken($yellow, 5%) !important; }
+.bg-orange {  background-color: $orange !important; border-color: darken($orange, 5%) !important; }
+.bg-red {     background-color: $red !important; border-color: darken($red, 5%) !important; }
+.bg-fuchsia { background-color: $fuchsia !important; border-color: darken($fuchsia, 5%) !important; }
+.bg-cerise { background-color: $cerise !important; border-color: darken($cerise, 5%) !important; }
+.bg-purple {  background-color: $purple !important; border-color: darken($purple, 5%) !important; }
+.bg-maroon {  background-color: $maroon !important; border-color: darken($maroon, 5%) !important; }
+.bg-white {   background-color: $white !important; border-color: darken($white, 5%) !important; }
+.bg-gray {    background-color: $gray !important; border-color: darken($gray, 5%) !important; }
+.bg-silver {  background-color: $silver !important; border-color: darken($silver, 5%) !important; }
+.bg-black {   background-color: $black !important; border-color: $black !important; }
+
+.bg-facebook {   background-color: $facebook !important; border-color: darken($facebook, 5%) !important; }
+.bg-twitter {    background-color: $twitter !important; border-color: darken($twitter, 5%) !important; }
+.bg-youtube {    background-color: $youtube !important; border-color: darken($youtube, 5%) !important; }
+.bg-linkedin {   background-color: $linkedin !important; border-color: darken($linkedin, 5%) !important; }
+.bg-github {     background-color: $github !important; border-color: darken($github, 5%) !important; }
+
+.bg-javascript {   background-color: $javascript !important; border-color: darken($javascript, 5%) !important; }
+.bg-rubyonrails {    background-color: $rubyonrails !important; border-color: darken($rubyonrails, 5%) !important; }
+.bg-rubylang {    background-color: $ruby !important; border-color: darken($ruby, 5%) !important; }
+.bg-php {   background-color: $php !important; border-color: darken($php, 5%) !important; }
+
+.bg-yellowmountain {   background-color: $yellowmountain !important; border-color: darken($yellowmountain, 5%) !important; }
+.bg-panther { background-color: $panther !important; border-color: darken($panther, 5%) !important; }
+.bg-panther-darker { background-color: darken($teal, 15%) !important; border-color: darken($teal, 20%) !important; }
+
+// Colors
+.navy {       color: $navy !important; }
+.blue {       color: $blue !important; }
+.aqua {       color: $aqua !important; }
+.teal {       color: $teal !important; }
+.olive {      color: $olive !important; }
+.green {      color: $green !important; }
+.lime {       color: $lime !important; }
+.yellow {     color: $yellow !important; }
+.orange {     color: $orange !important; }
+.red {        color: $red !important; }
+.fuchsia {    color: $fuchsia !important; }
+.cerise {    color: $cerise !important; }
+.purple {     color: $purple !important; }
+.maroon {     color: $maroon !important; }
+.white {      color: $white !important; }
+.silver {     color: $silver !important; }
+.gray {       color: $gray !important; }
+.black {      color: $black !important; }
+
+.facebook {   color: $facebook !important; }
+.twitter {    color: $twitter !important; }
+.youtube {    color: $youtube !important; }
+.linkedin {   color: $linkedin !important; }
+.github {     color: $github !important; }
+
+.javascript {   color: $javascript !important; }
+.rubyonrails {    color: $rubyonrails !important; }
+.rubylang {    color: $ruby !important; }
+.php {   color: $php !important; }
+
+.yellowmountain {   color: darken($yellowmountain, 7.5%) !important; }
+.yellowmountain a{   color: darken($yellowmountain, 5%) !important; &:hover{ color: darken($yellowmountain, 10%) !important; text-decoration:none; } }
+.silver a{   color: $silver !important; &:hover{ color: darken($silver, 10%) !important; text-decoration:none; } }
+.panther {   color: $panther !important; }
+.panther a{   color: $panther !important; &:hover{ color: lighten($panther, 5%) !important; text-decoration:none; } }
+
+// Border colors
+.border--navy {    border-color: $navy !important; }
+.border--blue {    border-color: $blue !important; }
+.border--aqua {    border-color: $aqua !important; }
+.border--teal {    border-color: $teal !important; }
+.border--olive {   border-color: $olive !important; }
+.border--green {   border-color: $green !important; }
+.border--lime {    border-color: $lime !important; }
+.border--yellow {  border-color: $yellow !important; }
+.border--orange {  border-color: $orange !important; }
+.border--red {     border-color: $red !important; }
+.border--fuchsia { border-color: $fuchsia !important; }
+.border--cerise { border-color: $cerise !important; }
+.border--purple {  border-color: $purple !important; }
+.border--maroon {  border-color: $maroon !important; }
+.border--white {   border-color: $white !important; }
+.border--gray {    border-color: $gray !important; }
+.border--silver {  border-color: $silver !important; }
+.border--black {   border-color: $black !important; }
+
+.border--facebook {   border-color: $facebook !important; }
+.border--twitter {    border-color: $twitter !important; }
+.border--youtube {    border-color: $youtube !important; }
+.border--linkedin {   border-color: $linkedin !important; }
+.border--github {     border-color: $github !important; }
+
+.border--javascript {   border-color: $javascript !important; }
+.border--rubyonrails {    border-color: $rubyonrails !important; }
+.border--rubylang {    border-color: $ruby !important; }
+.border--php {   border-color: $php !important; }
+
+.border--yellowmountain {   border-color: $yellowmountain !important; }
+
+/* SVG */
+
+// Fills for SVG
+.fill-navy {    fill: $navy !important; }
+.fill-blue {    fill: $blue !important; }
+.fill-aqua {    fill: $aqua !important; }
+.fill-teal {    fill: $teal !important; }
+.fill-olive {   fill: $olive !important; }
+.fill-green {   fill: $green !important; }
+.fill-lime {    fill: $lime !important; }
+.fill-yellow {  fill: $yellow !important; }
+.fill-orange {  fill: $orange !important; }
+.fill-red {     fill: $red !important; }
+.fill-fuchsia { fill: $fuchsia !important; }
+.fill-cerise { fill: $cerise !important; }
+.fill-purple {  fill: $purple !important; }
+.fill-maroon {  fill: $maroon !important; }
+.fill-white {   fill: $white !important; }
+.fill-gray {    fill: $gray !important; }
+.fill-silver {  fill: $silver !important; }
+.fill-black {   fill: $black !important; }
+
+.fill-facebook {   fill: $facebook !important; }
+.fill-twitter {    fill: $twitter !important; }
+.fill-youtube {    fill: $youtube !important; }
+.fill-linkedin {   fill: $linkedin !important; }
+.fill-github {     fill: $github !important; }
+
+.fill-javascript {   fill: $javascript !important; }
+.fill-rubyonrails {    fill: $rubyonrails !important; }
+.fill-rubylang {    fill: $ruby !important; }
+.fill-php {   fill: $php !important; }
+
+.fill-yellowmountain {   fill: $yellowmountain !important; }
+
+// Strokes for SVG
+.stroke-navy {    stroke: $navy !important; }
+.stroke-blue {    stroke: $blue !important; }
+.stroke-aqua {    stroke: $aqua !important; }
+.stroke-teal {    stroke: $teal !important; }
+.stroke-olive {   stroke: $olive !important; }
+.stroke-green {   stroke: $green !important; }
+.stroke-lime {    stroke: $lime !important; }
+.stroke-yellow {  stroke: $yellow !important; }
+.stroke-orange {  stroke: $orange !important; }
+.stroke-red {     stroke: $red !important; }
+.stroke-fuchsia { stroke: $fuchsia !important; }
+.stroke-cerise { stroke: $cerise !important; }
+.stroke-purple {  stroke: $purple !important; }
+.stroke-maroon {  stroke: $maroon !important; }
+.stroke-white {   stroke: $white !important; }
+.stroke-gray {    stroke: $gray !important; }
+.stroke-silver {  stroke: $silver !important; }
+.stroke-black {   stroke: $black !important; }
+
+.stroke-facebook {   stroke: $facebook !important; }
+.stroke-twitter {    stroke: $twitter !important; }
+.stroke-youtube {    stroke: $youtube !important; }
+.stroke-linkedin {   stroke: $linkedin !important; }
+.stroke-github {     stroke: $github !important; }
+
+.stroke-javascript {   stroke: $javascript !important; }
+.stroke-rubyonrails {    stroke: $rubyonrails !important; }
+.stroke-rubylang {    stroke: $ruby !important; }
+.stroke-php {   stroke: $php !important; }
+
+.stroke-yellowmountain {   stroke: $yellowmountain !important; }
