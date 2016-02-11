@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211021650) do
+ActiveRecord::Schema.define(version: 20160211055702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "collaborators", force: :cascade do |t|
+    t.integer  "subscriber_id"
+    t.integer  "collaborator_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "collaborators", ["collaborator_id"], name: "index_collaborators_on_collaborator_id", using: :btree
+  add_index "collaborators", ["subscriber_id"], name: "index_collaborators_on_subscriber_id", using: :btree
 
   create_table "contact_details_addresses", force: :cascade do |t|
     t.string   "line_1"

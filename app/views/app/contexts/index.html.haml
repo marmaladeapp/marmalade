@@ -1,17 +1,21 @@
 .grid-block.vertical
   .grid-block
     .grid-content.small-12.collapse
+      %ul.menu-bar
+        %li{}
+          %a{:href => vanity_path(current_user)}
+            %i.fa.fa-user
+            Thom Bruce
+        %li{}
+          - if true #current_user.household
+            %a{:href => contexts_path}
+              %i.fa.fa-home
+              = truncate("A Household Name Would Go Here Don't You Think", length: 15)
+          - else
+            %a{:href => contexts_path}
+              %i.fa.fa-home
+              Your Household
       %ul.menu-bar.vertical
-        %li.title
-          Your Profile
-        %li{}
-          %a{:href => user_path(current_user)}
-            = current_user.full_name
-        %li.title Household
-        %li{}
-          / this
-          %a{:href => contexts_path}
-            Household Name
         %li.title Businesses
         %li{}
           %a{:href => contexts_path}
@@ -37,13 +41,21 @@
         %li{}
           %a{:href => contexts_path}
             Company Name 8
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 9
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 10
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 11
+        %li{}
+          %a{:href => contexts_path}
+            Company Name 12
   .grid-block.shrink
     .grid-content.collapse
       %ul.menu-bar.icon-top
-        %li{}
-          %a{:href => contexts_path}
-            %i.fa.fa-fw.fa-home
-            Add household
         %li{}
           %a{:href => contexts_path}
             %i.fa.fa-fw.fa-briefcase
