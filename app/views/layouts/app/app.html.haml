@@ -8,14 +8,16 @@
       .grid-block.shrink.wrap
         .grid-content.collapse.small-12.medium-3.large-2
           %ul.marmalade-menu-bar
-            %li.hide-for-medium{}
-              %a{:href => '#'}
-                %i.fa.fa-envelope
+            - if false
+              %li.hide-for-medium{}
+                %a{:href => '#'}
+                  %i.fa.fa-envelope
             %li
               %a.pacifico{:href => root_path} Marmalade
-            %li.hide-for-medium{}
-              %a{:href => '#'}
-                %i.fa.fa-globe
+            - if false
+              %li.hide-for-medium{}
+                %a{:href => '#'}
+                  %i.fa.fa-globe
 
         - if current_user.subscribed?
           .grid-content.collapse.small-12.hide-for-medium
