@@ -14,5 +14,5 @@
               %img{:src => avatar_url(user,60), :style => 'border-radius:50%;'}
         .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
           .align-center.text-center{:style => 'width:40px;'}
-            %a.burnt-toast{:href => '#new_member_path_or_something'}
+            %a.burnt-toast{:href => new_user_home_member_path(@user)}
               %i.fa.fa-plus-circle.fa-lg
