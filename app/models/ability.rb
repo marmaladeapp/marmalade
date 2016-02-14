@@ -10,9 +10,8 @@ class Ability
       if user.subscribed?
         can :manage, Business, :subscriber => user
         can :manage, Household, :subscriber => user
-        cannot :create, Business if user.plan.business_limit.present? && user.subscriber_businesses.size >= (user.plan.business_limit - 1)
-        cannot :create, Household if user.plan.household_limit.present? && user.subscriber_households.size >= (user.plan.household_limit - 1)
-        cannot :create, Household if user.subscriber_households.size > 0
+        cannot :create, Business if user.plan.business_limit.present? && user.businesses.size >= user.plan.business_limit
+        cannot :create, Household if user.plan.household_limit.present? && user.households.size >= user.plan.household_limit
       end
 
     end
