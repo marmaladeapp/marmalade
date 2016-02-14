@@ -32,11 +32,6 @@
             %ul
               %li.with-dropdown
                 = f.time_zone_select :time_zone, nil, {default: @user.time_zone}
-        %section.block-list
-          %header Currency
-          %ul
-            %li.with-dropdown
-              = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @user.currency}
 
         %button.button.expanded.bg-blueberry Save household
         %a.button.small.hollow.strawberry-jam{:href => user_home_destroy_path(@user), :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}

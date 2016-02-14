@@ -14,8 +14,8 @@
         %section.block-list
           %header Business type
           %ul
-            %li.with-dropdown
-              = f.select :business_type, [["Sole Trader", "SoleTrader"], ["Partnership", "Partnership"], ["Limited Partnership", "LimitedPartnership"], ["Limited Liability Partnership", "LimitedLiabilityPartnership"], ["Limited Company", "LimitedCompany"], ["Unincorporated Association", "UnincorporatedAssociation"]], {prompt: true}
+            %li
+              .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @business.business_type.underscore.split('_').collect{|c| c.capitalize}.join(' ')
 
         %section.block-list
           %header About your business
@@ -38,11 +38,6 @@
             %ul
               %li.with-dropdown
                 = f.time_zone_select :time_zone, nil
-        %section.block-list
-          %header Currency
-          %ul
-            %li.with-dropdown
-              = f.collection_select :currency, @currencies_for_select, :iso_code, :description
 
         %button.button.expanded.bg-blueberry Save business
         %a.button.small.hollow.strawberry-jam{:href => business_destroy_path(@business), :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
