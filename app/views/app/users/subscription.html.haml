@@ -11,14 +11,14 @@
               %h6
                 Collaborators
               %h3
-                #{@user.collaborators_count.to_s}/#{@plan.collaborator_limit ? @plan.collaborator_limit.to_s : "&infin;".html_safe}
+                #{@user.collaborators.size.to_s}/#{@plan.collaborator_limit ? @plan.collaborator_limit.to_s : "&infin;".html_safe}
         .grid-content.small-6.large-3.text-center
           .card
             .card-section
               %h6
                 Organizations
               %h3
-                #{@user.organizations_count.to_s}/#{@plan.organization_limit ? @plan.organization_limit.to_s : "&infin;".html_safe}
+                #{(@user.businesses.size + @user.households.size).to_s}/#{@plan.business_limit ? (@plan.business_limit + @plan.household_limit).to_s : "&infin;".html_safe}
         .grid-content.small-6.large-3.text-center
           .card
             .card-section

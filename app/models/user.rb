@@ -40,6 +40,12 @@ class User < ActiveRecord::Base
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
 
+  has_many :collaborators, :dependent => :destroy
+
+  after_create do |user|
+    user.collaborators.create(:collaborator => user)
+  end
+
   before_destroy :unsubscribe
 
   def full_name

@@ -10,7 +10,7 @@ class Business < ActiveRecord::Base
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
   after_create do |business|
-    business.memberships.create(:member => business.subscriber)
+    business.memberships.create(:member => business.user)
   end
 
   accepts_nested_attributes_for :owners

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214104549) do
+ActiveRecord::Schema.define(version: 20160214111652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,7 +213,7 @@ ActiveRecord::Schema.define(version: 20160214104549) do
     t.integer  "plan_id"
     t.string   "braintree_customer_id"
     t.string   "braintree_subscription_id"
-    t.integer  "collaborators_count",       default: 1
+    t.integer  "collaborators_count",       default: 0
     t.integer  "wallets_count",             default: 0
     t.integer  "projects_count",            default: 0
     t.integer  "households_count",          default: 0

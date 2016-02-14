@@ -11,7 +11,7 @@ class Household < ActiveRecord::Base
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
   after_create do |household|
-    household.memberships.create(:member => household.subscriber)
+    household.memberships.create(:member => household.user)
   end
 
 end
