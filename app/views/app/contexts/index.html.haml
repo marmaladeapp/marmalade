@@ -7,56 +7,25 @@
             %i.fa.fa-user
             Thom Bruce
         %li{}
-          - if true #current_user.household
-            %a{:href => contexts_path}
+          - if current_user.home
+            %a{:href => user_home_path(current_user)}
               %i.fa.fa-home
-              = truncate("A Household Name Would Go Here Don't You Think", length: 15)
+              = truncate(current_user.home.name, length: 15)
           - else
-            %a{:href => contexts_path}
+            %a{:href => user_home_new_path(current_user)}
               %i.fa.fa-home
               Your Household
-      %ul.menu-bar.vertical
-        %li.title Businesses
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 1
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 2
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 3
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 4
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 5
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 6
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 7
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 8
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 9
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 10
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 11
-        %li{}
-          %a{:href => contexts_path}
-            Company Name 12
+      - if current_user.businesses.any?
+        %ul.menu-bar.vertical{:style => ''}
+          %li.title Businesses
+          - current_user.businesses.each do |business|
+            %li{}
+              %a{:href => vanity_path(business)}
+                = business.name
   .grid-block.shrink
     .grid-content.collapse
       %ul.menu-bar.icon-top
         %li{}
-          %a{:href => contexts_path}
+          %a{:href => new_business_path}
             %i.fa.fa-fw.fa-briefcase
             New business

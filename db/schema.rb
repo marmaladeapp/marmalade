@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211055702) do
+ActiveRecord::Schema.define(version: 20160214021723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "businesses", force: :cascade do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.text     "description"
+    t.string   "business_type", default: "LimitedCompany", null: false
+    t.string   "country",       default: "US",             null: false
+    t.string   "time_zone",     default: "UTC",            null: false
+    t.string   "currency",      default: "USD",            null: false
+    t.integer  "subscriber_id",                            null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "businesses", ["subscriber_id"], name: "index_businesses_on_subscriber_id", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
     t.integer  "subscriber_id"
@@ -74,6 +89,31 @@ ActiveRecord::Schema.define(version: 20160211055702) do
   add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+
+  create_table "households", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "country",       default: "US",  null: false
+    t.string   "time_zone",     default: "UTC", null: false
+    t.string   "currency",      default: "USD", null: false
+    t.integer  "subscriber_id",                 null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "households", ["subscriber_id"], name: "index_households_on_subscriber_id", using: :btree
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer  "collective_id"
+    t.string   "collective_type"
+    t.integer  "member_id"
+    t.string   "member_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "memberships", ["collective_type", "collective_id"], name: "index_memberships_on_collective_type_and_collective_id", using: :btree
+  add_index "memberships", ["member_type", "member_id"], name: "index_memberships_on_member_type_and_member_id", using: :btree
 
   create_table "ownership_ancestries", force: :cascade do |t|
     t.integer  "ownership_id"

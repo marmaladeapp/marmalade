@@ -1,0 +1,41 @@
+- if @user == current_user
+
+  - supported_currencies = $redis.smembers("supported_currencies")
+  - @currencies_for_select = []
+  - Money::Currency.each do |currency|
+    - if supported_currencies.include? currency.iso_code
+      - @currencies_for_select << currency
+
+  .grid-container.small-12.medium-10
+
+    .grid-content.small-12
+      %h3 Your household
+      = form_for @household, :url => user_home_create_path(@user) do |f|
+        %section.block-list
+          %header About your household
+          %ul
+            %li
+              = f.text_field :name, {:placeholder => 'Name'}
+            %li
+              = f.text_area :description, {:placeholder => 'Description'}
+
+        /= f.hidden_field :country, :value => @user.country
+        = f.hidden_field :time_zone, :value => @user.time_zone
+        %section.block-list
+          %header Country
+          %ul
+            %li.with-dropdown
+              = f.country_select :country, {selected: @user.country}
+        - if false
+          %section.block-list
+            %header Time zone
+            %ul
+              %li.with-dropdown
+                = f.time_zone_select :time_zone, nil, {default: @user.time_zone}
+        %section.block-list
+          %header Currency
+          %ul
+            %li.with-dropdown
+              = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @user.currency}
+
+        %button.button.expanded.bg-blueberry Save

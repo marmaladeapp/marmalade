@@ -13,9 +13,24 @@
                   %i.fa.fa-globe
           %ul.menu-bar.vertical.icon-top{:style => 'background:#f9f9f9 !important;'}
             %li{}
-              %a{:href => vanity_path(current_user)}
-                %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
-                %strong= current_user.full_name
+              - if @context
+                - case @context.class.name
+                - when 'Household'
+                  %a{:href => user_home_path(@user)}
+                    %i.fa.fa-fw.fa-4x.fa-home
+                    %strong= @context.name
+                - when 'Business'
+                  %a{:href => vanity_path(@context)}
+                    %i.fa.fa-fw.fa-4x.fa-briefcase
+                    %strong= @context.name
+                - else
+                  %a{:href => vanity_path(current_user)}
+                    %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+                    %strong= current_user.full_name
+              - else
+                %a{:href => vanity_path(current_user)}
+                  %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
+                  %strong= current_user.full_name
     .grid-block
       .grid-content.collapse.medium-12.text-center{:style => ''}
         %ul.menu-bar{:style => 'background:#f9f9f9 !important;'}
@@ -23,43 +38,24 @@
             %a{:href => vanity_path(current_user)}
               %i.fa.fa-user
           %li{}
-            - if true #current_user.household
-              %a{:href => contexts_path}
+            - if current_user.home
+              %a{:href => user_home_path(current_user)}
                 %i.fa.fa-home
             - else
-              %a{:href => contexts_path}
+              %a{:href => user_home_new_path(current_user)}
                 %i.fa.fa-home
-        %ul.menu-bar.vertical{:style => 'background:#f9f9f9 !important;'}
-          %li.title Businesses
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 1
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 2
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 3
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 4
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 5
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 6
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 7
-          %li{}
-            %a{:href => contexts_path}
-              Company Name 8
+        - if current_user.businesses.any?
+          %ul.menu-bar.vertical{:style => 'background:#f9f9f9 !important;'}
+            %li.title Businesses
+            - current_user.businesses.each do |business|
+              %li{}
+                %a{:href => vanity_path(business)}
+                  = business.name
     .grid-block.shrink
       .grid-content.collapse
         %ul.menu-bar.icon-top{:style => 'background:#f9f9f9 !important;'}
           %li{}
-            %a{:href => contexts_path}
+            %a{:href => new_business_path}
               %i.fa.fa-fw.fa-briefcase
               New business
   - else

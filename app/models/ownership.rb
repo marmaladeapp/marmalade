@@ -10,6 +10,13 @@ class Ownership < ActiveRecord::Base
   after_create :create_ancestry
   after_destroy :destroy_orphans
 
+  def global_owner
+    self.owner.to_global_id if self.owner.present?
+  end
+  def global_owner=(owner)
+    self.owner = GlobalID::Locator.locate owner
+  end
+
   private
 
   def create_ancestry
@@ -20,7 +27,7 @@ class Ownership < ActiveRecord::Base
         end
       end
     else
-      @ancestry = ObjectAncestry.create(:ownership => self, :item_class => owner.class.name)
+      @ancestry = OwnershipAncestry.create(:ownership => self, :item_class => owner.class.name)
     end
     if item.ownerships.any?
       item.ownerships.each do |ownership|

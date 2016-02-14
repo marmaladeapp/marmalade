@@ -10,7 +10,13 @@ Rails.application.routes.draw do
   scope module: 'app' do
     resources :users, only: [:show,:edit,:update]
 
+    resources :businesses, only: [:show,:new,:create]
+
     get '/contexts', to: 'contexts#index'
+
+    ## The Tricky Part ##
+    match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
+
     scope '/:user_id', as: 'user' do
       get '/profile', to: 'users#profile'
       get '/password', to: 'users#password', as: 'pass'
@@ -22,9 +28,31 @@ Rails.application.routes.draw do
       patch '/payment', to: 'users#pay_subscription'
       get '/billing', to: 'users#billing'
       patch '/billing', to: 'users#update_payment'
+
+      scope '/home', as: 'home' do
+        root 'households#show', as: ''
+        get '/new', to: 'households#new', as: 'new'
+        post '/new', to: 'households#create', as: 'create'
+        get '/edit', to: 'households#edit', as: 'edit'
+        patch '/edit', to: 'households#update', as: 'update'
+        delete '/edit', to: 'households#destroy', as: 'destroy'
+      end
+
     end
 
-    match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
+    scope '/:business_id', as: 'business' do
+      get '/edit', to: 'businesses#edit', as: 'edit'
+      patch '/edit', to: 'businesses#update', as: 'update'
+      delete '/edit', to: 'businesses#destroy', as: 'destroy'
+    end
+
+    scope '/:resource_id', as: 'resource' do
+      # resources :contacts
+      # resources :projects
+      # resources :wallets, path: 'finances'
+    end
+    #/ the tricky part ##
+
     authenticated :user do
       root :to => "dashboard#index", as: :authenticated
     end

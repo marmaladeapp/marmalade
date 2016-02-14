@@ -1,3 +1,8 @@
-.grid-content.medium-12{:style => 'padding-top:20px;'}
-  %h4 About the app
-  %p A little info about each module.
+.grid-block.vertical
+  .grid-block.shrink.align-center
+    .grid-content.medium-9{:style => 'margin:20px 0;'}
+      = analog(current_user.time_zone, :size => '100%')
+  .grid-block
+    .grid-content.medium-12
+      %h4 About the app
+      %p A little info about each module.

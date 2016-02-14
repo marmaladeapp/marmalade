@@ -8,6 +8,8 @@
 //= require_tree ../../../vendor/assets/javascripts/services/.
 //= require_tree ../../../vendor/assets/javascripts/components/.
 //
+//= require timepiece
+//
 // require turbolinks
 
 //Turbolinks.enableProgressBar();

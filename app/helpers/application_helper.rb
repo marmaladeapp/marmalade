@@ -1,6 +1,6 @@
 module ApplicationHelper
-  def avatar_url(user)
+  def avatar_url(user,size=150)
     gravatar_id = Digest::MD5.hexdigest(user.email.downcase)
-    "http://gravatar.com/avatar/#{gravatar_id}.png?s=150&d=mm"
+    "http://gravatar.com/avatar/#{gravatar_id}.png?s=#{size}&d=mm"
   end
 end
