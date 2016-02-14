@@ -1,4 +1,5 @@
 class App::HouseholdsController < App::AppController
+  authorize_resource
 
   def show
     @user = User.find(params[:user_id])
@@ -18,7 +19,7 @@ class App::HouseholdsController < App::AppController
     @user = User.find(params[:user_id])
     @household = Household.new(household_params)
     @household.currency = @user.currency
-    @household.subscriber_id = @user.id
+    @household.user_id = @user.id
     if @household.save
       @household.ownerships.create(:owner => @household, :item => @user, :equity => BigDecimal.new(100))
       @household.ownerships.each do |ownership|
@@ -52,6 +53,6 @@ class App::HouseholdsController < App::AppController
   private
 
   def household_params
-    params.require(:household).permit(:name,:description,:subscriber_id,:currency,:country,:time_zone)
+    params.require(:household).permit(:name,:description,:currency,:country,:time_zone)
   end
 end

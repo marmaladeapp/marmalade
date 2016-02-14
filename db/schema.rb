@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214021723) do
+ActiveRecord::Schema.define(version: 20160214104549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,22 +24,22 @@ ActiveRecord::Schema.define(version: 20160214021723) do
     t.string   "country",       default: "US",             null: false
     t.string   "time_zone",     default: "UTC",            null: false
     t.string   "currency",      default: "USD",            null: false
-    t.integer  "subscriber_id",                            null: false
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
+    t.integer  "user_id"
   end
 
-  add_index "businesses", ["subscriber_id"], name: "index_businesses_on_subscriber_id", using: :btree
+  add_index "businesses", ["user_id"], name: "index_businesses_on_user_id", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
-    t.integer  "subscriber_id"
     t.integer  "collaborator_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "user_id"
   end
 
   add_index "collaborators", ["collaborator_id"], name: "index_collaborators_on_collaborator_id", using: :btree
-  add_index "collaborators", ["subscriber_id"], name: "index_collaborators_on_subscriber_id", using: :btree
+  add_index "collaborators", ["user_id"], name: "index_collaborators_on_user_id", using: :btree
 
   create_table "contact_details_addresses", force: :cascade do |t|
     t.string   "line_1"
@@ -93,15 +93,15 @@ ActiveRecord::Schema.define(version: 20160214021723) do
   create_table "households", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.string   "country",       default: "US",  null: false
-    t.string   "time_zone",     default: "UTC", null: false
-    t.string   "currency",      default: "USD", null: false
-    t.integer  "subscriber_id",                 null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.string   "country",     default: "US",  null: false
+    t.string   "time_zone",   default: "UTC", null: false
+    t.string   "currency",    default: "USD", null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "user_id"
   end
 
-  add_index "households", ["subscriber_id"], name: "index_households_on_subscriber_id", using: :btree
+  add_index "households", ["user_id"], name: "index_households_on_user_id", using: :btree
 
   create_table "memberships", force: :cascade do |t|
     t.integer  "collective_id"
@@ -157,12 +157,13 @@ ActiveRecord::Schema.define(version: 20160214021723) do
     t.decimal  "price"
     t.string   "currency"
     t.integer  "billing_frequency"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "collaborator_limit"
-    t.integer  "organization_limit"
     t.integer  "wallet_limit"
     t.integer  "project_limit"
+    t.integer  "business_limit",     default: 0
+    t.integer  "household_limit",    default: 0
   end
 
   create_table "roles", force: :cascade do |t|
@@ -213,9 +214,10 @@ ActiveRecord::Schema.define(version: 20160214021723) do
     t.string   "braintree_customer_id"
     t.string   "braintree_subscription_id"
     t.integer  "collaborators_count",       default: 1
-    t.integer  "organizations_count",       default: 0
     t.integer  "wallets_count",             default: 0
     t.integer  "projects_count",            default: 0
+    t.integer  "households_count",          default: 0
+    t.integer  "businesses_count",          default: 0
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -244,6 +246,9 @@ ActiveRecord::Schema.define(version: 20160214021723) do
   add_index "vanity_urls", ["owner_type", "owner_id"], name: "index_vanity_urls_on_owner_type_and_owner_id", using: :btree
   add_index "vanity_urls", ["slug"], name: "index_vanity_urls_on_slug", unique: true, using: :btree
 
+  add_foreign_key "businesses", "users"
+  add_foreign_key "collaborators", "users"
+  add_foreign_key "households", "users"
   add_foreign_key "ownership_ancestries", "ownerships"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "users", "plans"

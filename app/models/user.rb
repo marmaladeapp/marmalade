@@ -25,8 +25,8 @@ class User < ActiveRecord::Base
   has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'
   has_many :telephones, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Telephone'
 
-  has_many :subscriber_households, :as => :subscriber, :dependent => :destroy, :class_name => 'Household'
-  has_many :subscriber_businesses, :as => :subscriber, :dependent => :destroy, :class_name => 'Business'
+  has_many :subscriber_households, :dependent => :destroy, :class_name => 'Household'
+  has_many :subscriber_businesses, :dependent => :destroy, :class_name => 'Business'
 
   has_many :ownerships, :as => :owner, :dependent => :destroy
   has_one :owner, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
