@@ -1,0 +1,23 @@
+- case @resource.class.name
+- when 'Business'
+  - path_array = [@resource, @ownership]
+  - url = business_ownerships_path(@business)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New owner
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Owner
+        %ul
+          %li.with-dropdown
+            = f.grouped_collection_select :global_owner, [User.where(:id => current_user.id)], :all, :human_name, :to_global_id, :name, {:selected => params[:parent_id] ? Business.find(params[:parent_id]).to_global_id : current_user.to_global_id}
+      %section.block-list
+        %header Equity (%)
+        %ul
+          %li
+            = f.number_field :equity, :step => 'any', :max => 100, :min => 0, :value => 100
+
+      %button.button.expanded.bg-blueberry Save

@@ -1,0 +1,27 @@
+- case @resource.class.name
+- when 'Business'
+  - path_array = [@resource, @ownership]
+  - url = business_ownership_path(@business, @ownership.owner)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit owner
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Member
+        %ul
+          %li
+            .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @ownership.owner.name
+      %section.block-list
+        %header Equity (%)
+        %ul
+          %li
+            = f.number_field :equity, :step => 'any', :max => 100, :min => 0
+
+      %button.button.expanded.bg-blueberry Save
+      - unless @ownership.owner == @business.user
+        %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+          %i.fa.fa-trash
+          Delete

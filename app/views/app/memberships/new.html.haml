@@ -1,0 +1,21 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @membership]
+  - url = user_home_memberships_path(@user)
+- when 'Business'
+  - path_array = [@resource, @membership]
+  - url = business_memberships_path(@business)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New member
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Member
+        %ul
+          %li.with-dropdown
+            = f.grouped_collection_select :member, [User.where(:id => current_user.id)], :all, :human_name, :id, :name, {:selected => current_user.id}
+
+      %button.button.expanded.bg-blueberry Save

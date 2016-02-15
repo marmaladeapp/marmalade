@@ -36,7 +36,7 @@ Rails.application.routes.draw do
         get '/edit', to: 'households#edit', as: 'edit'
         patch '/edit', to: 'households#update', as: 'update'
         delete '/edit', to: 'households#destroy', as: 'destroy'
-        resources :members
+        resources :memberships, path: 'members'
       end
 
     end
