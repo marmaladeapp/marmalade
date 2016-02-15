@@ -1,4 +1,5 @@
 class Ownership < ActiveRecord::Base
+  default_scope { order('created_at ASC') }
   belongs_to :owner, polymorphic: true
   belongs_to :item, polymorphic: true
 

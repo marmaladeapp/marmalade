@@ -14,8 +14,14 @@
 
       %section.block-list
         %header Member
-        %ul
-          %li.with-dropdown
-            = f.grouped_collection_select :member, [User.where(:id => current_user.id)], :all, :human_name, :id, :name, {:selected => current_user.id}
+        - if @options_for_member_select.any?
+          %ul
+            %li.with-dropdown
+              = f.grouped_collection_select :global_member, [@options_for_member_select], :all, :human_name, :to_global_id, :name
+        - else
+          = f.hidden_field :membership, :value => @membership
+          %ul
+            %li
+              = text_field_tag :invite, nil, {:placeholder => 'Invite by email'}
 
       %button.button.expanded.bg-blueberry Save

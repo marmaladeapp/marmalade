@@ -41,6 +41,9 @@ class User < ActiveRecord::Base
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
 
   has_many :collaborators, :dependent => :destroy
+  has_many :collaborator_users, :through => :collaborators, :source => :collaborator
+
+  has_many :collaborator_subscribers, :as => :collaborator, :class_name => 'Collaborator', :dependent => :destroy
 
   after_create do |user|
     user.collaborators.create(:collaborator => user)

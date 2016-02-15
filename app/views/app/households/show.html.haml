@@ -4,15 +4,16 @@
       %div{:style => 'margin-top:20px;margin-bottom:20px;'}
         %h3= @household.name
         %p= @household.description
-        - if @user == current_user
+        - if current_user == @household.user
           %a{:href => user_home_edit_path(@user)} Edit household
     .grid-content.small-5
       %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
         - @household.members.each do |user|
           .float-left{:style => 'margin-left:5px;'}
-            %a{:href => edit_user_home_membership_path(@user,user)}
+            %a{:href => current_user == @household.user ? edit_user_home_membership_path(@user,user) : vanity_path(user)}
               %img{:src => avatar_url(user,60), :style => 'border-radius:50%;'}
-        .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
-          .align-center.text-center{:style => 'width:40px;'}
-            %a.burnt-toast{:href => new_user_home_membership_path(@user)}
-              %i.fa.fa-plus-circle.fa-lg
+        - if current_user == @household.user
+          .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => new_user_home_membership_path(@user)}
+                %i.fa.fa-plus-circle.fa-lg

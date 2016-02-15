@@ -15,7 +15,7 @@
             %a{:href => user_home_new_path(current_user)}
               %i.fa.fa-home
               Your Household
-      - if current_user.businesses.any?
+      - if current_user.businesses.count > 0 # .any? appears to utilise counter_cache; bugger. We'll have to rename our associations.
         %ul.menu-bar.vertical{:style => ''}
           %li.title Businesses
           - current_user.businesses.each do |business|

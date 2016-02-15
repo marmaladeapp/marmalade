@@ -11,9 +11,17 @@
 
       %section.block-list
         %header Owner
-        %ul
-          %li.with-dropdown
-            = f.grouped_collection_select :global_owner, [User.where(:id => current_user.id)], :all, :human_name, :to_global_id, :name, {:selected => params[:parent_id] ? Business.find(params[:parent_id]).to_global_id : current_user.to_global_id}
+
+        - if @options_for_owner_select.any?
+          %ul
+            %li.with-dropdown
+              = f.grouped_collection_select :global_owner, [@options_for_owner_select], :all, :human_name, :to_global_id, :name
+        - else
+          = f.hidden_field :ownership, :value => @ownership
+          %ul
+            %li
+              = text_field_tag :invite, nil, {:placeholder => 'Invite by email'}
+
       %section.block-list
         %header Equity (%)
         %ul
