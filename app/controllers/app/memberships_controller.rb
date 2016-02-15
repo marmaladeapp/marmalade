@@ -77,6 +77,20 @@ class App::MembershipsController < App::AppController
     end
   end
   def update
+    if params[:business_id]
+      @business = Business.find(params[:business_id])
+      @resource = @business
+      @context = @business
+      @membership = @business.memberships.find_by(:member => User.find(params[:id]))
+      redirect_to vanity_path(@business)
+    else
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @resource = @household
+      @context = @household
+      @membership = @household.memberships.find_by(:member => User.find(params[:id]))
+      redirect_to user_home_path(@user)
+    end
   end
   def destroy
   end
