@@ -78,6 +78,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  def is_owner?(resource)
+    ownerships.find_by(:item => resource).present?
+  end
+  def is_member?(resource)
+    memberships.find_by(:collective => resource).present?
+  end
+
   def subscribed?
     first_name && last_name && plan && (plan.price.blank? || braintree_subscription_id) # last detail required = do they have braintree creds?
   end

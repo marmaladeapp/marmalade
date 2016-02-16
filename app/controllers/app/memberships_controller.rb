@@ -56,7 +56,7 @@ class App::MembershipsController < App::AppController
       end
     end
     @membership.user = @resource.user
-    if @membership.save
+    if !@membership.member.is_member?(@membership.collective) && @membership.save
       if params[:business_id]
         redirect_to vanity_path(@business)
       else
@@ -64,6 +64,11 @@ class App::MembershipsController < App::AppController
         redirect_to user_home_path(@user)
       end
     else
+      ids = []
+      @resource.members.each do |member|
+        ids << member.id
+      end
+      @options_for_member_select = current_user.collaborator_users.where.not(:id => ids)
       render 'new'
     end
   end

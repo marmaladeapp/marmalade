@@ -36,12 +36,17 @@ class App::OwnershipsController < App::AppController
       end
     end
     @ownership.user = @resource.user
-    if @ownership.save
+    if !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
       unless @resource.memberships.where(:member => @ownership.owner).any?
         @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
       end
       redirect_to vanity_path(@business)
     else
+      ids = []
+      @resource.owners.each do |ownership|
+        ids << ownership.owner.id
+      end
+      @options_for_owner_select = current_user.collaborator_users.where.not(:id => ids)
       render 'new'
     end
   end
