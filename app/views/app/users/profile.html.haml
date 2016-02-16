@@ -15,6 +15,11 @@
       %h3 Edit profile
       = form_for @user do |f|
         %section.block-list
+          %header Username
+          %ul
+            %li
+              = f.text_field :username, {:placeholder => 'Username'}
+        %section.block-list
           %header About you
           %ul
             %li

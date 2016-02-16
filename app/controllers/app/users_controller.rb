@@ -210,6 +210,6 @@ class App::UsersController < App::AppController
 
   private
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :bio, :country, :language, :time_zone, :currency, :plan_id, :payment_method_nonce, :password, :password_confirmation, :current_password)
+    params.require(:user).permit(:username, :first_name, :last_name, :bio, :country, :language, :time_zone, :currency, :plan_id, :payment_method_nonce, :password, :password_confirmation, :current_password)
   end
 end
