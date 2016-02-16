@@ -97,6 +97,22 @@ class App::MembershipsController < App::AppController
     end
   end
   def destroy
+    if params[:business_id]
+      @business = Business.find(params[:business_id])
+      @membership = @business.memberships.find_by(:member => User.find(params[:id]))
+      unless @membership.member == @business.user
+        @membership.destroy
+      end
+      redirect_to vanity_path(@business)
+    else
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @membership = @household.memberships.find_by(:member => User.find(params[:id]))
+      unless @membership.member == @household.user
+        @membership.destroy
+      end
+      redirect_to user_home_path(@user)
+    end
   end
   private
   def membership_params
