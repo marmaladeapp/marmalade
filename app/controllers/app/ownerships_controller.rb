@@ -52,6 +52,16 @@ class App::OwnershipsController < App::AppController
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
   end
   def update
+    @business = Business.find(params[:business_id])
+    @resource = @business
+    # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
+    @context = @business
+    @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    if @ownership.update_attributes(ownership_params)
+      redirect_to vanity_path(@business)
+    else
+      render 'edit'
+    end
   end
   def destroy
   end
