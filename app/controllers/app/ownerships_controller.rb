@@ -35,9 +35,10 @@ class App::OwnershipsController < App::AppController
         current_user.collaborators.create(:collaborator => @ownership.owner)
       end
     end
+    @ownership.user = @resource.user
     if @ownership.save
       unless @resource.memberships.where(:member => @ownership.owner).any?
-        @resource.memberships.create(:member => @ownership.owner)
+        @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
       end
       redirect_to vanity_path(@business)
     else

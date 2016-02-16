@@ -52,9 +52,10 @@ class App::MembershipsController < App::AppController
     unless params[:business_id]
       if @membership.member.home.present?
         ## Should rescue us from assigning secondary households.
-        redirect_to user_home_path(@user)
+        redirect_to user_home_path(@user) and return
       end
     end
+    @membership.user = @resource.user
     if @membership.save
       if params[:business_id]
         redirect_to vanity_path(@business)
@@ -109,6 +110,7 @@ class App::MembershipsController < App::AppController
       @household = @user.home
       @membership = @household.memberships.find_by(:member => User.find(params[:id]))
       unless @membership.member == @household.user
+        @household.ownerships.find_by(:owner => @household, :item => @membership.member).destroy
         @membership.destroy
       end
       redirect_to user_home_path(@user)

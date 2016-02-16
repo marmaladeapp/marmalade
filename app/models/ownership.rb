@@ -1,5 +1,8 @@
 class Ownership < ActiveRecord::Base
   default_scope { order('created_at ASC') }
+
+  belongs_to :user, :inverse_of => :subscriber_ownerships
+
   belongs_to :owner, polymorphic: true
   belongs_to :item, polymorphic: true
 
@@ -47,6 +50,11 @@ class Ownership < ActiveRecord::Base
   end
 
   def destroy_orphans
+    if self.owner.class.name == "User"
+      unless Ownership.where(:owner => self.owner, :user => self.user).any? || Membership.where(:member => self.owner, :user => self.user).any?
+        Collaborator.find_by(:user => self.user, :collaborator => self.owner).destroy
+      end
+    end
     unless self.item.class.name == "User"
       self.item.destroy if self.item.owners.empty?
     end

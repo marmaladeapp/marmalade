@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214111652) do
+ActiveRecord::Schema.define(version: 20160216040815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,10 +110,12 @@ ActiveRecord::Schema.define(version: 20160214111652) do
     t.string   "member_type"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "user_id"
   end
 
   add_index "memberships", ["collective_type", "collective_id"], name: "index_memberships_on_collective_type_and_collective_id", using: :btree
   add_index "memberships", ["member_type", "member_id"], name: "index_memberships_on_member_type_and_member_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
   create_table "ownership_ancestries", force: :cascade do |t|
     t.integer  "ownership_id"
@@ -136,10 +138,12 @@ ActiveRecord::Schema.define(version: 20160214111652) do
     t.decimal  "equity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "user_id"
   end
 
   add_index "ownerships", ["item_type", "item_id"], name: "index_ownerships_on_item_type_and_item_id", using: :btree
   add_index "ownerships", ["owner_type", "owner_id"], name: "index_ownerships_on_owner_type_and_owner_id", using: :btree
+  add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
   create_table "payment_methods", force: :cascade do |t|
     t.integer  "user_id"
@@ -249,7 +253,9 @@ ActiveRecord::Schema.define(version: 20160214111652) do
   add_foreign_key "businesses", "users"
   add_foreign_key "collaborators", "users"
   add_foreign_key "households", "users"
+  add_foreign_key "memberships", "users"
   add_foreign_key "ownership_ancestries", "ownerships"
+  add_foreign_key "ownerships", "users"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "users", "plans"
 end

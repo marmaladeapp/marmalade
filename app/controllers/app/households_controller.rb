@@ -21,7 +21,7 @@ class App::HouseholdsController < App::AppController
     @household.currency = @user.currency
     @household.user_id = @user.id
     if @household.save
-      @household.ownerships.create(:owner => @household, :item => @user, :equity => BigDecimal.new(100))
+      @household.ownerships.create(:owner => @household, :item => @user, :equity => BigDecimal.new(100), :user => current_user)
       @household.ownerships.each do |ownership|
         #ownership.update_balance_sheets(:value => ownership.item.net_worth,:current_assets => ownership.item.current_assets,:fixed_assets => ownership.item.fixed_assets,:current_liabilities => ownership.item.current_liabilities,:long_term_liabilities => ownership.item.long_term_liabilities,:cash => ownership.item.cash,:ledgers_receivable => ownership.item.total_ledgers_receivable,:ledgers_debt => ownership.item.total_ledgers_debt,:wallets => ownership.item.total_wallets,:item => ownership.item,:action => 'create')
       end
