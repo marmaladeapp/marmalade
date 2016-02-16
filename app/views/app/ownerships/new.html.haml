@@ -9,18 +9,27 @@
     %h3 New owner
     = form_for path_array, url: url do |f|
 
-      %section.block-list
-        %header Owner
-
-        - if @options_for_owner_select.any?
+      - if @options_for_owner_select.any?
+        %section.block-list
+          %header Choose from collaborators
           %ul
             %li.with-dropdown
-              = f.grouped_collection_select :global_owner, [@options_for_owner_select], :all, :human_name, :to_global_id, :name
-        - else
+              = f.grouped_collection_select :global_owner, [@options_for_owner_select], :all, :human_name, :to_global_id, :name, {:prompt => true}
+        %section.block-list
+          %header Or send an invite
           = f.hidden_field :ownership, :value => @ownership
           %ul
             %li
               = text_field_tag :invite, nil, {:placeholder => 'Invite by email'}
+      - else
+        %section.block-list
+          %header Owner
+          = f.hidden_field :ownership, :value => @ownership
+          %ul
+            %li
+              = text_field_tag :invite, nil, {:placeholder => 'Invite by email'}
+
+
 
       %section.block-list
         %header Equity (%)

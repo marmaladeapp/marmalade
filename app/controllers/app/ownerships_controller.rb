@@ -21,7 +21,7 @@ class App::OwnershipsController < App::AppController
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = @resource.owners.new(ownership_params)
-    if params[:invite]
+    if params[:invite].present?
       if User.find_by(:email => params[:invite]).present?
         @ownership.owner = User.find_by(:email => params[:invite])
         unless current_user.collaborators.where(:collaborator => @ownership.owner).any?

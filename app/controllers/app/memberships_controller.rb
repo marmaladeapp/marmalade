@@ -35,7 +35,7 @@ class App::MembershipsController < App::AppController
       @context = @household
       @membership = @resource.memberships.new(membership_params)
     end
-    if params[:invite]
+    if params[:invite].present?
       if User.find_by(:email => params[:invite]).present?
         @membership.member = User.find_by(:email => params[:invite])
         unless current_user.collaborators.where(:collaborator => @membership.member).exists?
