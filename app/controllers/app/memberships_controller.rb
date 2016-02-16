@@ -42,7 +42,11 @@ class App::MembershipsController < App::AppController
           current_user.collaborators.create(:collaborator => @membership.member)
         end
       else
-        #invitey blips.
+        new_user = User.new(:email => params[:invite])
+        new_user.username = "u_" + Array.new(8){ [*'0'..'9',*'A'..'Z',*'a'..'z'].sample }.join
+        new_user.invite!(current_user)
+        @membership.member = new_user
+        current_user.collaborators.create(:collaborator => @membership.member)
       end
     end
     unless params[:business_id]

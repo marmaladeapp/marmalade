@@ -28,7 +28,11 @@ class App::OwnershipsController < App::AppController
           current_user.collaborators.create(:collaborator => @ownership.owner)
         end
       else
-        #invitey blips.
+        new_user = User.new(:email => params[:invite])
+        new_user.username = "u_" + Array.new(8){ [*'0'..'9',*'A'..'Z',*'a'..'z'].sample }.join
+        new_user.invite!(current_user)
+        @ownership.owner = new_user
+        current_user.collaborators.create(:collaborator => @ownership.owner)
       end
     end
     if @ownership.save

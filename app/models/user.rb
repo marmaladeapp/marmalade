@@ -52,7 +52,11 @@ class User < ActiveRecord::Base
   before_destroy :unsubscribe
 
   def full_name
-    first_name + " " + last_name
+    if first_name
+      first_name + " " + last_name
+    else
+      email
+    end
   end
   def name
     full_name
