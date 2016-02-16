@@ -6,13 +6,14 @@
       %h3 Edit billing
       = form_for @user, :url => user_billing_path(@user) do |f|
         = f.hidden_field :user, :value => @user
-        %section.block-list
-          %header Current payment method
-          %ul
-            %li
-              .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @card.card_type
-            %li
-              .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= '#### #### #### ' + @card.last_4
+        - if @card
+          %section.block-list
+            %header Current payment method
+            %ul
+              %li
+                .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @card.card_type
+              %li
+                .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= '#### #### #### ' + @card.last_4
         %section.block-list
           %header New payment method
           %ul
@@ -28,7 +29,6 @@
         %p
           %strong Note:
           Adding a new payment method will replace your current payment method. Marmalade currently only stores one payment method per customer.
-
 
   :javascript
     braintree.setup(gon.client_token, "custom", {

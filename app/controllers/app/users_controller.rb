@@ -105,10 +105,12 @@ class App::UsersController < App::AppController
         :customer_id => @user.braintree_customer_id,
         :payment_method_nonce => params[:payment_method_nonce]
       )
-      Braintree::Subscription.update(
-        @user.braintree_subscription_id,
-        :payment_method_token => r.payment_method.token
-      )
+      if @user.braintree_subscription_id
+        Braintree::Subscription.update(
+          @user.braintree_subscription_id,
+          :payment_method_token => r.payment_method.token
+        )
+      end
       Braintree::PaymentMethod.delete(@user.payment_methods.first.braintree_payment_method_token)
       @user.payment_methods.first.update_attributes(:braintree_payment_method_token => r.payment_method.token)
     end
