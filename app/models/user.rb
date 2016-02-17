@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include HumanizeName
   include VanitizeUrl
+  include Subscribable
+  include Contactable
 
   attr_accessor :login
   default_scope -> { order('users.created_at DESC') }
@@ -18,19 +20,6 @@ class User < ActiveRecord::Base
   validates :username, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
   # validates :username, format: { without: /\A(?:admin|about|users|staff|login|signin|signup|register|edit|profile)\Z/i, message: "restricted." }
 
-  belongs_to :plan
-  has_many :payment_methods, :dependent => :destroy
-
-  has_many :emails, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Email'
-  has_many :addresses, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Address'
-  has_many :telephones, :as => :owner, :dependent => :destroy, :class_name => 'ContactDetails::Telephone'
-
-  has_many :subscriber_ownerships, :dependent => :destroy, :class_name => 'Ownership'
-  has_many :subscriber_memberships, :dependent => :destroy, :class_name => 'Membership'
-
-  has_many :subscriber_households, :dependent => :destroy, :class_name => 'Household'
-  has_many :subscriber_businesses, :dependent => :destroy, :class_name => 'Business'
-
   has_many :ownerships, :as => :owner, :dependent => :destroy
   has_one :owner, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_one :home, :through => :owner, :source => :owner, :source_type => 'Household'
@@ -42,17 +31,6 @@ class User < ActiveRecord::Base
   has_many :memberships, :as => :member, :dependent => :destroy
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
-
-  has_many :collaborators, :dependent => :destroy
-  has_many :collaborator_users, :through => :collaborators, :source => :collaborator
-
-  has_many :collaborator_subscribers, :as => :collaborator, :class_name => 'Collaborator', :dependent => :destroy
-
-  after_create do |user|
-    user.collaborators.create(:collaborator => user)
-  end
-
-  before_destroy :unsubscribe
 
   def full_name
     if first_name
@@ -83,16 +61,6 @@ class User < ActiveRecord::Base
   end
   def is_member?(resource)
     memberships.find_by(:collective => resource).present?
-  end
-
-  def subscribed?
-    first_name && last_name && plan && (plan.price.blank? || braintree_subscription_id) # last detail required = do they have braintree creds?
-  end
-
-  private
-
-  def unsubscribe
-    Braintree::Customer.delete(braintree_customer_id)
   end
 
 end
