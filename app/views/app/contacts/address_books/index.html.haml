@@ -7,3 +7,7 @@
       %a.button.bg-blueberry{:href => @context.class.name == "Household" ? new_user_home_address_book_path(current_user) : new_resource_address_book_path(@resource)} New address book
     - else
       %h3 Your contacts
+
+    - @address_books.each do |address_book|
+      = address_book.name
+      |
