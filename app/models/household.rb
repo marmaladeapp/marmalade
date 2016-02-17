@@ -1,6 +1,8 @@
 class Household < ActiveRecord::Base
   include HumanizeName
 
+  include HasContacts
+
   belongs_to :user, :inverse_of => :subscriber_households, counter_cache: true
   has_many :ownerships, :as => :owner, :dependent => :destroy
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'

@@ -1,11 +1,14 @@
 class User < ActiveRecord::Base
+  default_scope -> { order('users.created_at DESC') }
+
   include HumanizeName
   include VanitizeUrl
   include Subscribable
   include Contactable
 
+  include HasContacts
+
   attr_accessor :login
-  default_scope -> { order('users.created_at DESC') }
 
   rolify
   extend FriendlyId

@@ -1,25 +1,49 @@
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - context_dashboard = vanity_path(@context)
+    - context_contacts = resource_address_books_path(@context)
+    - context_calendar = resource_calendars_path(@context)
+    - context_time = resource_time_sheets_path(@context)
+    - context_finances = resource_balance_sheets_path(@context)
+    - context_projects = resource_projects_path(@context)
+  - when 'Household'
+    - context_dashboard = user_home_path(current_user)
+    - context_contacts = user_home_address_books_path(current_user)
+    - context_calendar = user_home_calendars_path(current_user)
+    - context_time = user_home_time_sheets_path(current_user)
+    - context_finances = user_home_balance_sheets_path(current_user)
+    - context_projects = user_home_projects_path(current_user)
+- else
+  - context_dashboard = root_path
+  - context_contacts = address_books_path
+  - context_calendar = calendars_path
+  - context_time = time_sheets_path
+  - context_finances = balance_sheets_path
+  - context_projects = projects_path
+
 %ul.marmalade-menu-bar
-  %li.active{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item1"}
+  %li{'ui-sref-active' => "is-active", :class => request.path == context_dashboard ? 'active' : ''}
+    %a{'ui-sref' => "dashboard", :href => context_dashboard}
       %i.fa.fa-dashboard.fa-fw
       %span.show-for-large Dashboard
-  %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item1"}
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_contacts) ? 'active' : ''}
+    %a{'ui-sref' => "contacts", :href => context_contacts}
       %i.fa.fa-user.fa-fw
       %span.show-for-large Contacts
-  %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item2"}
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_calendar) ? 'active' : ''}
+    %a{'ui-sref' => "calendar", :href => context_calendar}
       %i.fa.fa-calendar.fa-fw
       %span.show-for-large Calendar
-  %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item3"}
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_time) ? 'active' : ''}
+    %a{'ui-sref' => "time", :href => context_time}
       %i.fa.fa-clock-o.fa-fw
       %span.show-for-large Time
-  %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item4"}
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_finances) ? 'active' : ''}
+    %a{'ui-sref' => "finances", :href => context_finances}
       %i.fa.fa-usd.fa-fw
       %span.show-for-large Finances
-  %li{'ui-sref-active' => "is-active"}
-    %a{'ui-sref' => "item5"}
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_projects) ? 'active' : ''}
+    %a{'ui-sref' => "projects", :href => context_projects}
       %i.fa.fa-folder-open.fa-fw
       %span.show-for-large Projects

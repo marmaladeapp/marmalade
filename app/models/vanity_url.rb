@@ -4,6 +4,9 @@ class VanityUrl < ActiveRecord::Base
 
   belongs_to :owner, :polymorphic => true
 
+  extend FriendlyId
+  friendly_id :slug, use: [:finders]
+
   def action
     [:render, :redirect].sample
   end

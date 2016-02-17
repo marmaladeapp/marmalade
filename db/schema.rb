@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216040815) do
+ActiveRecord::Schema.define(version: 20160217065612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,19 @@ ActiveRecord::Schema.define(version: 20160216040815) do
   end
 
   add_index "contact_details_telephones", ["owner_type", "owner_id"], name: "index_contact_details_telephones_on_owner_type_and_owner_id", using: :btree
+
+  create_table "contacts_address_books", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "name"
+    t.text     "description"
+  end
+
+  add_index "contacts_address_books", ["owner_type", "owner_id"], name: "index_contacts_address_books_on_owner_type_and_owner_id", using: :btree
+  add_index "contacts_address_books", ["user_id"], name: "index_contacts_address_books_on_user_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -252,6 +265,7 @@ ActiveRecord::Schema.define(version: 20160216040815) do
 
   add_foreign_key "businesses", "users"
   add_foreign_key "collaborators", "users"
+  add_foreign_key "contacts_address_books", "users"
   add_foreign_key "households", "users"
   add_foreign_key "memberships", "users"
   add_foreign_key "ownership_ancestries", "ownerships"

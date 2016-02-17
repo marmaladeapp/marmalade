@@ -1,0 +1,9 @@
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} contacts
+      %a.button.bg-blueberry{:href => @context.class.name == "Household" ? new_user_home_address_book_path(current_user) : new_resource_address_book_path(@resource)} New address book
+    - else
+      %h3 Your contacts

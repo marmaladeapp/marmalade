@@ -8,16 +8,33 @@ Rails.application.routes.draw do
   end
   
   scope module: 'app' do
+    get '/contexts', to: 'contexts#index'
+
     resources :users, only: [:show,:edit,:update]
 
     resources :businesses, only: [:show,:new,:create]
 
-    get '/contexts', to: 'contexts#index'
+    scope module: 'contacts' do
+      resources :address_books, path: 'contacts'
+    end
+    scope module: 'calendar' do
+      resources :calendars
+    end
+    scope module: 'time' do
+      resources :time_sheets, path: 'time'
+    end
+    scope module: 'finances' do
+      resources :balance_sheets, path: 'finances'
+    end
+    scope module: 'projects' do
+      resources :projects
+    end
 
     ## The Tricky Part ##
     match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
 
     scope '/:user_id', as: 'user' do
+      # profile management
       get '/profile', to: 'users#profile'
       get '/password', to: 'users#password', as: 'pass'
       patch '/password', to: 'users#update_password', as: 'update_pass'
@@ -28,6 +45,7 @@ Rails.application.routes.draw do
       patch '/payment', to: 'users#pay_subscription'
       get '/billing', to: 'users#billing'
       patch '/billing', to: 'users#update_payment'
+      # / profile management
 
       scope '/home', as: 'home' do
         root 'households#show', as: ''
@@ -37,6 +55,22 @@ Rails.application.routes.draw do
         patch '/edit', to: 'households#update', as: 'update'
         delete '/edit', to: 'households#destroy', as: 'destroy'
         resources :memberships, path: 'members'
+
+        scope module: 'contacts' do
+          resources :address_books, path: 'contacts'
+        end
+        scope module: 'calendar' do
+          resources :calendars
+        end
+        scope module: 'time' do
+          resources :time_sheets, path: 'time'
+        end
+        scope module: 'finances' do
+          resources :balance_sheets, path: 'finances'
+        end
+        scope module: 'projects' do
+          resources :projects
+        end
       end
 
     end
@@ -50,9 +84,21 @@ Rails.application.routes.draw do
     end
 
     scope '/:resource_id', as: 'resource' do
-      # resources :contacts
-      # resources :projects
-      # resources :wallets, path: 'finances'
+      scope module: 'contacts' do
+        resources :address_books, path: 'contacts'
+      end
+      scope module: 'calendar' do
+        resources :calendars
+      end
+      scope module: 'time' do
+        resources :time_sheets, path: 'time'
+      end
+      scope module: 'finances' do
+        resources :balance_sheets, path: 'finances'
+      end
+      scope module: 'projects' do
+        resources :projects
+      end
     end
     #/ the tricky part ##
 
