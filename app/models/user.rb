@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include Subscribable
   include Contactable
 
-  include HasContacts
+  include HasModules
 
   attr_accessor :login
 

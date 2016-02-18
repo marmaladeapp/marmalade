@@ -1,7 +1,7 @@
 class Business < ActiveRecord::Base
   include HumanizeName
 
-  include HasContacts
+  include HasModules
 
   belongs_to :user, :inverse_of => :subscriber_businesses, counter_cache: true
   has_many :ownerships, :as => :owner, :dependent => :destroy

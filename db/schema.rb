@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218081807) do
+ActiveRecord::Schema.define(version: 20160218121523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,21 @@ ActiveRecord::Schema.define(version: 20160218081807) do
   end
 
   add_index "businesses", ["user_id"], name: "index_businesses_on_user_id", using: :btree
+
+  create_table "calendar_calendars", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "slug"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "calendar_calendars", ["owner_type", "owner_id"], name: "index_calendar_calendars_on_owner_type_and_owner_id", using: :btree
+  add_index "calendar_calendars", ["slug"], name: "index_calendar_calendars_on_slug", using: :btree
+  add_index "calendar_calendars", ["user_id"], name: "index_calendar_calendars_on_user_id", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
     t.integer  "collaborator_id"
@@ -278,6 +293,7 @@ ActiveRecord::Schema.define(version: 20160218081807) do
   add_index "vanity_urls", ["slug"], name: "index_vanity_urls_on_slug", unique: true, using: :btree
 
   add_foreign_key "businesses", "users"
+  add_foreign_key "calendar_calendars", "users"
   add_foreign_key "collaborators", "users"
   add_foreign_key "contacts_address_books", "users"
   add_foreign_key "households", "users"

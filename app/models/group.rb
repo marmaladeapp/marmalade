@@ -1,6 +1,6 @@
 class Group < ActiveRecord::Base
   include HumanizeName
-  include HasContacts
+  include HasModules
 
   belongs_to :user, :inverse_of => :subscriber_groups, counter_cache: true
 
