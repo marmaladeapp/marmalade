@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218053240) do
+ActiveRecord::Schema.define(version: 20160218081807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,9 +85,11 @@ ActiveRecord::Schema.define(version: 20160218053240) do
     t.datetime "updated_at",  null: false
     t.string   "name"
     t.text     "description"
+    t.string   "slug"
   end
 
   add_index "contacts_address_books", ["owner_type", "owner_id"], name: "index_contacts_address_books_on_owner_type_and_owner_id", using: :btree
+  add_index "contacts_address_books", ["slug"], name: "index_contacts_address_books_on_slug", using: :btree
   add_index "contacts_address_books", ["user_id"], name: "index_contacts_address_books_on_user_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
