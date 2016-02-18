@@ -1,0 +1,41 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_project = new_group_project_path(@context)
+  - else
+    - new_project = @context.class.name == "Household" ? new_user_home_project_path(current_user) : new_resource_project_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} projects
+      %a.button.bg-blueberry{:href => new_project} New project
+    - else
+      %h3 Your projects
+
+  .grid-block.wrap.small-12
+
+    - @projects.each do |project|
+      .grid-content.small-12.medium-6.large-4
+        - case project.owner.class.name
+        - when "User", "Business"
+          - canonical_link = resource_project_path(project.owner,project)
+        - when "Household"
+          - canonical_link = user_home_project_path(current_user,project)
+        - when "Group"
+          - canonical_link = group_project_path(project.owner,project)
+        %a{:href => canonical_link}
+          .card{:style => 'height:250px;'}
+            .card-section.bg-ice-cream.burnt-toast
+              %h4.panther.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(project.name, length: 12)
+                %span.float-right
+                  %i.fa.fa-folder-open
+            .card-divider.ice-cream.bg-panther
+              = truncate(project.owner.name, length: 15)
+            .card-section
+              - if !project.description.blank?
+                = project.description
+              - else
+                %em No description.
