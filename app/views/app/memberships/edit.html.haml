@@ -5,6 +5,9 @@
 - when 'Business'
   - path_array = [@resource, @membership]
   - url = business_membership_path(@business, @membership.member)
+- when 'Group'
+  - path_array = [@resource, @membership]
+  - url = group_membership_path(@group, @membership.member)
 
 .grid-container.small-12.medium-10
 

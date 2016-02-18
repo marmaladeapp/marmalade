@@ -23,6 +23,10 @@
                   %a{:href => vanity_path(@context)}
                     %i.fa.fa-fw.fa-4x.fa-briefcase
                     %strong= @context.name
+                - when 'Group'
+                  %a{:href => group_path(@context)}
+                    %i.fa.fa-fw.fa-4x.fa-users
+                    %strong= @context.name
                 - else
                   %a{:href => vanity_path(current_user)}
                     %img.medium-12{:src => avatar_url(current_user), :style => 'border-radius:50%;'}
@@ -44,6 +48,13 @@
             - else
               %a{:href => user_home_new_path(current_user)}
                 %i.fa.fa-home
+        - if current_user.groups.count > 0 # .any? appears to utilise counter_cache; bugger. We'll have to rename our associations.
+          %ul.menu-bar.vertical{:style => 'background:#f9f9f9 !important;'}
+            %li.title Groups
+            - current_user.groups.each do |group|
+              %li{}
+                %a{:href => group_path(group)}
+                  = group.name
         - if current_user.businesses.count > 0 # .any? appears to utilise counter_cache; bugger. We'll have to rename our associations.
           %ul.menu-bar.vertical{:style => 'background:#f9f9f9 !important;'}
             %li.title Businesses
@@ -53,11 +64,11 @@
                   = business.name
     .grid-block.shrink
       .grid-content.collapse
-        %ul.menu-bar.icon-top{:style => 'background:#f9f9f9 !important;'}
+        %ul.menu-bar.icon-top.text-center{:style => 'background:#f9f9f9 !important;'}
           %li{}
-            %a{:href => new_business_path}
+            %a{:href => new_organization_path}
               %i.fa.fa-fw.fa-briefcase
-              New business
+              New group/business
   - else
     .grid-content.collapse.medium-12.text-center{:style => ''}
       Please choose a plan and complete your subscription.

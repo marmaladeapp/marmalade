@@ -1,0 +1,20 @@
+.grid-container.small-12.medium-10
+  .grid-block.small-12.wrap.bg-ice-cream-small
+
+    .grid-content.small-7
+      %div{:style => 'margin-top:20px;margin-bottom:20px;'}
+        %h3= @group.name
+        %p= @group.description
+        - if current_user == @group.user
+          %a{:href => edit_group_path(@group)} Edit group
+    .grid-content.small-5
+      %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
+        - @group.memberships.each do |membership|
+          .float-left{:style => 'margin-left:5px;'}
+            %a{:href => current_user == @group.user ? edit_group_membership_path(@group,membership.member) : vanity_path(membership.member)}
+              %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
+        - if current_user == @group.user
+          .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => new_group_membership_path(@group)}
+                %i.fa.fa-plus-circle.fa-lg

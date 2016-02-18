@@ -9,6 +9,11 @@ class App::MembershipsController < App::AppController
       @resource = @business
       @context = @business
       @membership = Membership.new
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
+      @membership = Membership.new
     else
       @user = User.find(params[:user_id])
       @household = @user.home
@@ -27,6 +32,11 @@ class App::MembershipsController < App::AppController
       @business = Business.find(params[:business_id])
       @resource = @business
       @context = @business
+      @membership = @resource.memberships.new(membership_params)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
       @membership = @resource.memberships.new(membership_params)
     else
       @user = User.find(params[:user_id])
@@ -49,7 +59,7 @@ class App::MembershipsController < App::AppController
         current_user.collaborators.create(:collaborator => @membership.member)
       end
     end
-    unless params[:business_id]
+    unless params[:business_id] || params[:group_id]
       if @membership.member.home.present?
         ## Should rescue us from assigning secondary households.
         redirect_to user_home_path(@user) and return
@@ -59,6 +69,8 @@ class App::MembershipsController < App::AppController
     if !@membership.member.is_member?(@membership.collective) && @membership.save
       if params[:business_id]
         redirect_to vanity_path(@business)
+      elsif params[:group_id]
+        redirect_to group_path(@group)
       else
         @household.ownerships.create(:owner => @household, :item => @membership.member, :equity => BigDecimal.new(100))
         redirect_to user_home_path(@user)
@@ -78,6 +90,11 @@ class App::MembershipsController < App::AppController
       @resource = @business
       @context = @business
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
+      @membership = @group.memberships.find_by(:member => User.find(params[:id]))
     else
       @user = User.find(params[:user_id])
       @household = @user.home
@@ -93,6 +110,12 @@ class App::MembershipsController < App::AppController
       @context = @business
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
       redirect_to vanity_path(@business)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
+      @membership = @group.memberships.find_by(:member => User.find(params[:id]))
+      redirect_to group_path(@group)
     else
       @user = User.find(params[:user_id])
       @household = @user.home
@@ -110,6 +133,13 @@ class App::MembershipsController < App::AppController
         @membership.destroy
       end
       redirect_to vanity_path(@business)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @membership = @group.memberships.find_by(:member => User.find(params[:id]))
+      unless @membership.member == @group.user
+        @membership.destroy
+      end
+      redirect_to group_path(@group)
     else
       @user = User.find(params[:user_id])
       @household = @user.home

@@ -7,6 +7,13 @@
     - context_time = resource_time_sheets_path(@context)
     - context_finances = resource_balance_sheets_path(@context)
     - context_projects = resource_projects_path(@context)
+  - when 'Group'
+    - context_dashboard = group_path(@context)
+    - context_contacts = group_address_books_path(@context)
+    - context_calendar = group_calendars_path(@context)
+    - context_time = group_time_sheets_path(@context)
+    - context_finances = group_balance_sheets_path(@context)
+    - context_projects = group_projects_path(@context)
   - when 'Household'
     - context_dashboard = user_home_path(current_user)
     - context_contacts = user_home_address_books_path(current_user)

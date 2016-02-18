@@ -10,10 +10,15 @@ class App::Contacts::AddressBooksController < App::AppController
       @household = @user.home
       @context = @household
       @address_books = @household.address_books
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @address_books = @group.address_books
     else
       @address_books = current_user.address_books
       @address_books += ::Contacts::AddressBook.where(:owner => current_user.businesses.to_a)
       @address_books += ::Contacts::AddressBook.where(:owner => current_user.households.to_a)
+      @address_books += ::Contacts::AddressBook.where(:owner => current_user.groups.to_a)
     end
   end
 
@@ -27,6 +32,9 @@ class App::Contacts::AddressBooksController < App::AppController
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      @context = @resource
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
       @context = @resource
     end
     @address_book = ::Contacts::AddressBook.new
@@ -42,6 +50,9 @@ class App::Contacts::AddressBooksController < App::AppController
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      @context = @resource
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
       @context = @resource
     end
     @address_book = @resource.address_books.new(address_book_params)

@@ -1,0 +1,35 @@
+- if @user == current_user
+
+  - supported_currencies = $redis.smembers("supported_currencies")
+  - @currencies_for_select = []
+  - Money::Currency.each do |currency|
+    - if supported_currencies.include? currency.iso_code
+      - @currencies_for_select << currency
+
+  .grid-container.small-12.medium-10
+
+    .grid-content.small-12
+      %h3 Edit group
+      = form_for @group do |f|
+
+        %section.block-list
+          %header About your group
+          %ul
+            %li
+              = f.text_field :name, {:placeholder => 'Name'}
+            %li
+              = f.text_area :description, {:placeholder => 'Description'}
+
+        %section.block-list
+          %header Country
+          %ul
+            %li.with-dropdown
+              = f.country_select :country
+
+        %section.block-list
+          %header Currency
+          %ul
+            %li.with-dropdown
+              = f.collection_select :currency, @currencies_for_select, :iso_code, :description
+
+        %button.button.expanded.bg-blueberry Save

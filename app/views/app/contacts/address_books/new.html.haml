@@ -6,6 +6,9 @@
   - when 'Household'
     - path_array = [@resource, @address_book]
     - url = user_home_address_books_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @address_book]
+    - url = group_address_books_path(@resource)
 - else
   - path_array = @address_book
   - url = address_books_path

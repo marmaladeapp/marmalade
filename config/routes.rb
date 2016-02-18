@@ -12,6 +12,27 @@ Rails.application.routes.draw do
 
     resources :users, only: [:show,:edit,:update]
 
+    resources :organizations, only: [:new]
+
+    resources :groups do
+      resources :memberships, path: 'members'
+      scope module: 'contacts' do
+        resources :address_books, path: 'contacts'
+      end
+      scope module: 'calendar' do
+        resources :calendars
+      end
+      scope module: 'time' do
+        resources :time_sheets, path: 'time'
+      end
+      scope module: 'finances' do
+        resources :balance_sheets, path: 'finances'
+      end
+      scope module: 'projects' do
+        resources :projects
+      end
+    end
+
     resources :businesses, only: [:show,:new,:create]
 
     scope module: 'contacts' do

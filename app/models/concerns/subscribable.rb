@@ -9,6 +9,7 @@ module Subscribable
     has_many :subscriber_memberships, :dependent => :destroy, :class_name => 'Membership'
 
     has_many :subscriber_households, :dependent => :destroy, :class_name => 'Household'
+    has_many :subscriber_groups, :dependent => :destroy, :class_name => 'Group'
     has_many :subscriber_businesses, :dependent => :destroy, :class_name => 'Business'
 
     has_many :collaborators, :dependent => :destroy

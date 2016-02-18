@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   end
 
   has_many :memberships, :as => :member, :dependent => :destroy
+  has_many :groups, :through => :memberships, :source => :collective, :source_type => 'Group'
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
 

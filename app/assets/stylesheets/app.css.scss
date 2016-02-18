@@ -81,3 +81,64 @@ body{
   }
 
 }
+.blueberry-menu-bar {
+  // This placeholder selector gets you the core structural styles for the menu
+  @extend %menu-bar;
+  // Set the orientation and sizing of the menu bar
+  @include menu-bar-layout(
+    $orientation: horizontal, // Can be horizontal or vertical
+    $stretch: true // Set to false for a condensed menu
+  );
+  // Add styles for the menu bar items and text
+  @include menu-bar-style(
+    $background: $blueberry, // Background color of items
+    $background-hover: darken($blueberry,5%), // Background color of item on hover
+    $background-active: darken($blueberry,5%), // Background color of an active item
+    $color: $burnt-toast, // Text color of items
+    $color-hover: darken($burnt-toast,5%), // Text color of item on hover
+    $color-active: darken($burnt-toast,5%), // Text color of item when active
+    $autocolor: false // When true, all the above colors will be derived from $background
+  );
+  // Add support for icons
+  @include menu-bar-icons(
+    $position: top // Can be top, right, bottom, or left
+    //$size: 20px // Can be px, em, or rem
+  );
+  @include breakpoint(large) {
+    @include menu-bar-icons(
+      $position: left
+    );
+    $position: top
+    // All CSS in here goes inside the media query
+  }
+}
+
+.blueberry-menu-bar li.active {
+  @extend %menu-bar;
+  @include menu-bar-layout(
+    $orientation: horizontal, // Can be horizontal or vertical
+    $stretch: true // Set to false for a condensed menu
+  );
+  @include menu-bar-style(
+    $background: darken($blueberry,5%), // Background color of items
+    $background-hover: darken($blueberry,5%), // Background color of item on hover
+    $background-active: darken($blueberry,5%), // Background color of an active item
+    $color: #000, // Text color of items
+    $color-hover: darken($burnt-toast,5%), // Text color of item on hover
+    $color-active: darken($burnt-toast,5%), // Text color of item when active
+    $autocolor: false // When true, all the above colors will be derived from $background
+  );
+  // Add support for icons
+  @include menu-bar-icons(
+    $position: top // Can be top, right, bottom, or left
+    //$size: 20px // Can be px, em, or rem
+  );
+  @include breakpoint(large) {
+    @include menu-bar-icons(
+      $position: left
+    );
+    $position: top
+    // All CSS in here goes inside the media query
+  }
+
+}
