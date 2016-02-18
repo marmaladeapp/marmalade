@@ -27,12 +27,12 @@
           - canonical_link = group_address_book_path(address_book.owner,address_book)
         %a{:href => canonical_link}
           .card{:style => 'height:250px;'}
-            .card-section.bg-ice-cream.burnt-toast
-              %h4.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+            .card-section.bg-burnt-toast
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
                 %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(address_book.name, length: 12)
                 %span.float-right
                   %i.fa.fa-book
-            .card-divider.ice-cream.bg-burnt-toast
+            .card-divider.bg-ice-cream.burnt-toast
               = truncate(address_book.owner.name, length: 15)
             .card-section
               - if !address_book.description.blank?

@@ -27,12 +27,12 @@
           - canonical_link = group_calendar_path(calendar.owner,calendar)
         %a{:href => canonical_link}
           .card{:style => 'height:250px;'}
-            .card-section.bg-ice-cream.burnt-toast
-              %h4.rubylang.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+            .card-section.bg-rubylang
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
                 %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(calendar.name, length: 12)
                 %span.float-right
                   %i.fa.fa-calendar
-            .card-divider.ice-cream.bg-rubylang
+            .card-divider.bg-ice-cream.burnt-toast
               = truncate(calendar.owner.name, length: 15)
             .card-section
               - if !calendar.description.blank?

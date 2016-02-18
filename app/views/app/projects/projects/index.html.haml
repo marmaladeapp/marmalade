@@ -27,12 +27,12 @@
           - canonical_link = group_project_path(project.owner,project)
         %a{:href => canonical_link}
           .card{:style => 'height:250px;'}
-            .card-section.bg-ice-cream.burnt-toast
-              %h4.panther.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+            .card-section.bg-panther.burnt-toast
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
                 %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(project.name, length: 12)
                 %span.float-right
                   %i.fa.fa-folder-open
-            .card-divider.ice-cream.bg-panther
+            .card-divider.bg-ice-cream.burnt-toast
               = truncate(project.owner.name, length: 15)
             .card-section
               - if !project.description.blank?

@@ -25,8 +25,9 @@ Rails.application.routes.draw do
       scope module: 'time' do
         resources :time_sheets, path: 'time'
       end
-      scope module: 'finances' do
-        resources :balance_sheets, path: 'finances'
+      scope '/finances', module: 'finances' do
+        get '/', to: 'finances#index', as: 'finances'
+        resources :wallets
       end
       scope module: 'projects' do
         resources :projects
@@ -44,8 +45,9 @@ Rails.application.routes.draw do
     scope module: 'time' do
       resources :time_sheets, path: 'time'
     end
-    scope module: 'finances' do
-      resources :balance_sheets, path: 'finances'
+    scope '/finances', module: 'finances' do
+      get '/', to: 'finances#index', as: 'finances'
+      resources :wallets
     end
     scope module: 'projects' do
       resources :projects
@@ -86,8 +88,9 @@ Rails.application.routes.draw do
         scope module: 'time' do
           resources :time_sheets, path: 'time'
         end
-        scope module: 'finances' do
-          resources :balance_sheets, path: 'finances'
+        scope '/finances', module: 'finances' do
+          get '/', to: 'finances#index', as: 'finances'
+          resources :wallets
         end
         scope module: 'projects' do
           resources :projects
@@ -114,8 +117,9 @@ Rails.application.routes.draw do
       scope module: 'time' do
         resources :time_sheets, path: 'time'
       end
-      scope module: 'finances' do
-        resources :balance_sheets, path: 'finances'
+      scope '/finances', module: 'finances' do
+        get '/', to: 'finances#index', as: 'finances'
+        resources :wallets
       end
       scope module: 'projects' do
         resources :projects

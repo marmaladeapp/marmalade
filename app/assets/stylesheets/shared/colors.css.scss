@@ -193,40 +193,40 @@ $panther: darken($teal, 15%);
 .bg-panther-darker { background-color: darken($teal, 15%) !important; border-color: darken($teal, 20%) !important; }
 
 // Colors
-.navy {       color: $navy !important; }
-.blue {       color: $blue !important; }
-.aqua {       color: $aqua !important; }
-.teal {       color: $teal !important; }
-.olive {      color: $olive !important; }
-.green {      color: $green !important; }
-.lime {       color: $lime !important; }
-.yellow {     color: $yellow !important; }
-.orange {     color: $orange !important; }
-.red {        color: $red !important; }
-.fuchsia {    color: $fuchsia !important; }
-.cerise {    color: $cerise !important; }
-.purple {     color: $purple !important; }
-.maroon {     color: $maroon !important; }
-.white {      color: $white !important; }
-.silver {     color: $silver !important; }
-.gray {       color: $gray !important; }
-.black {      color: $black !important; }
+.navy {       color: $navy !important; border-color: $navy !important; }
+.blue {       color: $blue !important; border-color: $blue !important; }
+.aqua {       color: $aqua !important; border-color: $aqua !important; }
+.teal {       color: $teal !important; border-color: $teal !important; }
+.olive {      color: $olive !important; border-color: $olive !important; }
+.green {      color: $green !important; border-color: $green !important; }
+.lime {       color: $lime !important; border-color: $lime !important; }
+.yellow {     color: $yellow !important; border-color: $yellow !important; }
+.orange {     color: $orange !important; border-color: $orange !important; }
+.red {        color: $red !important; border-color: $red !important; }
+.fuchsia {    color: $fuchsia !important; border-color: $fuchsia !important; }
+.cerise {    color: $cerise !important; border-color: $cerise !important; }
+.purple {     color: $purple !important; border-color: $purple !important; }
+.maroon {     color: $maroon !important; border-color: $maroon !important; }
+.white {      color: $white !important; border-color: $white !important; }
+.silver {     color: $silver !important; border-color: $silver !important; }
+.gray {       color: $gray !important; border-color: $gray !important; }
+.black {      color: $black !important; border-color: $black !important; }
 
-.facebook {   color: $facebook !important; }
-.twitter {    color: $twitter !important; }
-.youtube {    color: $youtube !important; }
-.linkedin {   color: $linkedin !important; }
-.github {     color: $github !important; }
+.facebook {   color: $facebook !important; border-color: $facebook !important; }
+.twitter {    color: $twitter !important; border-color: $twitter !important; }
+.youtube {    color: $youtube !important; border-color: $youtube !important; }
+.linkedin {   color: $linkedin !important; border-color: $linkedin !important; }
+.github {     color: $github !important; border-color: $github !important; }
 
-.javascript {   color: $javascript !important; }
-.rubyonrails {    color: $rubyonrails !important; }
-.rubylang {    color: $ruby !important; }
-.php {   color: $php !important; }
+.javascript {   color: $javascript !important; border-color: $javascript !important; }
+.rubyonrails {    color: $rubyonrails !important; border-color: $rubyonrails !important; }
+.rubylang {    color: $ruby !important; border-color: $ruby !important; }
+.php {   color: $php !important; border-color: $php !important; }
 
-.yellowmountain {   color: darken($yellowmountain, 7.5%) !important; }
+.yellowmountain {   color: darken($yellowmountain, 7.5%) !important; border-color: darken($yellowmountain, 7.5%) !important; }
 .yellowmountain a{   color: darken($yellowmountain, 5%) !important; &:hover{ color: darken($yellowmountain, 10%) !important; text-decoration:none; } }
 .silver a{   color: $silver !important; &:hover{ color: darken($silver, 10%) !important; text-decoration:none; } }
-.panther {   color: $panther !important; }
+.panther {   color: $panther !important; border-color: $panther !important; }
 .panther a{   color: $panther !important; &:hover{ color: lighten($panther, 5%) !important; text-decoration:none; } }
 
 // Border colors
