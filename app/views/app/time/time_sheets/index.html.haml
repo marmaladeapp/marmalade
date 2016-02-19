@@ -1,0 +1,41 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_time_sheet = new_group_time_sheet_path(@context)
+  - else
+    - new_time_sheet = @context.class.name == "Household" ? new_user_home_time_sheet_path(current_user) : new_resource_time_sheet_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} time sheets
+      %a.button.bg-blueberry{:href => new_time_sheet} New time sheet
+    - else
+      %h3 Your time sheets
+
+  .grid-block.wrap.small-12
+
+    - @time_sheets.each do |time_sheet|
+      .grid-content.small-12.medium-6.large-4
+        - case time_sheet.owner.class.name
+        - when "User", "Business"
+          - canonical_link = resource_time_sheet_path(time_sheet.owner,time_sheet)
+        - when "Household"
+          - canonical_link = user_home_time_sheet_path(current_user,time_sheet)
+        - when "Group"
+          - canonical_link = group_time_sheet_path(time_sheet.owner,time_sheet)
+        %a{:href => canonical_link}
+          .card{:style => 'height:250px;'}
+            .card-section.bg-orange-juice.burnt-toast
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(time_sheet.name, length: 12)
+                %span.float-right
+                  %i.fa.fa-folder-open
+            .card-divider.bg-ice-cream.burnt-toast
+              = truncate(time_sheet.owner.name, length: 15)
+            .card-section
+              - if !time_sheet.description.blank?
+                = time_sheet.description
+              - else
+                %em No description.

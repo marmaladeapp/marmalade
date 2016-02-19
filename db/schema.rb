@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218123113) do
+ActiveRecord::Schema.define(version: 20160219063359) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,6 +237,21 @@ ActiveRecord::Schema.define(version: 20160218123113) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "time_time_sheets", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "slug"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "time_time_sheets", ["owner_type", "owner_id"], name: "index_time_time_sheets_on_owner_type_and_owner_id", using: :btree
+  add_index "time_time_sheets", ["slug"], name: "index_time_time_sheets_on_slug", using: :btree
+  add_index "time_time_sheets", ["user_id"], name: "index_time_time_sheets_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                     default: "",      null: false
     t.string   "encrypted_password",        default: "",      null: false
@@ -317,5 +332,6 @@ ActiveRecord::Schema.define(version: 20160218123113) do
   add_foreign_key "ownerships", "users"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "projects_projects", "users"
+  add_foreign_key "time_time_sheets", "users"
   add_foreign_key "users", "plans"
 end

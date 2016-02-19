@@ -1,0 +1,29 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @time_sheet]
+    - url = resource_time_sheets_path(@resource)
+  - when 'Household'
+    - path_array = [@resource, @time_sheet]
+    - url = user_home_time_sheets_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @time_sheet]
+    - url = group_time_sheets_path(@resource)
+- else
+  - path_array = @time_sheet
+  - url = time_sheets_path
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New time sheet
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Time sheet
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+
+      %button.button.expanded.bg-blueberry Save
