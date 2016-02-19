@@ -1,0 +1,11 @@
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} finances
+    - else
+      %h3 Your finances
+
+  .grid-block.wrap.small-12
+
