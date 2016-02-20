@@ -52,8 +52,8 @@ gem 'phony_rails'
 gem 'geocoder' # consider GeoKit as alternative
 gem 'timezone'
 
-gem 'eu_central_bank', git: 'https://github.com/mainio/eu_central_bank.git', branch: 'fix/money_recent'
-
+gem 'eu_central_bank', git: 'https://github.com/mainio/eu_central_bank.git'
+# fix branch merged, new version not yet published.
 
 group :development, :test do
   gem "dotenv-rails"
