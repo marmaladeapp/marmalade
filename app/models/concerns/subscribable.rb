@@ -12,6 +12,8 @@ module Subscribable
     has_many :subscriber_groups, :dependent => :destroy, :class_name => 'Group'
     has_many :subscriber_businesses, :dependent => :destroy, :class_name => 'Business'
 
+    has_many :subscriber_wallets, :dependent => :destroy, :class_name => 'Finances::Wallet'
+
     has_many :collaborators, :dependent => :destroy
     has_many :collaborator_users, :through => :collaborators, :source => :collaborator
     has_many :collaborator_subscribers, :as => :collaborator, :class_name => 'Collaborator', :dependent => :destroy

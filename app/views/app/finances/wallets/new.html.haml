@@ -1,0 +1,50 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @wallet]
+    - url = resource_wallets_path(@resource)
+  - when 'Household'
+    - path_array = [@resource, @wallet]
+    - url = user_home_wallets_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @wallet]
+    - url = group_wallets_path(@resource)
+- else
+  - path_array = @wallet
+  - url = wallets_path
+
+- supported_currencies = $redis.smembers("supported_currencies")
+- @currencies_for_select = []
+- Money::Currency.each do |currency|
+  - if supported_currencies.include? currency.iso_code
+    - @currencies_for_select << currency
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New wallet
+    = form_for path_array, :url => url do |f|
+      = f.fields_for :owners, @wallet.owners.build do |ff|
+        = ff.hidden_field :global_owner, :value => @resource.to_global_id
+        = ff.hidden_field :equity, :value => BigDecimal.new(100)
+        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? current_user.id : @resource.user.id
+      = f.hidden_field :starting_date, :value => Time.current
+      %section.block-list
+        %header Wallet
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+      %section.block-list
+        %header Balance
+        %ul
+          %li
+            = f.number_field :starting_balance, {:step => 'any', :placeholder => 'Starting balance'}
+      %section.block-list
+        %header Currency
+        %ul
+          %li.with-dropdown
+            = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @resource.currency}
+
+      %button.button.expanded.bg-blueberry Save

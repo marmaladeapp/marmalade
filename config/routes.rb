@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       scope '/finances', module: 'finances' do
         get '/', to: 'finances#index', as: 'finances'
         resources :wallets
+        resources :ledgers
       end
       scope module: 'projects' do
         resources :projects
@@ -48,6 +49,7 @@ Rails.application.routes.draw do
     scope '/finances', module: 'finances' do
       get '/', to: 'finances#index', as: 'finances'
       resources :wallets
+      resources :ledgers
     end
     scope module: 'projects' do
       resources :projects
@@ -91,6 +93,7 @@ Rails.application.routes.draw do
         scope '/finances', module: 'finances' do
           get '/', to: 'finances#index', as: 'finances'
           resources :wallets
+          resources :ledgers
         end
         scope module: 'projects' do
           resources :projects
@@ -120,6 +123,7 @@ Rails.application.routes.draw do
       scope '/finances', module: 'finances' do
         get '/', to: 'finances#index', as: 'finances'
         resources :wallets
+        resources :ledgers
       end
       scope module: 'projects' do
         resources :projects

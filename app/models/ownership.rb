@@ -21,6 +21,77 @@ class Ownership < ActiveRecord::Base
     self.owner = GlobalID::Locator.locate owner
   end
 
+  def update_balance_sheets(value:0, current_assets:0, fixed_assets:0, current_liabilities:0, long_term_liabilities:0, cash:0, ledgers_receivable:0, ledgers_debt:0, wallets:0, item:nil, action:nil)
+    @unique_owners = []
+    instantiating_item = item
+    @value = value
+    @current_assets = current_assets
+    @fixed_assets = fixed_assets
+    @current_liabilities = current_liabilities
+    @long_term_liabilities = long_term_liabilities
+    @cash = cash
+    @ledgers_receivable = ledgers_receivable
+    @ledgers_debt = ledgers_debt
+    @wallets = wallets
+
+    self.ancestries.each do |ancestry| # ownership.object_ancestry
+      @business_types = []
+      ancestry.path.reverse.each do |ancestor| # object_ancestry.object_ancestries including self
+        ownership = ancestor.ownership
+        if !@unique_owners.include?(ownership)
+          item = ownership.item
+          item_currency = (["Wallet","Ledger"].include?(item.class.name) ? item.currency : item.currency)
+          owner = ownership.owner
+          owner_currency = owner.currency
+          equity = ownership.equity
+          net_worth = owner.net_worth
+
+          @value = equity.percent_of(@value.convert_currency(item_currency,owner_currency))
+          @current_assets = equity.percent_of(@current_assets.convert_currency(item_currency,owner_currency))
+          @fixed_assets = equity.percent_of(@fixed_assets.convert_currency(item_currency,owner_currency))
+          @current_liabilities = equity.percent_of(@current_liabilities.convert_currency(item_currency,owner_currency))
+          @long_term_liabilities = equity.percent_of(@long_term_liabilities.convert_currency(item_currency,owner_currency))
+          @cash = equity.percent_of(@cash.convert_currency(item_currency,owner_currency))
+          @ledgers_receivable = equity.percent_of(@ledgers_receivable.convert_currency(item_currency,owner_currency))
+          @ledgers_debt = equity.percent_of(@ledgers_debt.convert_currency(item_currency,owner_currency))
+          @wallets = equity.percent_of(@wallets.convert_currency(item_currency,owner_currency))
+
+          if item.class.name == "Business"
+            @business_types << item.business_type
+          end
+
+          if (["LimitedPartnership","LimitedLiabilityPartnership","LimitedCompany"] & @business_types).empty?
+            if item == instantiating_item || (owner.class.name == "Household" && self.owner.class.name == "User")
+              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable + @ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt + @ledgers_debt, :total_wallets => owner.total_wallets + @wallets, :item => instantiating_item, :action => action)
+            else
+              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets, :item => instantiating_item, :action => action)
+            end
+          elsif (["LimitedLiabilityPartnership","LimitedCompany"] & @business_types).empty?
+            assets = @current_assets + @fixed_assets
+            liabilities = @current_liabilities + @long_term_liabilities
+            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities + liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets)
+          elsif (["LimitedLiabilityPartnership","LimitedCompany"] & @business_types).any?
+            assets = @value
+            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets)
+          end
+
+          if owner.class.name == "Business" && ["LimitedCompany","LimitedLiabilityPartnership"].include?(owner.business_type)
+            if (@value < 0 && (net_worth + @value) >= 0) || (@value > 0 && net_worth >= 0)
+              @value = @value
+            elsif (@value < 0 && net_worth > 0 && (net_worth + @value < 0))
+              @value = - net_worth
+            elsif (@value > 0 && net_worth < 0 && (net_worth + @value > 0))
+              @value = net_worth + @value
+            else
+              @value = 0
+            end
+          end
+          @unique_owners << ownership
+        end
+      end
+    end
+  end
+
   private
 
   def create_ancestry

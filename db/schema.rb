@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219063359) do
+ActiveRecord::Schema.define(version: 20160220080639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,56 @@ ActiveRecord::Schema.define(version: 20160219063359) do
   add_index "contacts_address_books", ["owner_type", "owner_id"], name: "index_contacts_address_books_on_owner_type_and_owner_id", using: :btree
   add_index "contacts_address_books", ["slug"], name: "index_contacts_address_books_on_slug", using: :btree
   add_index "contacts_address_books", ["user_id"], name: "index_contacts_address_books_on_user_id", using: :btree
+
+  create_table "finances_balance_sheets", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.decimal  "net_worth"
+    t.decimal  "total_assets"
+    t.decimal  "current_assets"
+    t.decimal  "fixed_assets"
+    t.decimal  "total_liabilities"
+    t.decimal  "current_liabilities"
+    t.decimal  "long_term_liabilities"
+    t.decimal  "cash"
+    t.decimal  "total_ledgers_receivable"
+    t.decimal  "total_ledgers_debt"
+    t.decimal  "total_wallets"
+    t.string   "currency"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.string   "action"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "finances_balance_sheets", ["item_type", "item_id"], name: "index_finances_balance_sheets_on_item_type_and_item_id", using: :btree
+  add_index "finances_balance_sheets", ["owner_type", "owner_id"], name: "index_finances_balance_sheets_on_owner_type_and_owner_id", using: :btree
+
+  create_table "finances_ledgers", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.decimal  "value"
+    t.decimal  "starting_value"
+    t.string   "currency"
+    t.datetime "due_in_full_at"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "finances_wallets", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.decimal  "balance"
+    t.decimal  "starting_balance"
+    t.string   "currency"
+    t.datetime "starting_date"
+    t.integer  "user_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "finances_wallets", ["user_id"], name: "index_finances_wallets_on_user_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -326,6 +376,7 @@ ActiveRecord::Schema.define(version: 20160219063359) do
   add_foreign_key "calendar_calendars", "users"
   add_foreign_key "collaborators", "users"
   add_foreign_key "contacts_address_books", "users"
+  add_foreign_key "finances_wallets", "users"
   add_foreign_key "households", "users"
   add_foreign_key "memberships", "users"
   add_foreign_key "ownership_ancestries", "ownerships"
