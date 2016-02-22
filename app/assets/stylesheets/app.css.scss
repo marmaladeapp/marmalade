@@ -3,10 +3,14 @@
 @import "font-awesome-sprockets";
 @import "font-awesome";
 
+@import "chartist.min";
+
 @import "timepiece";
 
 @import "shared/colors";
 @import "shared/fonts";
+
+@import "app/chartist";
 
 body{
   @include breakpoint(small only){

@@ -8,6 +8,10 @@
 //= require_tree ../../../vendor/assets/javascripts/services/.
 //= require_tree ../../../vendor/assets/javascripts/components/.
 //
+//= require chartist.min
+//
+//= require app/chartist
+//
 //= require timepiece
 //
 // require turbolinks

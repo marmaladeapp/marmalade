@@ -47,6 +47,8 @@ Rails.application.routes.draw do
       resources :time_sheets, path: 'time'
     end
     scope '/finances', module: 'finances' do
+      get 'charts/wallet_balance'
+      get 'charts/resource_balance'
       get '/', to: 'finances#index', as: 'finances'
       resources :wallets
       resources :ledgers

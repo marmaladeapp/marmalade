@@ -10,12 +10,14 @@ class App::Finances::FinancesController < App::AppController
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      @resource = @household
       @context = @household
       @balance_sheets = @household.balance_sheets
       @wallets = @household.wallets
       @ledgers = @household.ledgers
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      @resource = @group
       @context = @group
       @balance_sheets = @group.balance_sheets
       @wallets = @group.wallets
