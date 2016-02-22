@@ -18,8 +18,9 @@
     - else
       %h3 Your finances
 
+  .grid-content.small-12
+    %h4 Wallets
   .grid-block.wrap.small-12
-
     - @wallets.each do |wallet|
       .grid-content.small-12.medium-6.large-4
         - case wallet.owners.first.owner.class.name
@@ -44,8 +45,9 @@
               - else
                 %em No description.
 
+  .grid-content.small-12
+    %h4 Ledgers
   .grid-block.wrap.small-12
-
     - @ledgers.each do |ledger|
       .grid-content.small-12.medium-6.large-4
         - case ledger.owners.first.owner.class.name
