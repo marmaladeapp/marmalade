@@ -37,6 +37,25 @@
         .text-center{:style => "padding-top:2.2em;height:5.6em;"}
           %em.silver No records.
 
+  .grid-block.wrap.small-12
+    - if @resource.present?
+      .grid-content.small-3.text-center Net Worth
+      .grid-content.small-3.text-center Total Assets
+      .grid-content.small-3.text-center Total Liabilities
+      .grid-content.small-3.text-center Cash
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.net_worth}".to_money, :no_cents_if_whole => false
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_assets}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_liabilities}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.cash}".to_money, :no_cents_if_whole => false
+
   .grid-content.small-12
     %h4 Wallets
   .grid-block.wrap.small-12
@@ -60,9 +79,10 @@
               = truncate(wallet.owners.first.owner.name, length: 15)
             .card-section
               - if !wallet.description.blank?
-                = wallet.description
+                = truncate(wallet.description, length: 75)
               - else
                 %em No description.
+              %h2.text-center= humanized_money_with_symbol "#{wallet.currency} #{wallet.balance}".to_money
 
   .grid-content.small-12
     %h4 Ledgers
@@ -87,6 +107,7 @@
               = truncate(ledger.owners.first.owner.name, length: 15)
             .card-section
               - if !ledger.description.blank?
-                = ledger.description
+                = truncate(ledger.description, length: 75)
               - else
                 %em No description.
+              %h2.text-center= humanized_money_with_symbol "#{ledger.currency} #{ledger.value}".to_money
