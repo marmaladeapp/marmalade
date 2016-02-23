@@ -30,7 +30,22 @@ Rails.application.routes.draw do
         resources :wallets
         resources :ledgers
       end
-      resources :projects
+      resources :projects do
+        scope module: 'contacts' do
+          resources :address_books, path: 'contacts'
+        end
+        scope module: 'calendar' do
+          resources :calendars
+        end
+        scope module: 'time' do
+          resources :time_sheets, path: 'time'
+        end
+        scope '/finances', module: 'finances' do
+          get '/', to: 'finances#index', as: 'finances'
+          resources :wallets
+          resources :ledgers
+        end
+      end
     end
 
     resources :businesses, only: [:show,:new,:create]
@@ -93,7 +108,22 @@ Rails.application.routes.draw do
           resources :wallets
           resources :ledgers
         end
-        resources :projects
+        resources :projects do
+          scope module: 'contacts' do
+            resources :address_books, path: 'contacts'
+          end
+          scope module: 'calendar' do
+            resources :calendars
+          end
+          scope module: 'time' do
+            resources :time_sheets, path: 'time'
+          end
+          scope '/finances', module: 'finances' do
+            get '/', to: 'finances#index', as: 'finances'
+            resources :wallets
+            resources :ledgers
+          end
+        end
       end
 
     end
@@ -121,7 +151,22 @@ Rails.application.routes.draw do
         resources :wallets
         resources :ledgers
       end
-      resources :projects
+      resources :projects do
+        scope module: 'contacts' do
+          resources :address_books, path: 'contacts'
+        end
+        scope module: 'calendar' do
+          resources :calendars
+        end
+        scope module: 'time' do
+          resources :time_sheets, path: 'time'
+        end
+        scope '/finances', module: 'finances' do
+          get '/', to: 'finances#index', as: 'finances'
+          resources :wallets
+          resources :ledgers
+        end
+      end
     end
     #/ the tricky part ##
 
