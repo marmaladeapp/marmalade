@@ -1,5 +1,37 @@
 Rails.application.routes.draw do
+  #########################################################
+  ##########       Requirements & Concerns       ##########
+  #########################################################
   require 'constraints/short_dispatcher'
+  concern :modules do
+    scope module: 'contacts' do
+      resources :address_books, path: 'contacts'
+    end
+    scope module: 'calendar' do
+      resources :calendars
+    end
+    scope module: 'time' do
+      resources :time_sheets, path: 'time'
+    end
+    scope '/finances', module: 'finances' do
+      get '/', to: 'finances#index', as: 'finances'
+      resources :wallets
+      resources :ledgers
+    end
+  end
+
+  concern :has_modules do
+    resources :memberships, path: 'members'
+    concerns :modules
+    resources :projects do
+      concerns :modules
+    end
+  end
+  ###############  Requirements & Concerns  ###############
+  #########################################################
+
+  ### ROUTES ->
+
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", invitations: "users/invitations" }
 
   scope module: 'site' do
@@ -15,37 +47,7 @@ Rails.application.routes.draw do
     resources :organizations, only: [:new]
 
     resources :groups do
-      resources :memberships, path: 'members'
-      scope module: 'contacts' do
-        resources :address_books, path: 'contacts'
-      end
-      scope module: 'calendar' do
-        resources :calendars
-      end
-      scope module: 'time' do
-        resources :time_sheets, path: 'time'
-      end
-      scope '/finances', module: 'finances' do
-        get '/', to: 'finances#index', as: 'finances'
-        resources :wallets
-        resources :ledgers
-      end
-      resources :projects do
-        scope module: 'contacts' do
-          resources :address_books, path: 'contacts'
-        end
-        scope module: 'calendar' do
-          resources :calendars
-        end
-        scope module: 'time' do
-          resources :time_sheets, path: 'time'
-        end
-        scope '/finances', module: 'finances' do
-          get '/', to: 'finances#index', as: 'finances'
-          resources :wallets
-          resources :ledgers
-        end
-      end
+      concerns :has_modules
     end
 
     resources :businesses, only: [:show,:new,:create]
@@ -92,38 +94,7 @@ Rails.application.routes.draw do
         get '/edit', to: 'households#edit', as: 'edit'
         patch '/edit', to: 'households#update', as: 'update'
         delete '/edit', to: 'households#destroy', as: 'destroy'
-        resources :memberships, path: 'members'
-
-        scope module: 'contacts' do
-          resources :address_books, path: 'contacts'
-        end
-        scope module: 'calendar' do
-          resources :calendars
-        end
-        scope module: 'time' do
-          resources :time_sheets, path: 'time'
-        end
-        scope '/finances', module: 'finances' do
-          get '/', to: 'finances#index', as: 'finances'
-          resources :wallets
-          resources :ledgers
-        end
-        resources :projects do
-          scope module: 'contacts' do
-            resources :address_books, path: 'contacts'
-          end
-          scope module: 'calendar' do
-            resources :calendars
-          end
-          scope module: 'time' do
-            resources :time_sheets, path: 'time'
-          end
-          scope '/finances', module: 'finances' do
-            get '/', to: 'finances#index', as: 'finances'
-            resources :wallets
-            resources :ledgers
-          end
-        end
+        concerns :has_modules   
       end
 
     end
@@ -133,40 +104,10 @@ Rails.application.routes.draw do
       patch '/edit', to: 'businesses#update', as: 'update'
       delete '/edit', to: 'businesses#destroy', as: 'destroy'
       resources :ownerships, path: 'owners'
-      resources :memberships, path: 'members'
     end
 
     scope '/:resource_id', as: 'resource' do
-      scope module: 'contacts' do
-        resources :address_books, path: 'contacts'
-      end
-      scope module: 'calendar' do
-        resources :calendars
-      end
-      scope module: 'time' do
-        resources :time_sheets, path: 'time'
-      end
-      scope '/finances', module: 'finances' do
-        get '/', to: 'finances#index', as: 'finances'
-        resources :wallets
-        resources :ledgers
-      end
-      resources :projects do
-        scope module: 'contacts' do
-          resources :address_books, path: 'contacts'
-        end
-        scope module: 'calendar' do
-          resources :calendars
-        end
-        scope module: 'time' do
-          resources :time_sheets, path: 'time'
-        end
-        scope '/finances', module: 'finances' do
-          get '/', to: 'finances#index', as: 'finances'
-          resources :wallets
-          resources :ledgers
-        end
-      end
+      concerns :has_modules
     end
     #/ the tricky part ##
 

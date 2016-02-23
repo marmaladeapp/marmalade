@@ -27,10 +27,10 @@
       %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
         - @business.memberships.each do |membership|
           .float-left{:style => 'margin-left:5px;'}
-            %a{:href => current_user == @business.user ? edit_business_membership_path(@business,membership.member) : vanity_path(membership.member)}
+            %a{:href => current_user == @business.user ? edit_resource_membership_path(@business,membership.member) : vanity_path(membership.member)}
               %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
         - if current_user == @business.user
           .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
             .align-center.text-center{:style => 'width:40px;'}
-              %a.burnt-toast{:href => new_business_membership_path(@business)}
+              %a.burnt-toast{:href => new_resource_membership_path(@business)}
                 %i.fa.fa-plus-circle.fa-lg

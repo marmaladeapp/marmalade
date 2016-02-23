@@ -4,7 +4,7 @@
   - url = user_home_membership_path(@user, @membership.member)
 - when 'Business'
   - path_array = [@resource, @membership]
-  - url = business_membership_path(@business, @membership.member)
+  - url = resource_membership_path(@business, @membership.member)
 - when 'Group'
   - path_array = [@resource, @membership]
   - url = group_membership_path(@group, @membership.member)
