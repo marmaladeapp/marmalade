@@ -30,9 +30,7 @@ Rails.application.routes.draw do
         resources :wallets
         resources :ledgers
       end
-      scope module: 'projects' do
-        resources :projects
-      end
+      resources :projects
     end
 
     resources :businesses, only: [:show,:new,:create]
@@ -53,9 +51,7 @@ Rails.application.routes.draw do
       resources :wallets
       resources :ledgers
     end
-    scope module: 'projects' do
-      resources :projects
-    end
+    resources :projects
 
     ## The Tricky Part ##
     match '/:id', to: Constraints::ShortDispatcher.new(self), :via => 'get', :as => 'vanity'
@@ -97,9 +93,7 @@ Rails.application.routes.draw do
           resources :wallets
           resources :ledgers
         end
-        scope module: 'projects' do
-          resources :projects
-        end
+        resources :projects
       end
 
     end
@@ -127,9 +121,7 @@ Rails.application.routes.draw do
         resources :wallets
         resources :ledgers
       end
-      scope module: 'projects' do
-        resources :projects
-      end
+      resources :projects
     end
     #/ the tricky part ##
 

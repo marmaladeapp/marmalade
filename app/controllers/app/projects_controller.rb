@@ -1,4 +1,4 @@
-class App::Projects::ProjectsController < App::AppController
+class App::ProjectsController < App::AppController
 
   def index
     if params[:resource_id]
