@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160220080639) do
+ActiveRecord::Schema.define(version: 20160224093724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,7 +261,7 @@ ActiveRecord::Schema.define(version: 20160220080639) do
     t.integer  "household_limit",    default: 0
   end
 
-  create_table "projects_projects", force: :cascade do |t|
+  create_table "projects", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.string   "slug"
@@ -272,9 +272,9 @@ ActiveRecord::Schema.define(version: 20160220080639) do
     t.datetime "updated_at",  null: false
   end
 
-  add_index "projects_projects", ["owner_type", "owner_id"], name: "index_projects_projects_on_owner_type_and_owner_id", using: :btree
-  add_index "projects_projects", ["slug"], name: "index_projects_projects_on_slug", using: :btree
-  add_index "projects_projects", ["user_id"], name: "index_projects_projects_on_user_id", using: :btree
+  add_index "projects", ["owner_type", "owner_id"], name: "index_projects_on_owner_type_and_owner_id", using: :btree
+  add_index "projects", ["slug"], name: "index_projects_on_slug", using: :btree
+  add_index "projects", ["user_id"], name: "index_projects_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -382,7 +382,7 @@ ActiveRecord::Schema.define(version: 20160220080639) do
   add_foreign_key "ownership_ancestries", "ownerships"
   add_foreign_key "ownerships", "users"
   add_foreign_key "payment_methods", "users"
-  add_foreign_key "projects_projects", "users"
+  add_foreign_key "projects", "users"
   add_foreign_key "time_time_sheets", "users"
   add_foreign_key "users", "plans"
 end

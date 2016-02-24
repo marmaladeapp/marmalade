@@ -13,10 +13,10 @@ Rails.application.routes.draw do
     scope module: 'time' do
       resources :time_sheets, path: 'time'
     end
-    scope '/finances', module: 'finances' do
-      get '/', to: 'finances#index', as: 'finances'
-      resources :wallets
-      resources :ledgers
+    scope module: 'finances' do
+      get '/finances', to: 'finances#index', as: 'finances'
+      resources :wallets, path: '/finances/wallets'
+      resources :ledgers, path: '/finances/ledgers'
     end
   end
 
@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :memberships, path: 'members'
     concerns :modules
     resources :projects do
+      resources :memberships, path: 'members'
       concerns :modules
     end
   end
