@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160224093724) do
+ActiveRecord::Schema.define(version: 20160224175055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,7 +141,11 @@ ActiveRecord::Schema.define(version: 20160224093724) do
     t.datetime "due_in_full_at"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "context_id"
+    t.string   "context_type"
   end
+
+  add_index "finances_ledgers", ["context_type", "context_id"], name: "index_finances_ledgers_on_context_type_and_context_id", using: :btree
 
   create_table "finances_wallets", force: :cascade do |t|
     t.string   "name"
@@ -153,8 +157,11 @@ ActiveRecord::Schema.define(version: 20160224093724) do
     t.integer  "user_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.integer  "context_id"
+    t.string   "context_type"
   end
 
+  add_index "finances_wallets", ["context_type", "context_id"], name: "index_finances_wallets_on_context_type_and_context_id", using: :btree
   add_index "finances_wallets", ["user_id"], name: "index_finances_wallets_on_user_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|

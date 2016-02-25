@@ -17,6 +17,15 @@ class App::Finances::WalletsController < App::AppController
       @context = @resource
     end
     @wallet = ::Finances::Wallet.new
+    if @resource.class.name == "Household"
+      @ownerships = []
+      @resource.members.each do |member|
+        @ownerships << Ownership.new(:owner => member, :item => @wallet, :equity => BigDecimal.new(100) / @resource.members.count, :user_id => @resource.user.id)
+      end
+    else
+      @ownerships = []
+      @ownerships << Ownership.new(:owner => @resource, :item => @wallet, :equity => BigDecimal.new(100), :user_id => @resource.class.name == "User" ? @resource.id : @resource.user.id)
+    end
   end
 
   def create
@@ -35,6 +44,7 @@ class App::Finances::WalletsController < App::AppController
     @wallet = ::Finances::Wallet.new(wallet_params)
     @wallet.balance = @wallet.starting_balance
     @wallet.user = @resource.class.name == "User" ? current_user : @resource.user
+    @wallet.context = @context
     if @wallet.save
       @wallet.owners.each do |ownership|
         if @wallet.balance >= 0
@@ -52,7 +62,7 @@ class App::Finances::WalletsController < App::AppController
   private
 
   def wallet_params
-    params.require(:finances_wallet).permit(:name,:description,:starting_balance,:currency,:starting_date,:owners_attributes => [:user_id,:global_owner,:equity])
+    params.require(:finances_wallet).permit(:name,:description,:starting_balance,:currency,:starting_date,:global_context,:owners_attributes => [:user_id,:global_owner,:equity])
   end
 
 end

@@ -17,6 +17,15 @@ class App::Finances::LedgersController < App::AppController
       @context = @resource
     end
     @ledger = ::Finances::Ledger.new
+    if @resource.class.name == "Household"
+      @ownerships = []
+      @resource.members.each do |member|
+        @ownerships << Ownership.new(:owner => member, :item => @ledger, :equity => BigDecimal.new(100) / @resource.members.count, :user_id => @resource.user.id)
+      end
+    else
+      @ownerships = []
+      @ownerships << Ownership.new(:owner => @resource, :item => @ledger, :equity => BigDecimal.new(100), :user_id => @resource.class.name == "User" ? @resource.id : @resource.user.id)
+    end
   end
 
   def create
@@ -34,6 +43,7 @@ class App::Finances::LedgersController < App::AppController
     params[:finances_ledger][:starting_value] = BigDecimal.new(params[:finances_ledger][:starting_value])
     @ledger = ::Finances::Ledger.new(ledger_params)
     @ledger.value = @ledger.starting_value
+    @ledger.context = @context
     if @ledger.save
       @ledger.owners.each do |ownership|
         if @ledger.value >= 0
@@ -59,7 +69,7 @@ class App::Finances::LedgersController < App::AppController
   private
 
   def ledger_params
-    params.require(:finances_ledger).permit(:name, :description, :starting_value, :currency, :"due_in_full_at(1i)", :"due_in_full_at(2i)", :"due_in_full_at(3i)", :owners_attributes => [:user_id,:global_owner,:equity])
+    params.require(:finances_ledger).permit(:name, :description, :starting_value, :currency, :"due_in_full_at(1i)", :"due_in_full_at(2i)", :"due_in_full_at(3i)", :global_context, :owners_attributes => [:user_id,:global_owner,:equity])
   end
 
 end

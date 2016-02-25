@@ -56,18 +56,40 @@
         %h4
           %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.cash}".to_money, :no_cents_if_whole => false
 
+  .grid-block.wrap.small-12
+    - if @resource.present?
+      .grid-content.small-6.text-center
+        %a{:href => '#'}
+          .card
+            .card-section.bg-ice-cream
+              %strong.burnt-toast Outstanding Receivables
+            .card-section.bg-ice-cream
+              %h3.green
+                %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_ledgers_receivable}".to_money, :no_cents_if_whole => false
+      .grid-content.small-6.text-center
+        %a{:href => '#'}
+          .card
+            .card-section.bg-ice-cream
+              %strong.burnt-toast Outstanding Debts
+            .card-section.bg-ice-cream
+              %h3.strawberry-jam
+                %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_ledgers_debt}".to_money, :no_cents_if_whole => false
+
   .grid-content.small-12
     %h4 Wallets
   .grid-block.wrap.small-12
     - @wallets.each do |wallet|
       .grid-content.small-12.medium-6.large-4
-        - case wallet.owners.first.owner.class.name
-        - when "User", "Business"
-          - canonical_link = resource_wallet_path(wallet.owners.first.owner,wallet)
-        - when "Household"
+        - if wallet.context.present?
           - canonical_link = user_home_wallet_path(current_user,wallet)
-        - when "Group"
-          - canonical_link = group_wallet_path(wallet.owners.first.owner,wallet)
+        - else
+          - case wallet.owners.first.owner.class.name
+          - when "User", "Business"
+            - canonical_link = resource_wallet_path(wallet.owners.first.owner,wallet)
+          - when "Household"
+            - canonical_link = user_home_wallet_path(current_user,wallet)
+          - when "Group"
+            - canonical_link = group_wallet_path(wallet.owners.first.owner,wallet)
         %a{:href => canonical_link}
           .card{:style => 'height:250px;'}
             .card-section.bg-olive
