@@ -1,12 +1,12 @@
 - if @context
   - if @context.class.name == 'Group'
     - new_wallet = new_group_wallet_path(@context)
-    - new_ledger = new_group_ledger_path(@context)
+    /- new_ledger = new_group_ledger_path(@context)
     - receivables = group_receivables_path(@context)
     - debts = group_debts_path(@context)
   - else
     - new_wallet = @context.class.name == "Household" ? new_user_home_wallet_path(current_user) : new_resource_wallet_path(@resource)
-    - new_ledger = @context.class.name == "Household" ? new_user_home_ledger_path(current_user) : new_resource_ledger_path(@resource)
+    /- new_ledger = @context.class.name == "Household" ? new_user_home_ledger_path(current_user) : new_resource_ledger_path(@resource)
     - receivables = @context.class.name == "Household" ? user_home_receivables_path(current_user) : resource_receivables_path(@resource)
     - debts = @context.class.name == "Household" ? user_home_debts_path(current_user) : resource_debts_path(@resource)
 
