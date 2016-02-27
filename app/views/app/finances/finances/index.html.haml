@@ -2,9 +2,13 @@
   - if @context.class.name == 'Group'
     - new_wallet = new_group_wallet_path(@context)
     - new_ledger = new_group_ledger_path(@context)
+    - receivables = group_receivables_path(@context)
+    - debts = group_debts_path(@context)
   - else
     - new_wallet = @context.class.name == "Household" ? new_user_home_wallet_path(current_user) : new_resource_wallet_path(@resource)
     - new_ledger = @context.class.name == "Household" ? new_user_home_ledger_path(current_user) : new_resource_ledger_path(@resource)
+    - receivables = @context.class.name == "Household" ? user_home_receivables_path(current_user) : resource_receivables_path(@resource)
+    - debts = @context.class.name == "Household" ? user_home_debts_path(current_user) : resource_debts_path(@resource)
 
 
 .grid-container.small-12.medium-10
@@ -13,8 +17,6 @@
 
     - if @context
       %h3 #{@context.name.possessive} finances
-      %a.button.bg-blueberry{:href => new_wallet} New wallet
-      %a.button.bg-blueberry{:href => new_ledger} New ledger
     - else
       %h3 Your finances
 
@@ -59,7 +61,7 @@
   .grid-block.wrap.small-12
     - if @resource.present?
       .grid-content.small-6.text-center
-        %a{:href => '#'}
+        %a{:href => receivables}
           .card
             .card-section.bg-ice-cream
               %strong.burnt-toast Outstanding Receivables
@@ -67,7 +69,7 @@
               %h3.green
                 %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_ledgers_receivable}".to_money, :no_cents_if_whole => false
       .grid-content.small-6.text-center
-        %a{:href => '#'}
+        %a{:href => debts}
           .card
             .card-section.bg-ice-cream
               %strong.burnt-toast Outstanding Debts
@@ -77,59 +79,13 @@
 
   .grid-content.small-12
     %h4 Wallets
+    - if @context
+      %a.button.bg-blueberry{:href => new_wallet} New wallet
   .grid-block.wrap.small-12
-    - @wallets.each do |wallet|
-      .grid-content.small-12.medium-6.large-4
-        - if wallet.context.present?
-          - canonical_link = user_home_wallet_path(current_user,wallet)
-        - else
-          - case wallet.owners.first.owner.class.name
-          - when "User", "Business"
-            - canonical_link = resource_wallet_path(wallet.owners.first.owner,wallet)
-          - when "Household"
-            - canonical_link = user_home_wallet_path(current_user,wallet)
-          - when "Group"
-            - canonical_link = group_wallet_path(wallet.owners.first.owner,wallet)
-        %a{:href => canonical_link}
-          .card{:style => 'height:250px;'}
-            .card-section.bg-olive
-              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
-                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(wallet.name, length: 12)
-                %span.float-right
-                  %i.fa.fa-money
-            .card-divider.bg-ice-cream.burnt-toast
-              = truncate(wallet.owners.first.owner.name, length: 15)
-            .card-section
-              - if !wallet.description.blank?
-                = truncate(wallet.description, length: 75)
-              - else
-                %em No description.
-              %h2.text-center= humanized_money_with_symbol "#{wallet.currency} #{wallet.balance}".to_money
+    = render partial: 'app/finances/wallets/wallet', collection: @wallets
 
-  .grid-content.small-12
-    %h4 Ledgers
-  .grid-block.wrap.small-12
-    - @ledgers.each do |ledger|
-      .grid-content.small-12.medium-6.large-4
-        - case ledger.owners.first.owner.class.name
-        - when "User", "Business"
-          - canonical_link = resource_ledger_path(ledger.owners.first.owner,ledger)
-        - when "Household"
-          - canonical_link = user_home_ledger_path(current_user,ledger)
-        - when "Group"
-          - canonical_link = group_ledger_path(ledger.owners.first.owner,ledger)
-        %a{:href => canonical_link}
-          .card{:style => 'height:250px;'}
-            .card-section.bg-green
-              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
-                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(ledger.name, length: 12)
-                %span.float-right
-                  %i.fa.fa-bar-chart
-            .card-divider.bg-ice-cream.burnt-toast
-              = truncate(ledger.owners.first.owner.name, length: 15)
-            .card-section
-              - if !ledger.description.blank?
-                = truncate(ledger.description, length: 75)
-              - else
-                %em No description.
-              %h2.text-center= humanized_money_with_symbol "#{ledger.currency} #{ledger.value}".to_money
+  - if !@context
+    .grid-content.small-12
+      %h4 Ledgers
+    .grid-block.wrap.small-12
+      = render partial: 'app/finances/ledgers/ledger', collection: @ledgers

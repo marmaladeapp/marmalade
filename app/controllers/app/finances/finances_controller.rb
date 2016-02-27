@@ -14,7 +14,7 @@ class App::Finances::FinancesController < App::AppController
       @context = @household
       @balance_sheets = @household.balance_sheets
       @wallets = Finances::Wallet.where(:context => @household)
-      @ledgers = @household.ledgers
+      @ledgers = Finances::Ledger.where(:context => @household)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group

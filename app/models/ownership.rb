@@ -123,7 +123,11 @@ class Ownership < ActiveRecord::Base
   def destroy_orphans
     if self.owner.class.name == "User"
       unless Ownership.where(:owner => self.owner, :user => self.user).any? || Membership.where(:member => self.owner, :user => self.user).any?
-        Collaborator.find_by(:user => self.user, :collaborator => self.owner).destroy
+        unless self.user == self.owner
+          if collab = Collaborator.find_by(:user => self.user, :collaborator => self.owner)
+            collab.destroy
+          end
+        end
       end
     end
     unless self.item.class.name == "User"

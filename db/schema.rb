@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160224175055) do
+ActiveRecord::Schema.define(version: 20160226162452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,13 +139,16 @@ ActiveRecord::Schema.define(version: 20160224175055) do
     t.decimal  "starting_value"
     t.string   "currency"
     t.datetime "due_in_full_at"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.integer  "context_id"
     t.string   "context_type"
+    t.integer  "counterparty_id"
+    t.string   "counterparty_type"
   end
 
   add_index "finances_ledgers", ["context_type", "context_id"], name: "index_finances_ledgers_on_context_type_and_context_id", using: :btree
+  add_index "finances_ledgers", ["counterparty_type", "counterparty_id"], name: "index_finances_ledgers_on_counterparty_type_and_counterparty_id", using: :btree
 
   create_table "finances_wallets", force: :cascade do |t|
     t.string   "name"

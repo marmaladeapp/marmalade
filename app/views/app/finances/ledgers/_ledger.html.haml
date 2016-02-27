@@ -1,0 +1,36 @@
+.grid-content.small-12.medium-6.large-4
+  - if ledger.context
+    - canonical_link = user_home_ledger_path(current_user,ledger)
+  - else
+    - case ledger.owners.first.owner.class.name
+    - when "User", "Business"
+      - canonical_link = resource_ledger_path(ledger.owners.first.owner,ledger)
+    - when "Group"
+      - canonical_link = group_ledger_path(ledger.owners.first.owner,ledger)
+
+  %a{:href => canonical_link}
+    .card{:style => 'height:250px;'}
+      .card-section{:class => ledger.starting_value > 0 ? 'bg-green' : 'bg-red'}
+        %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+          %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(ledger.name, length: 12)
+          %span.float-right
+            %i.fa.fa-bar-chart
+      .card-divider.bg-ice-cream.burnt-toast
+        - if ledger.context
+          %i.fa.fa-home
+          = truncate(ledger.context.name, length: 15)
+        - else
+          - case ledger.owners.first.owner.class.name
+          - when "User"
+            %i.fa.fa-user
+          - when "Business"
+            %i.fa.fa-briefcase
+          - when "Group"
+            %i.fa.fa-users
+          = truncate(ledger.owners.first.owner.name, length: 15)
+      .card-section
+        - if !ledger.description.blank?
+          = truncate(ledger.description, length: 75)
+        - else
+          %em No description.
+        %h2.text-center= humanized_money_with_symbol "#{ledger.currency} #{ledger.value}".to_money

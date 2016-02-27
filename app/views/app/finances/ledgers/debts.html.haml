@@ -1,0 +1,12 @@
+- if @context.class.name == 'Group'
+  - new_debt = group_new_debt_path(@context)
+- else
+  - new_debt = @context.class.name == "Household" ? user_home_new_debt_path(current_user) : resource_new_debt_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h4 Debts
+    %a.button.bg-blueberry{:href => new_debt} New debt
+  .grid-block.wrap.small-12
+    = render partial: 'app/finances/ledgers/ledger', collection: @ledgers

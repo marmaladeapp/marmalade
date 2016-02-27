@@ -1,7 +1,21 @@
 class App::Finances::WalletsController < App::AppController
 
   def index
+  end
 
+  def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+    end
+    @wallet = ::Finances::Wallet.find(params[:id])
   end
 
   def new

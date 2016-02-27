@@ -3,6 +3,7 @@ class Finances::Ledger < ActiveRecord::Base
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
 
   belongs_to :context, polymorphic: true
+  belongs_to :counterparty, polymorphic: true
 
   accepts_nested_attributes_for :owners
 
@@ -11,6 +12,13 @@ class Finances::Ledger < ActiveRecord::Base
   end
   def global_context=(context)
     self.context = GlobalID::Locator.locate context
+  end
+
+  def global_counterparty
+    self.counterparty.to_global_id if self.counterparty.present?
+  end
+  def global_counterparty=(counterparty)
+    self.counterparty = GlobalID::Locator.locate counterparty
   end
 
 end

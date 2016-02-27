@@ -1,0 +1,37 @@
+.grid-content.small-12.medium-6.large-4
+  - if wallet.context.present?
+    - canonical_link = user_home_wallet_path(current_user,wallet)
+  - else
+    - case wallet.owners.first.owner.class.name
+    - when "User", "Business"
+      - canonical_link = resource_wallet_path(wallet.owners.first.owner,wallet)
+    - when "Household"
+      - canonical_link = user_home_wallet_path(current_user,wallet)
+    - when "Group"
+      - canonical_link = group_wallet_path(wallet.owners.first.owner,wallet)
+  %a{:href => canonical_link}
+    .card{:style => 'height:250px;'}
+      .card-section.bg-olive
+        %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+          %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(wallet.name, length: 12)
+          %span.float-right
+            %i.fa.fa-money
+      .card-divider.bg-ice-cream.burnt-toast
+        - if wallet.context
+          %i.fa.fa-home
+          = truncate(wallet.context.name, length: 15)
+        - else
+          - case wallet.owners.first.owner.class.name
+          - when "User"
+            %i.fa.fa-user
+          - when "Business"
+            %i.fa.fa-briefcase
+          - when "Group"
+            %i.fa.fa-users
+          = truncate(wallet.owners.first.owner.name, length: 15)
+      .card-section
+        - if !wallet.description.blank?
+          = truncate(wallet.description, length: 75)
+        - else
+          %em No description.
+        %h2.text-center= humanized_money_with_symbol "#{wallet.currency} #{wallet.balance}".to_money

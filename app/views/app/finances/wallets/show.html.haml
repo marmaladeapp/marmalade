@@ -1,0 +1,27 @@
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @wallet.name
+    = humanized_money_with_symbol "#{@wallet.currency} #{@wallet.balance}".to_money
+
+  .grid-content.small-12
+    %table{:style => 'width:100%;'}
+      %thead.text-left{:style => 'border-bottom:2px solid black;'}
+        %th Description
+        %th IN
+        %th OUT
+        %th Time
+        %th Balance
+      %tbody.text-left
+        %tr{:style => 'border-bottom:1px solid gray;'}
+          %td Value1
+          %td Value1
+          %td Value1
+          %td Value1
+          %td Value1
+        %tr{:style => 'border-bottom:1px solid gray;'}
+          %td Value2
+          %td Value2
+          %td Value2
+          %td Value2
+          %td Value2
