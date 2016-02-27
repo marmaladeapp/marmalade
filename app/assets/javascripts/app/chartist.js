@@ -132,12 +132,12 @@
         }, {
           low:min - range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
           high:max + range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
-          lineSmooth: Chartist.Interpolation.none({
+          lineSmooth: Chartist.Interpolation.cardinal({
             // was cardinal. Should it be?
             // we should also variably select between cardinal and simple, dependent upon... the complexity of the data?
             // or not at all. I dunno.
           }),
-          showPoint: true,
+          showPoint: false,
           showArea: true,
           axisY: {
             showLabel: false, // if we want to show the label. (We might want this on 'show' views, not on partials.)
@@ -187,12 +187,12 @@
         }, {
           low:min - range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
           high:max + range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
-          lineSmooth: Chartist.Interpolation.none({
+          lineSmooth: Chartist.Interpolation.cardinal({
             // was cardinal. Should it be?
             // we should also variably select between cardinal and simple, dependent upon... the complexity of the data?
             // or not at all. I dunno.
           }),
-          showPoint: true,
+          showPoint: false,
           showArea: true,
           axisY: {
             showLabel: false, // if we want to show the label. (We might want this on 'show' views, not on partials.)
