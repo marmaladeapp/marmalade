@@ -1,0 +1,36 @@
+.grid-content.small-12.medium-6.large-4
+  - case resource.class.name
+  - when "User", "Business"
+    - canonical_link = resource_finances_path(resource)
+  %a{:href => canonical_link}
+    .card{:style => 'height:250px;'}
+      .card-section.bg-burnt-toast
+        %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+          %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(resource.name, length: 12)
+          %span.float-right
+            - case resource.class.name
+            - when "User"
+              %i.fa.fa-user
+            - when "Business"
+              %i.fa.fa-briefcase
+      .card-divider.bg-ice-cream.burnt-toast
+        %strong Net worth:
+        = humanized_money_with_symbol "#{resource.currency} #{resource.net_worth}".to_money
+      .card-section
+        - if resource.present?
+          - currency_symbol = Money::Currency.new(resource.currency).symbol
+          - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+          - if resource.balance_sheets.any?
+            - if resource.balance_sheets.first.created_at > 1.hour.ago
+              .ct-chart.resource-chart-mini.ct-octave{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "minutely", :id => "resource" + resource.class.name + resource.id.to_s}
+            - elsif resource.balance_sheets.first.created_at > 1.week.ago
+              .ct-chart.resource-chart-mini.ct-octave{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "hourly", :id => "resource" + resource.class.name + resource.id.to_s}
+            - elsif resource.balance_sheets.first.created_at > 1.month.ago
+              .ct-chart.resource-chart-mini.ct-octave{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "daily", :id => "resource" + resource.class.name + resource.id.to_s}
+            - elsif resource.balance_sheets.first.created_at > 1.year.ago
+              .ct-chart.resource-chart-mini.ct-octave{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "weekly", :id => "resource" + resource.class.name + resource.id.to_s}
+            - else
+              .ct-chart.resource-chart-mini.ct-octave{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "monthly", :id => "resource" + resource.class.name + resource.id.to_s}
+          - else
+            .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+              %em.silver No records.

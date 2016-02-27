@@ -36,6 +36,8 @@ class User < ActiveRecord::Base
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
 
+  has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
+
   def full_name
     if first_name
       first_name + " " + last_name

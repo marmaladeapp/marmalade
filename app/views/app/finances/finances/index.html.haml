@@ -95,4 +95,10 @@
     .grid-content.small-12
       %h4= @context.class.name + " members"
     .grid-block.wrap.small-12
-      = render partial: 'app/finances/finances/member', collection: @context.members
+      = render partial: 'app/finances/finances/resource', collection: @context.members
+  - when "User", "Business"
+    .grid-content.small-12
+      %h4= @context.name.possessive + (@context.class.name == "Business" ? " subsidiaries" : " businesses")
+    .grid-block.wrap.small-12
+      = render partial: 'app/finances/finances/resource', collection: @context.subsidiaries
+

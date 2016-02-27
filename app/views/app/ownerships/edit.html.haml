@@ -21,7 +21,7 @@
             = f.number_field :equity, :step => 'any', :max => 100, :min => 0
 
       %button.button.expanded.bg-blueberry Save
-      - unless @ownership.owner == @business.user
+      - unless @business.owners.count == 1 || @ownership.owner == @business.user
         %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
           %i.fa.fa-trash
           Delete

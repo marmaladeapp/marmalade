@@ -1,5 +1,5 @@
 .grid-content.small-12.medium-6.large-4
-  - if ledger.context
+  - if ledger.context && ledger.context.class.name == "Household"
     - canonical_link = user_home_ledger_path(current_user,ledger)
   - else
     - case ledger.owners.first.owner.class.name
@@ -16,7 +16,7 @@
           %span.float-right
             %i.fa.fa-bar-chart
       .card-divider.bg-ice-cream.burnt-toast
-        - if ledger.context
+        - if ledger.context && ledger.context.class.name == "Household"
           %i.fa.fa-home
           = truncate(ledger.context.name, length: 15)
         - else

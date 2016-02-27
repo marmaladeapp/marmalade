@@ -11,6 +11,8 @@ class Business < ActiveRecord::Base
   has_many :memberships, :as => :collective, :dependent => :destroy
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
+  has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
+
   after_create do |business|
     business.memberships.create(:member => business.user, :user => business.user)
   end

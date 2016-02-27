@@ -1,5 +1,5 @@
 .grid-content.small-12.medium-6.large-4
-  - if wallet.context.present?
+  - if wallet.context.present? && wallet.context.class.name == "Household"
     - canonical_link = user_home_wallet_path(current_user,wallet)
   - else
     - case wallet.owners.first.owner.class.name
@@ -17,7 +17,7 @@
           %span.float-right
             %i.fa.fa-money
       .card-divider.bg-ice-cream.burnt-toast
-        - if wallet.context
+        - if wallet.context && wallet.context.class.name == "Household"
           %i.fa.fa-home
           = truncate(wallet.context.name, length: 15)
         - else

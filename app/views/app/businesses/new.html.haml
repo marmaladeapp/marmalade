@@ -23,7 +23,7 @@
             %header Owned by
             %ul
               %li.with-dropdown
-                = ff.grouped_collection_select :global_owner, [User.where(:id => current_user.id)], :all, :human_name, :to_global_id, :name, {:selected => params[:parent_id] ? Business.find(params[:parent_id]).to_global_id : current_user.to_global_id}
+                = ff.grouped_collection_select :global_owner, [User.where(:id => current_user.id), current_user.subscriber_businesses], :all, :human_name, :to_global_id, :name, {:selected => params[:parent_id] ? Business.find(params[:parent_id]).to_global_id : current_user.to_global_id}
           %section.block-list
             %header Equity (%)
             %ul
