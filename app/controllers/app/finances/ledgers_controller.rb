@@ -211,13 +211,14 @@ class App::Finances::LedgersController < App::AppController
       if @ledger.counterparty
         case @ledger.counterparty.class.name
         when "User", "Business"
-          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
+          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :counterledger_id => @ledger.id, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
         when "Household"
-          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty)
+          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty, :counterledger_id => @ledger.id)
           @ledger.counterparty.members.each do |member|
             member.ownerships.create(:item => @counter_ledger,:user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100) / @ledger.counterparty.members.count)
           end
         end
+        @ledger.update_attributes(:counterledger_id => @counter_ledger.id)
       end
 
       @ledger.owners.each do |ownership|
@@ -281,13 +282,14 @@ class App::Finances::LedgersController < App::AppController
       if @ledger.counterparty
         case @ledger.counterparty.class.name
         when "User", "Business"
-          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
+          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :counterledger_id => @ledger.id, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
         when "Household"
-          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty)
+          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty, :counterledger_id => @ledger.id)
           @ledger.counterparty.members.each do |member|
             member.ownerships.create(:item => @counter_ledger,:user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100) / @ledger.counterparty.members.count)
           end
         end
+        @ledger.update_attributes(:counterledger_id => @counter_ledger.id)
       end
 
       @ledger.owners.each do |ownership|

@@ -5,6 +5,8 @@ class Finances::Ledger < ActiveRecord::Base
   belongs_to :context, polymorphic: true
   belongs_to :counterparty, polymorphic: true
 
+  has_one :counterledger, :as => :counterledger, :class_name => 'Finances::Ledger'
+
   accepts_nested_attributes_for :owners
 
   def global_context
