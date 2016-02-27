@@ -1,3 +1,10 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_payment = new_group_wallet_payment_path(@context,@wallet)
+  - else
+    - new_payment = @context.class.name == "Household" ? new_user_home_wallet_payment_path(current_user,@wallet) : new_resource_wallet_payment_path(@resource,@wallet)
+
+
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
@@ -21,6 +28,10 @@
       - else
         .text-center{:style => "padding-top:2.2em;height:5.6em;"}
           %em.silver No records.
+
+  .grid-content.small-12
+    - if @context
+      %a.button.bg-blueberry{:href => new_payment} New payment
 
   .grid-content.small-12
     %table{:style => 'width:100%;'}
