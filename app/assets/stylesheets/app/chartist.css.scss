@@ -20,3 +20,10 @@
 .ct-area.ct-threshold-below {
   fill: lighten($red,5%);
 }
+
+
+.ct-labels foreignobject:nth-child(even) .ct-horizontal{
+  //@include breakpoint(small only){
+  display:none;
+  //}
+}

@@ -39,7 +39,7 @@
           showLabel: false,
           axisX: {
             showGrid: false,
-            showLabel: false
+            showLabel: true
           },
           chartPadding: 0//,
           // ctThreshold isn't showing line when series is flat.
@@ -53,6 +53,58 @@
     });
   }
 
+  function get_ledger_chart(){
+    $(".ledger-chart").each(function(i,e){
+      item = e
+      ledger_id = $(e).attr('data-ledgerId');
+      interval = $(e).attr('data-interval');
+      $.ajax({ type: "GET", url: "/finances/charts/ledger_balance.json?ledger_id=" + ledger_id + "&interval_period=" + interval, cache: false }).success(function(chart_data){
+        id = '#' + $(e).attr('id');
+        keys = Object.keys(chart_data);
+        values = keys.map(function(v) { return parseInt(chart_data[v]); });
+        min = Math.min.apply( Math, values );
+        max = Math.max.apply( Math, values );
+        range = max - min;
+        if (range == 0){
+          range = 100
+        }
+        new Chartist.Line(id, {
+          labels: keys,
+          series: [
+            values
+          ]
+        }, {
+          low:min - range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
+          high:max + range/10, // TODO: get highest and lowest from data, then add/substract some percentage of their range? Yep.
+          lineSmooth: Chartist.Interpolation.none({
+            // was cardinal. Should it be?
+            // we should also variably select between cardinal and simple, dependent upon... the complexity of the data?
+            // or not at all. I dunno.
+          }),
+          showPoint: true,
+          showArea: true,
+          axisY: {
+            //showLabel: false, // if we want to show the label. (We might want this on 'show' views, not on partials.)
+            //offset: 0, // we need to opt not to adjust the offset.
+            onlyInteger: true
+          },
+          fullWidth: true,
+          showLabel: false,
+          axisX: {
+            showGrid: false,
+            showLabel: true
+          },
+          chartPadding: 0//,
+          // ctThreshold isn't showing line when series is flat.
+          //plugins: [
+            //Chartist.plugins.ctThreshold({
+              //threshold: 0
+            //})
+          //]
+        });
+      });
+    });
+  }
 
   function get_resource_chart(){
     $(".resource-chart").each(function(i,e){
@@ -94,7 +146,7 @@
           showLabel: false,
           axisX: {
             showGrid: false,
-            showLabel: false
+            showLabel: true
           },
           chartPadding: 0//,
           // ctThreshold isn't showing line when series is flat.
@@ -222,6 +274,9 @@
     if ($(".wallet-chart").length > 0){
       get_wallet_chart();
     }
+    if ($(".ledger-chart").length > 0){
+      get_ledger_chart();
+    }
     if ($(".resource-chart").length > 0){
       get_resource_chart();
     }
@@ -235,6 +290,9 @@
   $(document).on('page:load', function(){
     if ($(".wallet-chart").length > 0){
       get_wallet_chart();
+    }
+    if ($(".ledger-chart").length > 0){
+      get_ledger_chart();
     }
     if ($(".resource-chart").length > 0){
       get_resource_chart();

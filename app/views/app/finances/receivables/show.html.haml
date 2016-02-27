@@ -2,4 +2,22 @@
 
   .grid-content.small-12
     %h3= @ledger.name
-    = humanized_money_with_symbol "#{@ledger.currency} #{@ledger.value}".to_money
+
+  .grid-content.small-12.medium-10.medium-offset-1
+    - if @ledger.present?
+      - currency_symbol = Money::Currency.new(@ledger.currency).symbol
+      - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+      - if @payments.any?
+        - if @payments.first.created_at > 1.hour.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "minutely", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.week.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "hourly", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.month.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "daily", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.year.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "weekly", :id => "ledger" + @ledger.id.to_s}
+        - else
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "monthly", :id => "ledger" + @ledger.id.to_s}
+      - else
+        .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+          %em.silver No records.

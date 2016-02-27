@@ -3,6 +3,12 @@
 
 %tr{:style => 'border-bottom:1px solid gray;'}
   %td{:style => 'padding:15px 10px;'}= payment.description
+  %td{:style => 'padding:15px 10px;'}
+    - if payment.id
+      - if payment.value > 0
+        %i.fa.fa-caret-up.green
+      - else
+        %i.fa.fa-caret-down.red
   %td{:style => 'padding:15px 10px;'}= payment.value > 0 ? (humanized_money_with_symbol "#{@wallet.currency} #{payment.value}".to_money) : ''
   %td{:style => 'padding:15px 10px;'}= payment.value < 0 ? (humanized_money_with_symbol "#{@wallet.currency} #{payment.value}".to_money) : ''
   %td{:style => 'padding:15px 10px;'}= time_ago_in_words(payment.created_at) + " ago"
