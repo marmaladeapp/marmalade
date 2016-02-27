@@ -6,6 +6,8 @@ class Finances::Wallet < ActiveRecord::Base
 
   belongs_to :context, polymorphic: true
 
+  has_many :payments, :class_name => 'Finances::Payment'
+
   accepts_nested_attributes_for :owners
 
   def global_context

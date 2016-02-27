@@ -20,7 +20,7 @@ class App::Finances::ChartsController < App::AppController
   # ...this might solve your repetition problem AND allow for more robust work to be done here too. :)
 
   def wallet_balance
-    @wallet = Wallet.find(params[:wallet_id])
+    @wallet = ::Finances::Wallet.find(params[:wallet_id])
     @user = current_user
 
     balances = []
@@ -29,12 +29,12 @@ class App::Finances::ChartsController < App::AppController
     if params[:interval_period] == "minutely"
       payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
       payments.reverse_order.each do |p|
-        balances << {:created_at => p.created_at, :balance => p.balance}
+        balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.hour.ago
-        last_hour = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.hour)).select(:balance).last
+        last_hour = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.hour)).select(:wallet_balance).last
         if last_hour
-          balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.balance}
+          balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.wallet_balance}
         else
           balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
         end
@@ -62,12 +62,12 @@ class App::Finances::ChartsController < App::AppController
     elsif params[:interval_period] == "hourly"
       payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('hour',created_at)"), :created_at => (DateTime.now - 24.hours)..DateTime.now)
       payments.reverse_order.each do |p|
-        balances << {:created_at => p.created_at, :balance => p.balance}
+        balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 24.hours.ago
-        last_yesterday = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 24.hours)).select(:balance).last
+        last_yesterday = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 24.hours)).select(:wallet_balance).last
         if last_yesterday
-          balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.balance}
+          balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.wallet_balance}
         else
           balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
         end
@@ -101,12 +101,12 @@ class App::Finances::ChartsController < App::AppController
     elsif params[:interval_period] == "daily"
       payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
-        balances << {:created_at => p.created_at, :balance => p.balance}
+        balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.week.ago
-        last_week = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.week)).select(:balance).last
+        last_week = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.week)).select(:wallet_balance).last
         if last_week
-          balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.balance}
+          balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.wallet_balance}
         else
           balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
         end
@@ -137,12 +137,12 @@ class App::Finances::ChartsController < App::AppController
       payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
-        balances << {:created_at => p.created_at, :balance => p.balance}
+        balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.month.ago
-        last_month = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.month)).select(:balance).last
+        last_month = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.month)).select(:wallet_balance).last
         if last_month
-          balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.balance}
+          balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.wallet_balance}
         else
           balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
         end
@@ -170,12 +170,12 @@ class App::Finances::ChartsController < App::AppController
     elsif params[:interval_period] == "monthly"
       payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
-        balances << {:created_at => p.created_at, :balance => p.balance}
+        balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.year.ago
-        last_year = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.year)).select(:balance).last
+        last_year = @wallet.payments.where(:created_at => @wallet.starting_date..(DateTime.now - 1.year)).select(:wallet_balance).last
         if last_year
-          balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.balance}
+          balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.wallet_balance}
         else
           balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
         end

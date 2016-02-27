@@ -17,12 +17,8 @@ Rails.application.routes.draw do
       get '/finances', to: 'finances#index', as: 'finances'
       resources :wallets, path: '/finances/wallets'
       resources :ledgers, path: '/finances/ledgers'
-      get '/finances/receivables', to: 'ledgers#receivables', as: 'receivables'
-      post '/finances/receivables', to: 'ledgers#create_receivable', as: 'create_receivables'
-      get '/finances/debts', to: 'ledgers#debts', as: 'debts'
-      post '/finances/debts', to: 'ledgers#create_debt', as: 'create_debts'
-      get '/finances/receivables/new', to: 'ledgers#new_receivable', as: 'new_receivable'
-      get '/finances/debts/new', to: 'ledgers#new_debt', as: 'new_debt'
+      resources :receivables, path: '/finances/receivables'
+      resources :debts, path: '/finances/debts'
     end
   end
 

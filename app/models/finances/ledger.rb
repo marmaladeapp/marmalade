@@ -7,6 +7,8 @@ class Finances::Ledger < ActiveRecord::Base
 
   has_one :counterledger, :as => :counterledger, :class_name => 'Finances::Ledger'
 
+  has_many :payments, :class_name => 'Finances::Payment'
+
   accepts_nested_attributes_for :owners
 
   def global_context

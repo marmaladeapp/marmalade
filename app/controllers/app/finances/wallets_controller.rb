@@ -16,6 +16,10 @@ class App::Finances::WalletsController < App::AppController
       @context = @resource
     end
     @wallet = ::Finances::Wallet.find(params[:id])
+    @payments = @wallet.payments.order(created_at: :desc).page(params[:page]) #.per(2)
+    if @payments.last == @wallet.payments.first || @payments.empty
+      @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :wallet_balance => @wallet.starting_balance, :created_at => @wallet.created_at)
+    end
   end
 
   def new

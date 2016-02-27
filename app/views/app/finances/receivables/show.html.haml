@@ -1,0 +1,5 @@
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @ledger.name
+    = humanized_money_with_symbol "#{@ledger.currency} #{@ledger.value}".to_money

@@ -2,13 +2,13 @@
   - case @resource.class.name
   - when 'User', 'Business'
     - path_array = [@resource, @ledger]
-    - url = resource_create_debts_path(@resource)
+    - url = resource_receivables_path(@resource)
   - when 'Household'
     - path_array = [@resource, @ledger]
-    - url = user_home_create_debts_path(@user)
+    - url = user_home_receivables_path(@user)
   - when 'Group'
     - path_array = [@resource, @ledger]
-    - url = group_create_debts_path(@resource)
+    - url = group_receivables_path(@resource)
 
 - supported_currencies = $redis.smembers("supported_currencies")
 - @currencies_for_select = []
@@ -19,10 +19,10 @@
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
-    %h3 New debt
+    %h3 New receivable
     = form_for path_array, :url => url do |f|
       %section.block-list
-        %header Debtors
+        %header Recipients
         %ul
           %li.clearfix{:style => 'padding:10px;'}
             - @ownerships.each do |ownership|
@@ -37,14 +37,14 @@
         = ff.hidden_field :user_id
 
       %section.block-list
-        %header Owed to
+        %header Owed by
         %ul
           %li.with-dropdown
             = f.grouped_collection_select :global_counterparty, [User.where(:id => current_user.id),current_user.collaborator_users, current_user.businesses, current_user.households], :all, :human_name, :to_global_id, :name, {:include_blank => true}
 
       = f.hidden_field :starting_date, :value => Time.current
       %section.block-list
-        %header Debt
+        %header Receivable
         %ul
           %li
             = f.text_field :name, {:placeholder => 'Name'}

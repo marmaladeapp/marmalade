@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227035029) do
+ActiveRecord::Schema.define(version: 20160227061201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,6 +151,21 @@ ActiveRecord::Schema.define(version: 20160227035029) do
   add_index "finances_ledgers", ["context_type", "context_id"], name: "index_finances_ledgers_on_context_type_and_context_id", using: :btree
   add_index "finances_ledgers", ["counterledger_id"], name: "index_finances_ledgers_on_counterledger_id", using: :btree
   add_index "finances_ledgers", ["counterparty_type", "counterparty_id"], name: "index_finances_ledgers_on_counterparty_type_and_counterparty_id", using: :btree
+
+  create_table "finances_payments", force: :cascade do |t|
+    t.text     "description"
+    t.decimal  "value",                          null: false
+    t.string   "currency",       default: "USD", null: false
+    t.integer  "wallet_id"
+    t.integer  "ledger_id"
+    t.decimal  "wallet_balance"
+    t.decimal  "ledger_balance"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "finances_payments", ["ledger_id"], name: "index_finances_payments_on_ledger_id", using: :btree
+  add_index "finances_payments", ["wallet_id"], name: "index_finances_payments_on_wallet_id", using: :btree
 
   create_table "finances_wallets", force: :cascade do |t|
     t.string   "name"

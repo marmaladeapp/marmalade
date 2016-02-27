@@ -1,7 +1,7 @@
 - if @context.class.name == 'Group'
-  - new_debt = group_new_debt_path(@context)
+  - new_debt = new_group_debt_path(@context)
 - else
-  - new_debt = @context.class.name == "Household" ? user_home_new_debt_path(current_user) : resource_new_debt_path(@resource)
+  - new_debt = @context.class.name == "Household" ? new_user_home_debt_path(current_user) : new_resource_debt_path(@resource)
 
 .grid-container.small-12.medium-10
 

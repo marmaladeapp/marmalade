@@ -1,7 +1,7 @@
 - if @context.class.name == 'Group'
-  - new_receivable = group_new_receivable_path(@context)
+  - new_receivable = new_group_receivable_path(@context)
 - else
-  - new_receivable = @context.class.name == "Household" ? user_home_new_receivable_path(current_user) : resource_new_receivable_path(@resource)
+  - new_receivable = @context.class.name == "Household" ? new_user_home_receivable_path(current_user) : new_resource_receivable_path(@resource)
 
 
 .grid-container.small-12.medium-10

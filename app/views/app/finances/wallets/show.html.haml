@@ -2,7 +2,25 @@
 
   .grid-content.small-12
     %h3= @wallet.name
-    = humanized_money_with_symbol "#{@wallet.currency} #{@wallet.balance}".to_money
+
+  .grid-content.small-12.medium-10.medium-offset-1
+    - if @wallet.present?
+      - currency_symbol = Money::Currency.new(@wallet.currency).symbol
+      - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+      - if @payments.any?
+        - if @payments.first.created_at > 1.hour.ago
+          .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "minutely", :id => "wallet" + @wallet.id.to_s}
+        - elsif @payments.first.created_at > 1.week.ago
+          .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "hourly", :id => "wallet" + @wallet.id.to_s}
+        - elsif @payments.first.created_at > 1.month.ago
+          .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "daily", :id => "wallet" + @wallet.id.to_s}
+        - elsif @payments.first.created_at > 1.year.ago
+          .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "weekly", :id => "wallet" + @wallet.id.to_s}
+        - else
+          .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "monthly", :id => "wallet" + @wallet.id.to_s}
+      - else
+        .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+          %em.silver No records.
 
   .grid-content.small-12
     %table{:style => 'width:100%;'}
@@ -13,15 +31,4 @@
         %th Time
         %th Balance
       %tbody.text-left
-        %tr{:style => 'border-bottom:1px solid gray;'}
-          %td Value1
-          %td Value1
-          %td Value1
-          %td Value1
-          %td Value1
-        %tr{:style => 'border-bottom:1px solid gray;'}
-          %td Value2
-          %td Value2
-          %td Value2
-          %td Value2
-          %td Value2
+        = render partial: 'app/finances/payments/payment', collection: @payments
