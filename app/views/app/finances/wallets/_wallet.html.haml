@@ -30,8 +30,38 @@
             %i.fa.fa-users
           = truncate(wallet.owners.first.owner.name, length: 15)
       .card-section
-        - if !wallet.description.blank?
-          = truncate(wallet.description, length: 75)
-        - else
-          %em No description.
-        %h2.text-center= humanized_money_with_symbol "#{wallet.currency} #{wallet.balance}".to_money
+        - if wallet.present?
+          - currency_symbol = Money::Currency.new(wallet.currency).symbol
+          - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+          - if wallet.payments.any?
+            - if wallet.payments.first.created_at > 1.hour.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "minutely", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.payments.first.created_at > 1.week.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "hourly", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.payments.first.created_at > 1.month.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "daily", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.payments.first.created_at > 1.year.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "weekly", :id => "wallet" + wallet.id.to_s}
+            - else
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "monthly", :id => "wallet" + wallet.id.to_s}
+          - else
+            - if wallet.created_at > 1.hour.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "minutely", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.created_at > 1.week.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "hourly", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.created_at > 1.month.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "daily", :id => "wallet" + wallet.id.to_s}
+            - elsif wallet.created_at > 1.year.ago
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "weekly", :id => "wallet" + wallet.id.to_s}
+            - else
+              .ct-chart.wallet-chart-mini.ct-major-eleventh{'data-walletId' => wallet.id.to_s, 'data-interval' => "monthly", :id => "wallet" + wallet.id.to_s}
+
+        - if false
+          - if !wallet.description.blank?
+            = truncate(wallet.description, length: 75)
+          - else
+            %em No description.
+
+        .text-center
+          %strong Balance:
+          = humanized_money_with_symbol "#{wallet.currency} #{wallet.balance}".to_money
