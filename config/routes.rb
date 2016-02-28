@@ -16,7 +16,9 @@ Rails.application.routes.draw do
     scope module: 'finances' do
       get '/finances', to: 'finances#index', as: 'finances'
       resources :wallets, path: '/finances/wallets' do
-        resources :payments
+        resources :receipts
+        resources :expenses
+        #resources :payments
       end
       # resources :ledgers, path: '/finances/ledgers'
       resources :receivables, path: '/finances/receivables' do

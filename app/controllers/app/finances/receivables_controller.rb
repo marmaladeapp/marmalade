@@ -46,7 +46,7 @@ class App::Finances::ReceivablesController < App::AppController
     @ledger = ::Finances::Ledger.find(params[:id])
     @payments = @ledger.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @ledger.payments.first || @payments.empty
-      @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :ledger_balance => @ledger.starting_value, :created_at => @ledger.created_at)
+      @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :ledger_balance => @ledger.starting_value, :created_at => @ledger.created_at, :currency => @ledger.currency)
     end
   end
 

@@ -1,3 +1,9 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_payment = new_group_receivable_payment_path(@context,@ledger)
+  - else
+    - new_payment = @context.class.name == "Household" ? new_user_home_receivable_payment_path(current_user,@ledger) : new_resource_receivable_payment_path(@resource,@ledger)
+
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
@@ -21,3 +27,23 @@
       - else
         .text-center{:style => "padding-top:2.2em;height:5.6em;"}
           %em.silver No records.
+
+
+
+  .grid-content.small-12
+    - if @context
+      %a.button.bg-blueberry{:href => new_payment} New payment
+
+
+      
+  .grid-content.small-12
+    %table{:style => 'width:100%;'}
+      %thead.text-left{:style => 'border-bottom:2px solid black;'}
+        %th Description
+        %th
+        %th IN
+        %th OUT
+        %th Time
+        %th Balance
+      %tbody.text-left
+        = render partial: 'app/finances/payments/payment', collection: @payments

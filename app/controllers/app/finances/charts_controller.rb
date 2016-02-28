@@ -28,7 +28,7 @@ class App::Finances::ChartsController < App::AppController
         if last_hour
           balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.wallet_balance}
         else
-          balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
+          balances << {:created_at => 1.hour.ago, :balance => @wallet.starting_balance}
         end
       else
         balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
@@ -61,7 +61,7 @@ class App::Finances::ChartsController < App::AppController
         if last_yesterday
           balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.wallet_balance}
         else
-          balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
+          balances << {:created_at => 24.hours.ago, :balance => @wallet.starting_balance}
         end
         # TODO FIXME fuck_it: Note the repetition of DateTime.now - 24.hours; you don't want to be repeating operations.
         # You absolutely also want to trim down the amount of SQL queries, so should see if there is a way to group everything you need into one.
@@ -100,7 +100,7 @@ class App::Finances::ChartsController < App::AppController
         if last_week
           balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.wallet_balance}
         else
-          balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
+          balances << {:created_at => 1.week.ago, :balance => @wallet.starting_balance}
         end
       else
         balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
@@ -136,7 +136,7 @@ class App::Finances::ChartsController < App::AppController
         if last_month
           balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.wallet_balance}
         else
-          balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
+          balances << {:created_at => 1.month.ago, :balance => @wallet.starting_balance}
         end
       else
         balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
@@ -169,7 +169,7 @@ class App::Finances::ChartsController < App::AppController
         if last_year
           balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.wallet_balance}
         else
-          balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
+          balances << {:created_at => 1.year.ago, :balance => @wallet.starting_balance}
         end
       else
         balances << {:created_at => @wallet.starting_date, :balance => @wallet.starting_balance}
@@ -216,7 +216,7 @@ class App::Finances::ChartsController < App::AppController
         if last_hour
           balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.ledger_balance}
         else
-          balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
+          balances << {:created_at => 1.hour.ago, :balance => @ledger.starting_value}
         end
       else
         balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
@@ -249,7 +249,7 @@ class App::Finances::ChartsController < App::AppController
         if last_yesterday
           balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.ledger_balance}
         else
-          balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
+          balances << {:created_at => 24.hours.ago, :balance => @ledger.starting_value}
         end
         # TODO FIXME fuck_it: Note the repetition of DateTime.now - 24.hours; you don't want to be repeating operations.
         # You absolutely also want to trim down the amount of SQL queries, so should see if there is a way to group everything you need into one.
@@ -288,7 +288,7 @@ class App::Finances::ChartsController < App::AppController
         if last_week
           balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.ledger_balance}
         else
-          balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
+          balances << {:created_at => 1.week.ago, :balance => @ledger.starting_value}
         end
       else
         balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
@@ -324,7 +324,7 @@ class App::Finances::ChartsController < App::AppController
         if last_month
           balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.ledger_balance}
         else
-          balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
+          balances << {:created_at => 1.month.ago, :balance => @ledger.starting_value}
         end
       else
         balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
@@ -357,7 +357,7 @@ class App::Finances::ChartsController < App::AppController
         if last_year
           balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.ledger_balance}
         else
-          balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
+          balances << {:created_at => 1.year.ago, :balance => @ledger.starting_value}
         end
       else
         balances << {:created_at => @ledger.created_at, :balance => @ledger.starting_value}
