@@ -56,6 +56,11 @@ class App::Finances::PaymentsController < App::AppController
 
     if @payment.save
 
+      if @ledger.counterledger_id
+        @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        @counter_payment = @counter_ledger.payments.create(:description => @payment.description,:value => - @payment.value,:ledger_balance => @counter_ledger.value + @payment.value,:currency => @counter_ledger.currency)
+      end
+
       if @wallet
         set_adjustments(@payment.value,@wallet.balance)
 
@@ -82,6 +87,25 @@ class App::Finances::PaymentsController < App::AppController
         end
       end
       @ledger.update_attribute(:value,@payment.ledger_balance)
+
+      if @counter_payment
+        @counter_ledger.owners.each do |ownership|
+          if @counter_ledger.value > 0
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_payment.value,:current_assets => - @counter_payment.value,:ledgers_receivable => - @counter_payment.value,:item => @counter_ledger,:action => 'update')
+            else
+              ownership.update_balance_sheets(:value => - @counter_payment.value,:fixed_assets => - @counter_payment.value,:ledgers_receivable => - @counter_payment.value,:item => @counter_ledger,:action => 'update')
+            end
+          else
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_payment.value,:current_liabilities => @counter_payment.value,:ledgers_debt => @counter_payment.value,:item => @counter_ledger,:action => 'update')
+            else
+              ownership.update_balance_sheets(:value => - @counter_payment.value,:long_term_liabilities => @counter_payment.value,:ledgers_debt => @counter_payment.value,:item => @counter_ledger,:action => 'update')
+            end
+          end
+        end
+        @counter_ledger.update_attribute(:value,@counter_payment.ledger_balance)
+      end
 
       flash[:notice] = "Payment registered!"
       redirect_to root_path
