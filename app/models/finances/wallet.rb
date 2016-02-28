@@ -1,4 +1,5 @@
 class Finances::Wallet < ActiveRecord::Base
+  include HumanizeName
   belongs_to :user, :inverse_of => :subscriber_wallets, counter_cache: true
 
   has_many :ownerships, :dependent => :destroy, :as => :owner

@@ -31,6 +31,13 @@
         .text-center{:style => "padding-top:2.2em;height:5.6em;"}
           %em.silver No records.
 
+  .grid-block.wrap.small-12
+    - if @wallet.present?
+      .grid-content.small-12.text-center Balance
+      .grid-content.small-12.text-center
+        %h3
+          %strong= humanized_money_with_symbol "#{@wallet.currency} #{@wallet.balance}".to_money, :no_cents_if_whole => false
+
   .grid-content.small-12.text-center
     - if @context
       %a.button.bg-green{:href => new_receipt} New receipt

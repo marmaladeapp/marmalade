@@ -29,6 +29,26 @@
           %em.silver No records.
 
 
+  .grid-block.wrap.small-12
+    - if @ledger.present?
+      .grid-content.small-3.text-center Total due
+      .grid-content.small-3.text-center Paid to date
+      .grid-content.small-3.text-center Expected in full by
+      .grid-content.small-3.text-center Remaining
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value - @ledger.value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = @ledger.due_in_full_at.strftime("%D")
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.value).abs}".to_money
+
+
   .grid-content.small-12
     - if @context
       %a.button.bg-blueberry{:href => new_payment} New payment
@@ -38,10 +58,8 @@
     %table{:style => 'width:100%;'}
       %thead.text-left{:style => 'border-bottom:2px solid black;'}
         %th Description
-        %th
-        %th IN
-        %th OUT
+        %th Value
         %th Time
-        %th Balance
+        %th Debt
       %tbody.text-left
         = render partial: 'app/finances/payments/payment', collection: @payments
