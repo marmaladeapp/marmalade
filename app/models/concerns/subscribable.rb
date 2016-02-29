@@ -16,7 +16,7 @@ module Subscribable
 
     has_many :collaborators, :dependent => :destroy
     has_many :collaborator_users, :through => :collaborators, :source => :collaborator
-    has_many :collaborator_subscribers, :as => :collaborator, :class_name => 'Collaborator', :dependent => :destroy
+    has_many :collaborator_subscribers, :foreign_key => 'collaborator_id', :class_name => 'Collaborator', :dependent => :destroy
 
     after_create do |user|
       user.collaborators.create(:collaborator => user)

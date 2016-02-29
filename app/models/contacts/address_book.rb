@@ -2,6 +2,8 @@ class Contacts::AddressBook < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
+  has_many :contacts, :class_name => 'Contacts::Contact'
+
   extend FriendlyId
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner

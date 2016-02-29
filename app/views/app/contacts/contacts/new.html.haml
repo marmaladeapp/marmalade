@@ -1,0 +1,27 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @contact]
+    - url = resource_contacts_path(@resource)
+  - when 'Household'
+    - path_array = [@resource, @contact]
+    - url = user_home_contacts_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @contact]
+    - url = group_contacts_path(@resource)
+- else
+  - path_array = @contact
+  - url = contacts_path
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New contact
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Contact
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+
+      %button.button.expanded.bg-blueberry Save

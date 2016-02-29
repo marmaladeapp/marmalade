@@ -10,6 +10,9 @@ module HasModules
     has_many :balance_sheets, :as => :owner, :dependent => :destroy, :class_name => 'Finances::BalanceSheet'
     has_many :wallets, :through => :ownerships, :source => :item, :source_type => 'Finances::Wallet'
     has_many :ledgers, :through => :ownerships, :source => :item, :source_type => 'Finances::Ledger'
+
+    has_many :contacts, :as => :context, :dependent => :destroy, :class_name => 'Contacts::Contact'
+    has_many :contact_profiles, :as => :item, :class_name => 'Contacts::Contact'
   end
 
   def net_worth

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227061201) do
+ActiveRecord::Schema.define(version: 20160228234410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,21 @@ ActiveRecord::Schema.define(version: 20160227061201) do
   add_index "contacts_address_books", ["owner_type", "owner_id"], name: "index_contacts_address_books_on_owner_type_and_owner_id", using: :btree
   add_index "contacts_address_books", ["slug"], name: "index_contacts_address_books_on_slug", using: :btree
   add_index "contacts_address_books", ["user_id"], name: "index_contacts_address_books_on_user_id", using: :btree
+
+  create_table "contacts_contacts", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.integer  "address_book_id"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "contacts_contacts", ["address_book_id"], name: "index_contacts_contacts_on_address_book_id", using: :btree
+  add_index "contacts_contacts", ["context_type", "context_id"], name: "index_contacts_contacts_on_context_type_and_context_id", using: :btree
+  add_index "contacts_contacts", ["item_type", "item_id"], name: "index_contacts_contacts_on_item_type_and_item_id", using: :btree
 
   create_table "finances_balance_sheets", force: :cascade do |t|
     t.integer  "owner_id"

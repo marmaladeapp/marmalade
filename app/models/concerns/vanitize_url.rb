@@ -46,15 +46,15 @@ module VanitizeUrl
           end
         end
       end # Holding onto the below for reference - we'll surely handle pages and posts here.
-    #elsif self.class.base_class.name == 'Organization'
-    #  unless self.name.blank?
-    #    if VanityUrl.find_by_slug(self.name.parameterize)
-    #      unless VanityUrl.find_by_slug(self.name.parameterize) == self.vanity_url
-    #        errors.add(self.class.model_name.singular, 'name has already been taken')
-    #        false
-    #      end
-    #    end
-    #  end
+    elsif self.class.name == 'Business'
+      unless self.name.blank?
+        if VanityUrl.find_by_slug(self.name.parameterize)
+          unless VanityUrl.find_by_slug(self.name.parameterize) == self.vanity_url
+            errors.add(self.class.model_name.singular, 'name has already been taken')
+            false
+          end
+        end
+      end
     #else
     #  unless self.slug.blank?
     #    if VanityUrl.find_by_slug(self.slug)

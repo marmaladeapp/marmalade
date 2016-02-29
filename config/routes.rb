@@ -5,7 +5,15 @@ Rails.application.routes.draw do
   require 'constraints/short_dispatcher'
   concern :modules do
     scope module: 'contacts' do
-      resources :address_books, path: 'contacts'
+      constraints(id: /\d+/) do
+        resources :contacts, except: [:index]
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :address_books, path: 'contacts'
+      end
+      scope '/contacts/:address_book_id', as: 'address_book' do
+        resources :contacts, path: ''
+      end
     end
     scope module: 'calendar' do
       resources :calendars
