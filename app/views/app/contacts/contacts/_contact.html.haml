@@ -1,0 +1,25 @@
+- if !contact.id
+  - canonical_link = '#'
+
+%tr{:style => 'border-bottom:1px solid gray;'}
+  %td{:style => 'padding:15px 10px;'}= contact.name
+  %td{:style => 'padding:15px 10px;'}= contact.emails.first.address
+  %td{:style => 'padding:15px 10px;'}= contact.telephones.first.number.phony_formatted
+  %td{:style => 'padding:15px 10px;'}
+    - unless contact.addresses.first.line_1.blank?
+      = contact.addresses.first.line_1
+      %br/
+    - unless contact.addresses.first.line_2.blank?
+      = contact.addresses.first.line_2
+      %br/
+    - unless contact.addresses.first.city.blank?
+      = contact.addresses.first.city
+      %br/
+    - unless contact.addresses.first.state.blank?
+      = contact.addresses.first.state
+      %br/
+    - unless contact.addresses.first.zip.blank?
+      = contact.addresses.first.zip
+      %br/
+    - unless contact.addresses.first.country.blank?
+      = ISO3166::Country.new(contact.addresses.first.country).name

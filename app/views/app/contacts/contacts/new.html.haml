@@ -24,4 +24,35 @@
           %li
             = f.text_field :name, {:placeholder => 'Name'}
 
+      = f.fields_for :emails, @contact.emails.build do |ff|
+        %section.block-list
+          %header Email
+          %ul
+            %li
+              = ff.text_field :address, {:placeholder => 'Email address'}
+
+      = f.fields_for :telephones, @contact.telephones.build do |ff|
+        %section.block-list
+          %header Telephone
+          %ul
+            %li
+              = ff.text_field :number, {:placeholder => 'Telephone number'}
+
+      = f.fields_for :addresses, @contact.addresses.build do |ff|
+        %section.block-list
+          %header Address
+          %ul
+            %li
+              = ff.text_field :line_1, {:placeholder => 'Line 1'}
+            %li
+              = ff.text_field :line_2, {:placeholder => 'Line 2'}
+            %li
+              = ff.text_field :city, {:placeholder => 'City'}
+            %li
+              = ff.text_field :state, {:placeholder => 'State/Province'}
+            %li
+              = ff.text_field :zip, {:placeholder => 'Zip/Postcode'}
+            %li.with-dropdown
+              = ff.country_select :country, priority_countries: ["GB", "US"]
+
       %button.button.expanded.bg-blueberry Save

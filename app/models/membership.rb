@@ -1,5 +1,5 @@
 class Membership < ActiveRecord::Base
-  default_scope { order('created_at ASC') }
+  default_scope { order(created_at: :asc) }
 
   belongs_to :user, :inverse_of => :subscriber_memberships
 

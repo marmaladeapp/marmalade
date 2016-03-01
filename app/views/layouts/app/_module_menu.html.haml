@@ -2,28 +2,28 @@
   - case @context.class.name
   - when 'User', 'Business'
     - context_dashboard = vanity_path(@context)
-    - context_contacts = resource_address_books_path(@context)
+    - context_contacts = resource_contacts_path(@context)
     - context_calendar = resource_calendars_path(@context)
     - context_time = resource_time_sheets_path(@context)
     - context_finances = resource_finances_path(@context)
     - context_projects = resource_projects_path(@context)
   - when 'Group'
     - context_dashboard = group_path(@context)
-    - context_contacts = group_address_books_path(@context)
+    - context_contacts = group_contacts_path(@context)
     - context_calendar = group_calendars_path(@context)
     - context_time = group_time_sheets_path(@context)
     - context_finances = group_finances_path(@context)
     - context_projects = group_projects_path(@context)
   - when 'Household'
     - context_dashboard = user_home_path(current_user)
-    - context_contacts = user_home_address_books_path(current_user)
+    - context_contacts = user_home_contacts_path(current_user)
     - context_calendar = user_home_calendars_path(current_user)
     - context_time = user_home_time_sheets_path(current_user)
     - context_finances = user_home_finances_path(current_user)
     - context_projects = user_home_projects_path(current_user)
 - else
   - context_dashboard = root_path
-  - context_contacts = address_books_path
+  - context_contacts = contacts_path
   - context_calendar = calendars_path
   - context_time = time_sheets_path
   - context_finances = finances_path

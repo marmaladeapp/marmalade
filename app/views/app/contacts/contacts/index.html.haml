@@ -1,0 +1,63 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_address_book = new_group_address_book_path(@context)
+    - new_contact = new_group_contact_path(@context)
+  - else
+    - new_address_book = @context.class.name == "Household" ? new_user_home_address_book_path(current_user) : new_resource_address_book_path(@resource)
+    - new_contact = @context.class.name == "Household" ? new_user_home_contact_path(current_user) : new_resource_contact_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} address books
+      %a.button.bg-blueberry{:href => new_address_book} New address book
+    - else
+      %h3 Your address books
+
+  .grid-block.wrap.small-12
+
+    - @address_books.each do |address_book|
+      .grid-content.small-12.medium-6.large-4
+        - case address_book.owner.class.name
+        - when "User", "Business"
+          - canonical_link = resource_address_book_path(address_book.owner,address_book)
+        - when "Household"
+          - canonical_link = user_home_address_book_path(current_user,address_book)
+        - when "Group"
+          - canonical_link = group_address_book_path(address_book.owner,address_book)
+        %a{:href => canonical_link}
+          .card{:style => 'height:250px;'}
+            .card-section.bg-burnt-toast
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(address_book.name, length: 12)
+                %span.float-right
+                  %i.fa.fa-book
+            .card-divider.bg-ice-cream.burnt-toast
+              = truncate(address_book.owner.name, length: 15)
+            .card-section
+              - if !address_book.description.blank?
+                = address_book.description
+              - else
+                %em No description.
+
+
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} contacts
+      %a.button.bg-blueberry{:href => new_contact} New contact
+    - else
+      %h3 Your contacts
+
+  .grid-content.small-12
+    %table{:style => 'width:100%;'}
+      %thead.text-left{:style => 'border-bottom:2px solid black;'}
+        %th Name
+        %th Email
+        %th Telephone
+        %th Address
+      %tbody.text-left
+        = render partial: 'app/contacts/contacts/contact', collection: @contacts

@@ -8,6 +8,8 @@ class Contacts::AddressBook < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner
 
+  validates :slug, format: { without: /\A(?:address-books)\Z/i, message: "restricted." }
+
   def slug_candidates
     [
       :name
