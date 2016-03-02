@@ -42,6 +42,23 @@ class App::Contacts::ContactsController < App::AppController
   end
 
   def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @contact =  ::Contacts::Contact.find(params[:id])
+      @address_books =  @contact.address_books
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @contact = ::Contacts::Contact.find(params[:id])
+      @address_books = @contact.address_books
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @contact = ::Contacts::Contact.find(params[:id])
+      @address_books = @contact.address_books
+    end
   end
 
   def new
@@ -99,6 +116,6 @@ class App::Contacts::ContactsController < App::AppController
   private
 
   def contact_params
-    params.require(:contacts_contact).permit(:name,:address_book_id,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:number])
+    params.require(:contacts_contact).permit(:name,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:number],:memberships_attributes => [:user_id,:global_collective])
   end
 end

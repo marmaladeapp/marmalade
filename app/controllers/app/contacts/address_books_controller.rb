@@ -23,6 +23,23 @@ class App::Contacts::AddressBooksController < App::AppController
   end
 
   def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @address_book =  @resource.address_books.find(params[:id])
+      @contacts = @address_book.contacts
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @address_book = @household.address_books.find(params[:id])
+      @contacts = @address_book.contacts
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @address_books = @group.address_books.find(params[:id])
+      @contacts = @address_book.contacts
+    end
   end
 
   def new

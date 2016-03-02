@@ -1,0 +1,14 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_contact = new_group_address_book_contact_path(@context,@address_book)
+  - else
+    - new_contact = @context.class.name == "Household" ? new_user_home_address_book_contact_path(current_user,@address_book) : new_resource_address_book_contact_path(@resource,@address_book)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @address_book.name
+    %a.button.bg-blueberry{:href => new_contact} New contact
+
+  .grid-content.small-12
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/contacts/contacts/contact', collection: @contacts

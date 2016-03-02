@@ -17,7 +17,17 @@
 
   .grid-content.small-12
     %h3 New contact
+
     = form_for path_array, :url => url do |f|
+
+      = f.fields_for :memberships, @contact.memberships.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.user.id
+        %section.block-list
+          %header Address book
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_collective, [@resource.address_books], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:address_book_id] ? @address_book.to_global_id : ''}
+
       %section.block-list
         %header Contact
         %ul

@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   validates :username, :presence => true, :uniqueness => { :case_sensitive => false }
   validates :username, length: 2..15, format: { with: /\A(?:[a-z0-9][_]?)*[a-z0-9]\z/i, message: "invalid."} # "may only contain letters, numbers and underscores, must start and end with a letter or number, and cannot contain more than one underscore in a row."
   validates :username, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
-  # validates :username, format: { without: /\A(?:admin|about|users|staff|login|signin|signup|register|edit|profile)\Z/i, message: "restricted." }
+  validates :username, format: { without: /\A(?:admin|about|login|signin|signup|register|terms-of-service|privacy-policy|businesses|households|groups|contacts|calendars|time|finances|projects)\Z/i, message: "restricted." }
 
   has_many :ownerships, :as => :owner, :dependent => :destroy
   has_one :owner, :as => :item, :dependent => :destroy, :class_name => 'Ownership'

@@ -1,0 +1,35 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - #
+  - else
+    - #
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %ol{:style => 'list-style:none;margin:0;'}
+      %li.burnt-toast
+        .card
+          .card-section.clearfix
+            %div.float-left{:style => 'width:20%;'}
+              %strong= @contact.name
+            %div.float-left{:style => 'width:35%;'}= @contact.emails.first.address
+            %div.float-left{:style => 'width:20%;'}= @contact.telephones.first.number.phony_formatted
+            %div.float-left{:style => 'width:25%;'}
+              - unless @contact.addresses.first.line_1.blank?
+                = @contact.addresses.first.line_1
+                %br/
+              - unless @contact.addresses.first.line_2.blank?
+                = @contact.addresses.first.line_2
+                %br/
+              - unless @contact.addresses.first.city.blank?
+                = @contact.addresses.first.city
+                %br/
+              - unless @contact.addresses.first.state.blank?
+                = @contact.addresses.first.state
+                %br/
+              - unless @contact.addresses.first.zip.blank?
+                = @contact.addresses.first.zip
+                %br/
+              - unless @contact.addresses.first.country.blank?
+                = ISO3166::Country.new(@contact.addresses.first.country).name

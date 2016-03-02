@@ -1,8 +1,10 @@
 class Contacts::AddressBook < ActiveRecord::Base
+  include HumanizeName
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
-  has_many :contacts, :class_name => 'Contacts::Contact'
+  has_many :memberships, :as => :collective, :dependent => :destroy
+  has_many :contacts, :through => :memberships, :source => :member, :source_type => 'Contacts::Contact'
 
   extend FriendlyId
 

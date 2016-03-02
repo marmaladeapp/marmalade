@@ -1,25 +1,34 @@
-- if !contact.id
-  - canonical_link = '#'
+- case contact.context.class.name
+- when "User", "Business"
+  - canonical_link = resource_contact_path(contact.context,contact)
+- when "Household"
+  - canonical_link = user_home_contact_path(current_user,contact)
+- when "Group"
+  - canonical_link = group_contact_path(contact.context,contact)
 
-%tr{:style => 'border-bottom:1px solid gray;'}
-  %td{:style => 'padding:15px 10px;'}= contact.name
-  %td{:style => 'padding:15px 10px;'}= contact.emails.first.address
-  %td{:style => 'padding:15px 10px;'}= contact.telephones.first.number.phony_formatted
-  %td{:style => 'padding:15px 10px;'}
-    - unless contact.addresses.first.line_1.blank?
-      = contact.addresses.first.line_1
-      %br/
-    - unless contact.addresses.first.line_2.blank?
-      = contact.addresses.first.line_2
-      %br/
-    - unless contact.addresses.first.city.blank?
-      = contact.addresses.first.city
-      %br/
-    - unless contact.addresses.first.state.blank?
-      = contact.addresses.first.state
-      %br/
-    - unless contact.addresses.first.zip.blank?
-      = contact.addresses.first.zip
-      %br/
-    - unless contact.addresses.first.country.blank?
-      = ISO3166::Country.new(contact.addresses.first.country).name
+%li
+  %a.burnt-toast{:href => canonical_link}
+    .card
+      .card-section.clearfix
+        %div.float-left{:style => 'width:20%;'}
+          %strong= contact.name
+        %div.float-left{:style => 'width:35%;'}= contact.emails.first.address
+        %div.float-left{:style => 'width:20%;'}= contact.telephones.first.number.phony_formatted
+        %div.float-left{:style => 'width:25%;'}
+          - unless contact.addresses.first.line_1.blank?
+            = contact.addresses.first.line_1
+            %br/
+          - unless contact.addresses.first.line_2.blank?
+            = contact.addresses.first.line_2
+            %br/
+          - unless contact.addresses.first.city.blank?
+            = contact.addresses.first.city
+            %br/
+          - unless contact.addresses.first.state.blank?
+            = contact.addresses.first.state
+            %br/
+          - unless contact.addresses.first.zip.blank?
+            = contact.addresses.first.zip
+            %br/
+          - unless contact.addresses.first.country.blank?
+            = ISO3166::Country.new(contact.addresses.first.country).name

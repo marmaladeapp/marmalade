@@ -53,11 +53,4 @@
       %h3 Your contacts
 
   .grid-content.small-12
-    %table{:style => 'width:100%;'}
-      %thead.text-left{:style => 'border-bottom:2px solid black;'}
-        %th Name
-        %th Email
-        %th Telephone
-        %th Address
-      %tbody.text-left
-        = render partial: 'app/contacts/contacts/contact', collection: @contacts
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/contacts/contacts/contact', collection: @contacts

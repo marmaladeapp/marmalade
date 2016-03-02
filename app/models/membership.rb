@@ -15,6 +15,13 @@ class Membership < ActiveRecord::Base
     self.member = GlobalID::Locator.locate member
   end
 
+  def global_collective
+    self.collective.to_global_id if self.collective.present?
+  end
+  def global_collective=(collective)
+    self.collective = GlobalID::Locator.locate collective
+  end
+
   private
 
   def destroy_orphans
