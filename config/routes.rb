@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   concern :modules do
     scope module: 'contacts' do
       constraints(id: /\d+/) do
-        resources :contacts
+        resources :contacts do
+          resources :emails, only: [:new,:edit,:create,:update,:destroy]
+          resources :telephones, only: [:new,:edit,:create,:update,:destroy]
+          resources :addresses, only: [:new,:edit,:create,:update,:destroy]
+        end
       end
       constraints(id: /(?!address-books$)[0-9a-z\-\_]+/i) do
         resources :address_books, path: 'contacts', only: [:show,:edit]
@@ -14,7 +18,7 @@ Rails.application.routes.draw do
       end
       scope '/contacts/:address_book_id', as: 'address_book' do
         resources :contacts, path: ''
-      end
+      end # ????
     end
     scope module: 'calendar' do
       resources :calendars

@@ -16,6 +16,6 @@ class Group < ActiveRecord::Base
     group.memberships.create(:member => group.user, :user => group.user)
   end
 
-  accepts_nested_attributes_for :owners
+  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
 end

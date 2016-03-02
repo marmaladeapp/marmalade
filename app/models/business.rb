@@ -19,7 +19,7 @@ class Business < ActiveRecord::Base
     business.memberships.create(:member => business.user, :user => business.user)
   end
 
-  accepts_nested_attributes_for :owners
+  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
   include VanitizeUrl
   extend FriendlyId

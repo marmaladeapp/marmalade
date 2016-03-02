@@ -80,6 +80,22 @@ class App::Contacts::ContactsController < App::AppController
   end
 
   def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @contact =  ::Contacts::Contact.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:id])
+    end
   end
 
   def create
@@ -95,9 +111,6 @@ class App::Contacts::ContactsController < App::AppController
       @context = @resource
     end
 
-    unless params[:contacts_contact][:telephones_attributes]["0"][:number].blank?
-      params[:contacts_contact][:telephones_attributes]["0"][:number] = PhonyRails.normalize_number(params[:contacts_contact][:telephones_attributes]["0"][:number], default_country_code: params[:contacts_contact][:addresses_attributes]["0"][:country])
-    end
 
     @contact = @resource.contacts.new(contact_params)
     if @contact.save
@@ -108,6 +121,27 @@ class App::Contacts::ContactsController < App::AppController
   end
 
   def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @contact =  ::Contacts::Contact.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:id])
+    end
+    if @contact.update_attributes(contact_params)
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy
@@ -116,6 +150,6 @@ class App::Contacts::ContactsController < App::AppController
   private
 
   def contact_params
-    params.require(:contacts_contact).permit(:name,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:number],:memberships_attributes => [:user_id,:global_collective])
+    params.require(:contacts_contact).permit(:name,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:country_code,:number],:memberships_attributes => [:user_id,:global_collective])
   end
 end

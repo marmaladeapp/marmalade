@@ -7,5 +7,5 @@ class Contacts::Contact < ActiveRecord::Base
 
   belongs_to :item, polymorphic: true
 
-  accepts_nested_attributes_for :memberships
+  accepts_nested_attributes_for :memberships, reject_if: proc { |attributes| attributes['global_collective'].blank? }
 end

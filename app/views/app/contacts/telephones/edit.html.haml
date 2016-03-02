@@ -1,0 +1,30 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @contact, @telephone]
+    - url = resource_contact_telephone_path(@resource,@contact,@telephone)
+  - when 'Household'
+    - path_array = [@resource, @contact, @telephone]
+    - url = user_home_contact_telephone_path(@user,@contact,@telephone)
+  - when 'Group'
+    - path_array = [@resource, @contact, @telephone]
+    - url = group_contact_telephone_path(@resource,@contact,@telephone)
+- else
+  - path_array = @contact
+  - url = contact_telephone_path(@contact,@telephone)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @contact.name + " - Edit phone number"
+
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Telephone
+        %ul
+          %li.with-dropdown.clearfix
+            = f.country_select :country_code, {priority_countries: ["GB", "US"], format: :with_country_code, :include_blank => 'Country code'}, :class => 'small-4 float-left'
+            = f.text_field :number, {:placeholder => 'Telephone number', :class => 'small-8 float-left'}
+
+      %button.button.expanded.bg-blueberry Save

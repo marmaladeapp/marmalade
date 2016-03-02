@@ -45,8 +45,9 @@
         %section.block-list
           %header Telephone
           %ul
-            %li
-              = ff.text_field :number, {:placeholder => 'Telephone number'}
+            %li.with-dropdown.clearfix
+              = ff.country_select :country_code, {priority_countries: ["GB", "US"], format: :with_country_code, :include_blank => 'Country code'}, :class => 'small-4 float-left'
+              = ff.text_field :number, {:placeholder => 'Telephone number', :class => 'small-8 float-left'}
 
       = f.fields_for :addresses, @contact.addresses.build do |ff|
         %section.block-list
@@ -63,6 +64,6 @@
             %li
               = ff.text_field :zip, {:placeholder => 'Zip/Postcode'}
             %li.with-dropdown
-              = ff.country_select :country, priority_countries: ["GB", "US"]
+              = ff.country_select :country, priority_countries: ["GB", "US"], format: :with_country_code, :include_blank => true
 
       %button.button.expanded.bg-blueberry Save

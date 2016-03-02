@@ -1,0 +1,29 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @contact, @email]
+    - url = resource_contact_emails_path(@resource,@contact)
+  - when 'Household'
+    - path_array = [@resource, @contact, @email]
+    - url = user_home_contact_emails_path(@user,@contact)
+  - when 'Group'
+    - path_array = [@resource, @contact, @email]
+    - url = group_contact_emails_path(@resource,@contact)
+- else
+  - path_array = @contact
+  - url = contact_emails_path(@contact)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @contact.name + " - Add email"
+
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Email
+        %ul
+          %li
+            = f.text_field :address, {:placeholder => 'Email address'}
+
+      %button.button.expanded.bg-blueberry Save

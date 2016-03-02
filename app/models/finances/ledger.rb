@@ -9,7 +9,7 @@ class Finances::Ledger < ActiveRecord::Base
 
   has_many :payments, :class_name => 'Finances::Payment'
 
-  accepts_nested_attributes_for :owners
+  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
   def global_context
     self.context.to_global_id if self.context.present?

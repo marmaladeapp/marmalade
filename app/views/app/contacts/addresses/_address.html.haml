@@ -1,0 +1,31 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_address = edit_group_contact_address_path(@context,@contact,address)
+  - else
+    - edit_address = @context.class.name == "Household" ? edit_user_home_contact_address_path(current_user,@contact,address) : edit_resource_contact_address_path(@resource,@contact,address)
+
+%div.clearfix
+  %div.float-left
+    %p{:style => 'line-height:1.3;margin-bottom:10px;font-size:1.2em;'}
+      - unless address.line_1.blank?
+        = address.line_1
+        %br/
+      - unless address.line_2.blank?
+        = address.line_2
+        %br/
+      - unless address.city.blank?
+        = address.city
+        %br/
+      - unless address.state.blank?
+        = address.state
+        %br/
+      - unless address.zip.blank?
+        = address.zip
+        %br/
+      - unless address.country.blank?
+        = ISO3166::Country.new(address.country).name
+  %div.float-left{:style => 'padding-left:10px;'}
+    %div
+      %p{:style => 'line-height:1.3;margin-bottom:10px;font-size:1.2em;'}
+        %a.silver{:href => edit_address}
+          %i.fa.fa-fw.fa-pencil

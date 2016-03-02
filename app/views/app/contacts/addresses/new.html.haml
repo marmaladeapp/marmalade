@@ -1,0 +1,39 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @contact, @address]
+    - url = resource_contact_addresses_path(@resource,@contact)
+  - when 'Household'
+    - path_array = [@resource, @contact, @address]
+    - url = user_home_contact_addresses_path(@user,@contact)
+  - when 'Group'
+    - path_array = [@resource, @contact, @address]
+    - url = group_contact_addresses_path(@resource,@contact)
+- else
+  - path_array = @contact
+  - url = contact_addresses_path(@contact)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @contact.name + " - Add address"
+
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Address
+        %ul
+          %li
+            = f.text_field :line_1, {:placeholder => 'Line 1'}
+          %li
+            = f.text_field :line_2, {:placeholder => 'Line 2'}
+          %li
+            = f.text_field :city, {:placeholder => 'City'}
+          %li
+            = f.text_field :state, {:placeholder => 'State/Province'}
+          %li
+            = f.text_field :zip, {:placeholder => 'Zip/Postcode'}
+          %li.with-dropdown
+            = f.country_select :country, priority_countries: ["GB", "US"], format: :with_country_code, :include_blank => true
+
+      %button.button.expanded.bg-blueberry Save
