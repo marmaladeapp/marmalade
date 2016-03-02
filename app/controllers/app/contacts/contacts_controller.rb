@@ -74,7 +74,7 @@ class App::Contacts::ContactsController < App::AppController
       @context = @resource
     end
     if params[:address_book_id]
-      @address_book = ::Contacts::AddressBook.find(params[:address_book_id])
+      @address_book = @resource.address_books.find(params[:address_book_id])
     end
     @contact = ::Contacts::Contact.new
   end
