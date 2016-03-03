@@ -38,12 +38,12 @@
 
     = form_for path_array, :url => url do |f|
 
-      = f.fields_for :memberships, @contact.memberships.build do |ff|
+      = f.fields_for :owners, @contact.owners.build do |ff|
         = ff.hidden_field :user_id, :value => @resource.user.id
         %section.block-list
           %header Add to
           %ul
             %li.with-dropdown
-              = ff.grouped_collection_select :global_collective, [@resource.address_books.where.not(:id => @address_books.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:address_book_id] ? @address_book.to_global_id : ''}
+              = ff.grouped_collection_select :global_owner, [@resource.address_books.where.not(:id => @address_books.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:address_book_id] ? @address_book.to_global_id : ''}
 
       %button.button.expanded.bg-blueberry Save

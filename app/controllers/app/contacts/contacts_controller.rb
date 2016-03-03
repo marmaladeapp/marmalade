@@ -170,6 +170,6 @@ class App::Contacts::ContactsController < App::AppController
   private
 
   def contact_params
-    params.require(:contacts_contact).permit(:name,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:country_code,:number],:memberships_attributes => [:user_id,:global_collective])
+    params.require(:contacts_contact).permit(:name,:global_item,:emails_attributes => [:address],:addresses_attributes => [:line_1,:line_2,:city,:state,:zip,:country],:telephones_attributes => [:country_code,:number],:owners_attributes => [:user_id,:global_owner])
   end
 end

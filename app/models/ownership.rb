@@ -95,24 +95,26 @@ class Ownership < ActiveRecord::Base
   private
 
   def create_ancestry
-    if owner.owners.any?
-      owner.owners.each do |ownership|
-        ownership.ancestries.each do |ancestry|
-          @ancestry = ancestry.children.create(:ownership => self, :item_class => owner.class.name)
+    if (["Contacts::Contact"] & item.class.name.lines.to_a).empty?
+      if owner.owners.any?
+        owner.owners.each do |ownership|
+          ownership.ancestries.each do |ancestry|
+            @ancestry = ancestry.children.create(:ownership => self, :item_class => owner.class.name)
+          end
         end
+      else
+        @ancestry = OwnershipAncestry.create(:ownership => self, :item_class => owner.class.name)
       end
-    else
-      @ancestry = OwnershipAncestry.create(:ownership => self, :item_class => owner.class.name)
-    end
-    if item.ownerships.any?
-      item.ownerships.each do |ownership|
-        ownership.ancestries.each do |ancestry|
-          @descendant = @ancestry
-          ancestry.subtree.each do |descendant|
-            if ancestry.is_root?
-              descendant.update_attributes(:ancestry => "#{@ancestry.id}" + (descendant.ancestry.blank? ? "" : "/" + descendant.ancestry), :ancestry_depth => descendant.ancestry_depth + 1)
-            else
-              @descendant = @descendant.children.create(:ownership => descendant.ownership, :item_class => descendant.item_class)
+      if item.ownerships.any?
+        item.ownerships.each do |ownership|
+          ownership.ancestries.each do |ancestry|
+            @descendant = @ancestry
+            ancestry.subtree.each do |descendant|
+              if ancestry.is_root?
+                descendant.update_attributes(:ancestry => "#{@ancestry.id}" + (descendant.ancestry.blank? ? "" : "/" + descendant.ancestry), :ancestry_depth => descendant.ancestry_depth + 1)
+              else
+                @descendant = @descendant.children.create(:ownership => descendant.ownership, :item_class => descendant.item_class)
+              end
             end
           end
         end

@@ -3,8 +3,8 @@ class Contacts::AddressBook < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
-  has_many :memberships, :as => :collective, :dependent => :destroy
-  has_many :contacts, :through => :memberships, :source => :member, :source_type => 'Contacts::Contact'
+  has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'
+  has_many :contacts, :through => :ownerships, :source => :item, :source_type => 'Contacts::Contact'
 
   extend FriendlyId
 
