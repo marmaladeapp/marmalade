@@ -147,6 +147,26 @@ class App::Contacts::ContactsController < App::AppController
   def destroy
   end
 
+  def address_books
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @contact =  ::Contacts::Contact.find(params[:contact_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:contact_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @contact = ::Contacts::Contact.find(params[:contact_id])
+    end
+    @address_books = @contact.address_books
+  end
+
   private
 
   def contact_params

@@ -37,7 +37,7 @@ class App::Contacts::AddressBooksController < App::AppController
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
-      @address_books = @group.address_books.find(params[:id])
+      @address_book = @group.address_books.find(params[:id])
       @contacts = @address_book.contacts
     end
   end
@@ -58,6 +58,22 @@ class App::Contacts::AddressBooksController < App::AppController
   end
 
   def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @address_book =  @resource.address_books.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @address_book = @household.address_books.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @address_book = @group.address_books.find(params[:id])
+    end
   end
 
   def create
@@ -82,6 +98,25 @@ class App::Contacts::AddressBooksController < App::AppController
   end
 
   def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @address_book =  @resource.address_books.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @address_book = @household.address_books.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @address_book = @group.address_books.find(params[:id])
+    end
+    if @address_book.update_attributes(address_book_params)
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy

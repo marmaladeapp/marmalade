@@ -1,0 +1,46 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @contact]
+    - url = resource_contact_path(@resource,@contact)
+  - when 'Household'
+    - path_array = [@resource, @contact]
+    - url = user_home_contact_path(@user,@contact)
+  - when 'Group'
+    - path_array = [@resource, @contact]
+    - url = group_contact_path(@resource,@contact)
+- else
+  - path_array = @contact
+  - url = contact_path(@contact)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @contact.name
+
+  .grid-content.small-12
+    %section.block-list
+      %header Address books
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @address_books.each do |address_book|
+            - if address_book.owner.class.name == "Group"
+              - canonical_address_book = group_address_book_path(address_book.owner,address_book)
+            - else
+              - canonical_address_book = address_book.owner.class.name == "Household" ? user_home_address_book_path(current_user,address_book) : resource_address_book_path(address_book.owner,address_book)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_address_book}
+                %strong= address_book.name
+
+    = form_for path_array, :url => url do |f|
+
+      = f.fields_for :memberships, @contact.memberships.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.user.id
+        %section.block-list
+          %header Add to
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_collective, [@resource.address_books.where.not(:id => @address_books.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:address_book_id] ? @address_book.to_global_id : ''}
+
+      %button.button.expanded.bg-blueberry Save

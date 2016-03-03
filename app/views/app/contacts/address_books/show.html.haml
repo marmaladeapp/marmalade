@@ -1,13 +1,19 @@
 - if @context
   - if @context.class.name == 'Group'
+    - edit_address_book = edit_group_address_book_path(@context,@address_book)
     - new_contact = new_group_address_book_contact_path(@context,@address_book)
   - else
+    - edit_address_book = @context.class.name == "Household" ? edit_user_home_address_book_path(current_user,@address_book) : edit_resource_address_book_path(@resource,@address_book)
     - new_contact = @context.class.name == "Household" ? new_user_home_address_book_contact_path(current_user,@address_book) : new_resource_address_book_contact_path(@resource,@address_book)
 
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
-    %h3= @address_book.name
+    %h3
+      = @address_book.name
+      %a.olive{:href => edit_address_book}
+        %i.fa.fa-fw.fa-pencil
+    %p= @address_book.description
     %a.button.bg-blueberry{:href => new_contact} New contact
 
   .grid-content.small-12

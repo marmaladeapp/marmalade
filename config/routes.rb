@@ -10,11 +10,12 @@ Rails.application.routes.draw do
           resources :emails, only: [:new,:edit,:create,:update,:destroy]
           resources :telephones, only: [:new,:edit,:create,:update,:destroy]
           resources :addresses, only: [:new,:edit,:create,:update,:destroy]
+          get 'address-books', to: 'contacts#address_books'
         end
       end
       constraints(id: /(?!address-books$)[0-9a-z\-\_]+/i) do
-        resources :address_books, path: 'contacts', only: [:show,:edit]
-        resources :address_books, path: 'contacts/address-books', except: [:show,:edit]
+        resources :address_books, path: 'contacts', only: [:show,:edit,:update]
+        resources :address_books, path: 'contacts/address-books', except: [:show,:edit,:update]
       end
       scope '/contacts/:address_book_id', as: 'address_book' do
         resources :contacts, path: ''

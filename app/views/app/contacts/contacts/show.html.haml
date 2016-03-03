@@ -1,17 +1,38 @@
 - if @context
   - if @context.class.name == 'Group'
     - edit_contact = edit_group_contact_path(@context,@contact)
+    - add_address_book = group_contact_address_books_path(@context,@contact)
     - new_email = new_group_contact_email_path(@context,@contact)
     - new_telephone = new_group_contact_telephone_path(@context,@contact)
     - new_address = new_group_contact_address_path(@context,@contact)
   - else
     - edit_contact = @context.class.name == "Household" ? edit_user_home_contact_path(current_user,@contact) : edit_resource_contact_path(@resource,@contact)
+    - add_address_book = @context.class.name == "Household" ? user_home_contact_address_books_path(current_user,@contact) : resource_contact_address_books_path(@resource,@contact)
     - new_email = @context.class.name == "Household" ? new_user_home_contact_email_path(current_user,@contact) : new_resource_contact_email_path(@resource,@contact)
     - new_telephone = @context.class.name == "Household" ? new_user_home_contact_telephone_path(current_user,@contact) : new_resource_contact_telephone_path(@resource,@contact)
     - new_address = @context.class.name == "Household" ? new_user_home_contact_address_path(current_user,@contact) : new_resource_contact_address_path(@resource,@contact)
 
 
 .grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %section.block-list
+      %header Address books
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @contact.address_books.each do |address_book|
+            - if address_book.owner.class.name == "Group"
+              - canonical_address_book = group_address_book_path(address_book.owner,address_book)
+            - else
+              - canonical_address_book = address_book.owner.class.name == "Household" ? user_home_address_book_path(current_user,address_book) : resource_address_book_path(address_book.owner,address_book)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_address_book}
+                %strong= address_book.name
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_address_book}
+                %i.fa.fa-plus-circle.fa-lg
+
 
   .grid-content.small-12
     %h3
