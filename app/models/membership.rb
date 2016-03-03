@@ -6,6 +6,7 @@ class Membership < ActiveRecord::Base
   belongs_to :collective, polymorphic: true
   belongs_to :member, polymorphic: true
 
+  # after_create :create_contact
   after_destroy :destroy_orphans
 
   def global_member
