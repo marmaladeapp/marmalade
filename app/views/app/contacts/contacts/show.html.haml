@@ -28,6 +28,9 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_address_book}
                 %strong= address_book.name
+              - unless address_book == @contact.address_books.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
           .float-left.v-align{:style => ''}
             .align-center.text-center{:style => 'width:40px;'}
               %a.burnt-toast{:href => add_address_book}

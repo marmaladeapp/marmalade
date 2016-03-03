@@ -32,6 +32,9 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_address_book}
                 %strong= address_book.name
+              - unless address_book == @contact.address_books.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
 
     = form_for path_array, :url => url do |f|
 
