@@ -52,6 +52,8 @@ gem 'phony_rails'
 gem 'geocoder' # consider GeoKit as alternative
 gem 'timezone'
 
+gem 'clndr-rails'
+
 gem 'eu_central_bank', git: 'https://github.com/RubyMoney/eu_central_bank.git'
 # fix branch merged, new version not yet published.
 

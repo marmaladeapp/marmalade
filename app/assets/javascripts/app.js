@@ -12,6 +12,10 @@
 //
 //= require app/chartist
 //
+//= require moment
+//= require underscore
+//= require clndr-rails
+//
 //= require timepiece
 //
 // require turbolinks

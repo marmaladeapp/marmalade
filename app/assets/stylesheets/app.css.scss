@@ -12,6 +12,8 @@
 
 @import "app/chartist";
 
+@import "clndr-rails";
+
 body{
   @include breakpoint(small only){
     //background-color:$ice-cream;
