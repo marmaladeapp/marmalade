@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  default_scope -> { order('users.created_at DESC') }
+  default_scope { order(created_at: :desc) }
 
   include HumanizeName
   include VanitizeUrl
