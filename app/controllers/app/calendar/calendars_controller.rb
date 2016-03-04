@@ -23,6 +23,23 @@ class App::Calendar::CalendarsController < App::AppController
   end
 
   def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @calendar =  @resource.calendars.find(params[:id])
+      @events = @calendar.events
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @calendar = @household.calendars.find(params[:id])
+      @events = @calendar.events
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @calendar = @group.calendars.find(params[:id])
+      @events = @calendar.events
+    end
   end
 
   def new
@@ -41,6 +58,22 @@ class App::Calendar::CalendarsController < App::AppController
   end
 
   def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @calendar =  @resource.calendars.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @calendar = @household.calendars.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @calendar = @group.calendars.find(params[:id])
+    end
   end
 
   def create
@@ -65,6 +98,25 @@ class App::Calendar::CalendarsController < App::AppController
   end
 
   def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @calendar =  @resource.calendars.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @calendar = @household.calendars.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @calendar = @group.calendars.find(params[:id])
+    end
+    if @calendar.update_attributes(calendar_params)
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy

@@ -1,0 +1,15 @@
+- case event.context.class.name
+- when "User", "Business"
+  - canonical_link = resource_event_path(event.context,event)
+- when "Household"
+  - canonical_link = user_home_event_path(current_user,event)
+- when "Group"
+  - canonical_link = group_event_path(event.context,event)
+
+%li
+  %a.burnt-toast{:href => canonical_link}
+    .card{}
+      .card-section.clearfix
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px 1px 1px 10px;'}
+          %strong= event.name
+        %div.float-left.text-overflow{:style => 'width:80%;padding:1px;'}= event.description

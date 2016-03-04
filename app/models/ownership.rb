@@ -95,7 +95,7 @@ class Ownership < ActiveRecord::Base
   private
 
   def create_ancestry
-    if (["Contacts::Contact"] & item.class.name.lines.to_a).empty?
+    if (["Contacts::Contact","Calendar::Event"] & item.class.name.lines.to_a).empty?
       if owner.owners.any?
         owner.owners.each do |ownership|
           ownership.ancestries.each do |ancestry|

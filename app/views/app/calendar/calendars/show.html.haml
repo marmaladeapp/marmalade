@@ -1,0 +1,20 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_calendar = edit_group_calendar_path(@context,@calendar)
+    - new_event = new_group_calendar_event_path(@context,@calendar)
+  - else
+    - edit_calendar = @context.class.name == "Household" ? edit_user_home_calendar_path(current_user,@calendar) : edit_resource_calendar_path(@resource,@calendar)
+    - new_event = @context.class.name == "Household" ? new_user_home_calendar_event_path(current_user,@calendar) : new_resource_calendar_event_path(@resource,@calendar)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @calendar.name
+      %a.olive{:href => edit_calendar}
+        %i.fa.fa-fw.fa-pencil
+    %p= @calendar.description
+    %a.button.bg-blueberry{:href => new_event} New event
+
+  .grid-content.small-12
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: @events

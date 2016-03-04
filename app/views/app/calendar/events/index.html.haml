@@ -1,0 +1,57 @@
+
+- if @context
+  - if @context.class.name == 'Group'
+    - new_calendar = new_group_calendar_path(@context)
+    - new_event = new_group_event_path(@context)
+  - else
+    - new_calendar = @context.class.name == "Household" ? new_user_home_calendar_path(current_user) : new_resource_calendar_path(@resource)
+    - new_event = @context.class.name == "Household" ? new_user_home_event_path(current_user) : new_resource_event_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} calendars
+      %a.button.bg-blueberry{:href => new_calendar} New calendar
+    - else
+      %h3 Your calendars
+
+  .grid-block.wrap.small-12
+
+    - @calendars.each do |calendar|
+      .grid-content.small-12.medium-6.large-4
+        - case calendar.owner.class.name
+        - when "User", "Business"
+          - canonical_link = resource_calendar_path(calendar.owner,calendar)
+        - when "Household"
+          - canonical_link = user_home_calendar_path(current_user,calendar)
+        - when "Group"
+          - canonical_link = group_calendar_path(calendar.owner,calendar)
+        %a{:href => canonical_link}
+          .card{:style => 'height:250px;'}
+            .card-section.bg-rubylang
+              %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(calendar.name, length: 12)
+                %span.float-right
+                  %i.fa.fa-calendar
+            .card-divider.bg-ice-cream.burnt-toast
+              = truncate(calendar.owner.name, length: 15)
+            .card-section
+              - if !calendar.description.blank?
+                = calendar.description
+              - else
+                %em No description.
+
+
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} events
+      %a.button.bg-blueberry{:href => new_event} New event
+    - else
+      %h3 Your events
+
+  .grid-content.small-12
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: @events

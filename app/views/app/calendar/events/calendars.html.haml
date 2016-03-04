@@ -1,0 +1,49 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @event]
+    - url = resource_event_path(@resource,@event)
+  - when 'Household'
+    - path_array = [@resource, @event]
+    - url = user_home_event_path(@user,@event)
+  - when 'Group'
+    - path_array = [@resource, @event]
+    - url = group_event_path(@resource,@event)
+- else
+  - path_array = @event
+  - url = event_path(@event)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @event.name
+
+  .grid-content.small-12
+    %section.block-list
+      %header Address books
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @calendars.each do |calendar|
+            - if calendar.owner.class.name == "Group"
+              - canonical_calendar = group_calendar_path(calendar.owner,calendar)
+            - else
+              - canonical_calendar = calendar.owner.class.name == "Household" ? user_home_calendar_path(current_user,calendar) : resource_calendar_path(calendar.owner,calendar)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_calendar}
+                %strong= calendar.name
+              - unless calendar == @event.calendars.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+
+    = form_for path_array, :url => url do |f|
+
+      = f.fields_for :owners, @event.owners.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.user.id
+        %section.block-list
+          %header Add to
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_owner, [@resource.calendars.where.not(:id => @calendars.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:calendar_id] ? @calendar.to_global_id : ''}
+
+      %button.button.expanded.bg-blueberry Save

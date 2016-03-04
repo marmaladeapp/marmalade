@@ -22,7 +22,19 @@ Rails.application.routes.draw do
       end # ????
     end
     scope module: 'calendar' do
-      resources :calendars
+      constraints(id: /\d+/) do
+        resources :events, only: [:create]
+        resources :events, path: '/calendars', only: [:index], as: 'events'
+        resources :events, path: '/calendars/events', except: [:index,:create] do
+          get 'calendars', to: 'events#calendars'
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :calendars, except: [:index]
+      end
+      scope '/calendars/:calendar_id', as: 'calendar' do
+        resources :events, path: ''
+      end
     end
     scope module: 'time' do
       resources :time_sheets, path: 'time'
@@ -90,7 +102,19 @@ Rails.application.routes.draw do
       end
     end
     scope module: 'calendar' do
-      resources :calendars
+      constraints(id: /\d+/) do
+        resources :events, only: [:create]
+        resources :events, path: '/calendars', only: [:index], as: 'events'
+        resources :events, path: '/calendars/events', except: [:index,:create] do
+          get 'calendars', to: 'events#calendars'
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :calendars, except: [:index]
+      end
+      scope '/calendars/:calendar_id', as: 'calendar' do
+        resources :events, path: ''
+      end
     end
     scope module: 'time' do
       resources :time_sheets, path: 'time'

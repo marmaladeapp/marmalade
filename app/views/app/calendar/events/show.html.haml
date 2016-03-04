@@ -1,0 +1,43 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_event = edit_group_event_path(@context,@event)
+    - add_calendar = group_event_calendars_path(@context,@event)
+
+  - else
+    - edit_event = @context.class.name == "Household" ? edit_user_home_event_path(current_user,@event) : edit_resource_event_path(@resource,@event)
+    - add_calendar = @context.class.name == "Household" ? user_home_event_calendars_path(current_user,@event) : resource_event_calendars_path(@resource,@event)
+
+
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %section.block-list
+      %header Calendars
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @event.calendars.each do |calendar|
+            - if calendar.owner.class.name == "Group"
+              - canonical_calendar = group_calendar_path(calendar.owner,calendar)
+            - else
+              - canonical_calendar = calendar.owner.class.name == "Household" ? user_home_calendar_path(current_user,calendar) : resource_calendar_path(calendar.owner,calendar)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_calendar}
+                %strong= calendar.name
+              - unless calendar == @event.calendars.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_calendar}
+                %i.fa.fa-plus-circle.fa-lg
+
+
+  .grid-content.small-12
+    %h3    
+      - if @event.item
+        %img{:src => avatar_url(@event.item,50), :style => 'border-radius:50%;'}
+      = @event.name
+      %a.olive{:href => edit_event}
+        %i.fa.fa-fw.fa-pencil
+    %p= @event.description
