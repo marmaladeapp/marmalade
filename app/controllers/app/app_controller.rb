@@ -8,11 +8,17 @@ class App::AppController < ActionController::Base
   before_action :subscribe_user!
   before_filter :set_locale
 
+  around_filter :user_time_zone, if: :current_user
+
   def set_locale
     I18n.locale = current_user.language
   end
 
   private
+
+  def user_time_zone(&block)
+    Time.use_zone(current_user.time_zone, &block)
+  end
 
   def subscribe_user!
     unless request.fullpath.include?(user_subscribe_path(current_user)) || request.fullpath.include?(user_payment_path(current_user))

@@ -27,5 +27,21 @@
             = f.text_field :name, {:placeholder => 'Name'}
           %li
             = f.text_area :description, {:placeholder => 'Description'}
+      %section.block-list
+        %header Starting at
+        %ul
+          %li.with-dropdown.clearfix
+            = f.datetime_select :starting_at, {:datetime_separator => '<div class="float-left" style="width:16.666%;padding:1px;"></div>', :time_separator => ''}, {:class => 'small-2 float-left'}
+      %section.block-list
+        %header Ending at
+        %ul
+          %li.with-dropdown.clearfix
+            = f.datetime_select :ending_at, {:datetime_separator => '<div class="small-2 float-left" style="width:16.666%;padding:1px;"></div>', :time_separator => ''}, {:class => 'small-2 float-left'}
+
+      .text-center
+        %small in
+        %br
+        = current_user.time_zone
+        %h4= timepiece(current_user.time_zone)
 
       %button.button.expanded.bg-blueberry Save

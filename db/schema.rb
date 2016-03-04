@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304052154) do
+ActiveRecord::Schema.define(version: 20160304080053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,9 +53,13 @@ ActiveRecord::Schema.define(version: 20160304052154) do
     t.string   "context_type"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.datetime "starting_at"
+    t.datetime "ending_at"
   end
 
   add_index "calendar_events", ["context_type", "context_id"], name: "index_calendar_events_on_context_type_and_context_id", using: :btree
+  add_index "calendar_events", ["ending_at"], name: "index_calendar_events_on_ending_at", using: :btree
+  add_index "calendar_events", ["starting_at"], name: "index_calendar_events_on_starting_at", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
     t.integer  "collaborator_id"

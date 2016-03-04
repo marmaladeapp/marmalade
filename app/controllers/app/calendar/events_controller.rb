@@ -170,6 +170,6 @@ class App::Calendar::EventsController < App::AppController
   private
 
   def event_params
-    params.require(:calendar_event).permit(:name,:description,:owners_attributes => [:user_id,:global_owner])
+    params.require(:calendar_event).permit(:name,:description,:"starting_at(1i)",:"starting_at(2i)",:"starting_at(3i)",:"starting_at(4i)",:"starting_at(5i)",:"ending_at(1i)",:"ending_at(2i)",:"ending_at(3i)",:"ending_at(4i)",:"ending_at(5i)",:owners_attributes => [:user_id,:global_owner])
   end
 end
