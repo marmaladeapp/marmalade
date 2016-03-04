@@ -6,7 +6,7 @@ class Membership < ActiveRecord::Base
   belongs_to :collective, polymorphic: true
   belongs_to :member, polymorphic: true
 
-  # after_create :create_contact
+  after_create :create_contact
   after_destroy :destroy_orphans
 
   def global_member
@@ -24,6 +24,22 @@ class Membership < ActiveRecord::Base
   end
 
   private
+
+  def create_contact
+    unless Contacts::Contact.find_by(:item => member, :context => collective)
+      contact = Contacts::Contact.create(:name => member.name, :item => member, :context => collective)
+      contact.emails.create(:address => member.email)
+      member.emails.each do |email|
+        contact.emails.create(:address => email.address)
+      end
+      member.addresses.each do |address|
+        contact.addresses.create(:line_1 => address.line_1,:line_2 => address.line_2,:city => address.city,:state => address.state,:zip => address.zip,:country => address.country)
+      end
+      member.telephones.each do |telephone|
+        contact.telephones.create(:country_code => telephone.country_code,:number => telephone.number)
+      end
+    end
+  end
 
   def destroy_orphans
     if self.member.class.name == "User"

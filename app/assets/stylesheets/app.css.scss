@@ -151,3 +151,10 @@ body{
 th, td{
   padding:5px 10px;
 }
+
+
+.text-overflow{
+  overflow: hidden;
+  //white-space: nowrap;
+  text-overflow: ellipsis;
+}

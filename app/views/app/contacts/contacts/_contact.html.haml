@@ -8,13 +8,16 @@
 
 %li
   %a.burnt-toast{:href => canonical_link}
-    .card
+    .card{:class => contact.item ? 'bg-ice-cream' : ''}
       .card-section.clearfix
-        %div.float-left{:style => 'width:20%;padding:1px;'}
+        %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+          - if contact.item
+            %img{:src => avatar_url(contact.item,50), :style => 'border-radius:50%;'}
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px 1px 1px 10px;'}
           %strong= contact.name
-        %div.float-left{:style => 'width:35%;padding:1px;'}= contact.emails.any? ? contact.emails.first.address : ''
-        %div.float-left{:style => 'width:20%;padding:1px;'}= contact.telephones.any? ? contact.telephones.first.number.phony_formatted : ''
-        %div.float-left{:style => 'width:25%;padding:1px;'}
+        %div.float-left.text-overflow{:style => 'width:30%;padding:1px;'}= contact.emails.any? ? contact.emails.first.address : ''
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px;'}= contact.telephones.any? ? contact.telephones.first.number.phony_formatted : ''
+        %div.float-left.text-overflow{:style => 'width:25%;padding:1px;'}
           - if contact.addresses.any?
             - unless contact.addresses.first.line_1.blank?
               = contact.addresses.first.line_1
