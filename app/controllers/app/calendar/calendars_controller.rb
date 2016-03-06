@@ -40,6 +40,16 @@ class App::Calendar::CalendarsController < App::AppController
       @calendar = @group.calendars.find(params[:id])
       @events = @calendar.events
     end
+    if false # clndr
+      @clndr = Clndr.new(@calendar.name.parameterize.underscore.to_sym)
+      @events.each do |event|
+        if event.starting_at.noon == event.ending_at.noon
+          @clndr.add_event(event.starting_at,event.name,description:event.description)
+        else
+          @clndr.add_multiday_event(event.starting_at,event.ending_at,event.name,description:event.description)
+        end
+      end
+    end
   end
 
   def new

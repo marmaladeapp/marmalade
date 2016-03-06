@@ -1,0 +1,22 @@
+.clndr{
+  .clndr-controls{
+    .clndr-control-button{
+      display:none;
+    }
+    .month{
+      text-align:center;
+    }
+  }
+}
+.clndr-table{
+  .header-days{
+    background-color:$burnt-toast;
+    .header-day{
+      font-weight:bold;
+      color:$ice-cream;
+    }
+  }
+  .day.event{
+    background-color:$ice-cream;
+  }
+}
