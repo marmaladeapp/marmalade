@@ -23,22 +23,29 @@ class App::Calendar::CalendarsController < App::AppController
   end
 
   def show
+    if params['s']
+      @start_date = DateTime.new(params['s'][:'start_date(1i)'].to_i,params['s'][:'start_date(2i)'].to_i,params['s'][:'start_date(3i)'].to_i).beginning_of_day
+      @end_date = DateTime.new(params['s'][:'end_date(1i)'].to_i,params['s'][:'end_date(2i)'].to_i,params['s'][:'end_date(3i)'].to_i).end_of_day
+    else
+      @start_date = DateTime.now.beginning_of_day
+      @end_date = (DateTime.now + 6.days).end_of_day
+    end
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       @calendar =  @resource.calendars.find(params[:id])
-      @events = @calendar.events
+      @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @calendar = @household.calendars.find(params[:id])
-      @events = @calendar.events
+      @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @calendar = @group.calendars.find(params[:id])
-      @events = @calendar.events
+      @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     end
     if false # clndr
       @clndr = Clndr.new(@calendar.name.parameterize.underscore.to_sym)

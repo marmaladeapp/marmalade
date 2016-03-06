@@ -20,5 +20,34 @@
     .grid-content.small-12
       = show_calendar(@calendar.name.parameterize.underscore.to_sym, id:@calendar.name.parameterize.underscore,style:'width:266px;')
 
+  = form_tag request.path, method: 'get' do
+    .grid-block.wrap.small-12
+      .grid-content.small-6
+        %section.block-list
+          %header Starting at
+          %ul
+            %li.with-dropdown.clearfix
+              = date_select 's', :start_date, {:selected => @start_date}, {:class => 'small-4 float-left'}
+      .grid-content.small-6
+        %section.block-list
+          %header Ending at
+          %ul
+            %li.with-dropdown.clearfix
+              = date_select 's', :end_date, {:selected => @end_date}, {:class => 'small-4 float-left'}
+      .grid-content.small-12.clearfix
+        .pull-right
+          %button.button.expanded.bg-blueberry Search
+
   .grid-content.small-12
-    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: @events
+    - range = (@start_date..@end_date).to_a
+
+    - range.each do |date|
+      %h4.clearfix
+        %span.pull-left= date.strftime("%A")
+        %span.silver.pull-right= date.strftime("%-d %b")
+      - if !([date] & @events.group_by(&:day).keys).empty?
+        - @events.group_by(&:day).slice(date).each do |day, events|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: events
+      - else
+        %p 
+          %em.silver No records

@@ -40,4 +40,5 @@
       = @event.name
       %a.olive{:href => edit_event}
         %i.fa.fa-fw.fa-pencil
+    %h4.text-center= @event.starting_at.to_formatted_s(:long) + " - " + @event.ending_at.to_formatted_s(:long)
     %p= @event.description

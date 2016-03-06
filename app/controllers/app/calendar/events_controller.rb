@@ -147,7 +147,7 @@ class App::Calendar::EventsController < App::AppController
     if @event.update_attributes(event_params)
       redirect_to root_path
     else
-      render 'new'
+      render 'edit'
     end
   end
 
