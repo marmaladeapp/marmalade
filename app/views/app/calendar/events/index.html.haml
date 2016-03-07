@@ -73,7 +73,7 @@
           %button.button.expanded.bg-blueberry Search
 
   .grid-content.small-12
-    - range = (@start_date..@end_date).to_a
+    - range = (@start_date.to_date..@end_date.to_date).to_a
 
     - range.each do |date|
       %h4.clearfix
@@ -85,4 +85,3 @@
       - else
         %p 
           %em.silver No records
-
