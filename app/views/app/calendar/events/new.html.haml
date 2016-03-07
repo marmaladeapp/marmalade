@@ -21,7 +21,7 @@
     = form_for path_array, :url => url do |f|
 
       = f.fields_for :owners, @event.owners.build do |ff|
-        = ff.hidden_field :user_id, :value => @resource.user.id
+        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? @resource.id : @resource.user.id
         %section.block-list
           %header Calendar
           %ul

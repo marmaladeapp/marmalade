@@ -21,11 +21,19 @@ class App::Calendar::AttendeesController < App::AppController
       @event = ::Calendar::Event.find(params[:event_id])
       @membership = Membership.new
     end
-    ids = []
-    @event.members.each do |member|
-      ids << member.id
+    if @resource.class.name == 'User'
+      ids = []
+      @event.members.each do |member|
+        ids << member.id
+      end
+      @options_for_member_select = User.where(:id => current_user.id).where.not(:id => ids)
+    else
+      ids = []
+      @event.members.each do |member|
+        ids << member.id
+      end
+      @options_for_member_select = @resource.members.where.not(:id => ids)
     end
-    @options_for_member_select = @resource.members.where.not(:id => ids)
   end
   def create
     if params[:resource_id]
@@ -45,7 +53,7 @@ class App::Calendar::AttendeesController < App::AppController
       @event = ::Calendar::Event.find(params[:event_id])
       @membership = @event.memberships.new(membership_params)
     end
-    @membership.user = @resource.user
+    @membership.user = @resource.class.name == 'User' ? @resource : @resource.user
     if !@membership.member.is_member?(@membership.collective) && @membership.save
       if params[:resource_id]
         redirect_to resource_event_path(@resource,@event)
@@ -55,11 +63,19 @@ class App::Calendar::AttendeesController < App::AppController
         redirect_to user_home_event_path(@user,@event)
       end
     else
-      ids = []
-      @event.members.each do |member|
-        ids << member.id
+      if @resource.class.name == 'User'
+        ids = []
+        @event.members.each do |member|
+          ids << member.id
+        end
+        @options_for_member_select = User.where(:id => current_user.id).where.not(:id => ids)
+      else
+        ids = []
+        @event.members.each do |member|
+          ids << member.id
+        end
+        @options_for_member_select = @resource.members.where.not(:id => ids)
       end
-      @options_for_member_select = @resource.members.where.not(:id => ids)
       render 'new'
     end
   end
