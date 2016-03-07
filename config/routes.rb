@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         resources :events, path: '/calendars', only: [:index], as: 'events'
         resources :events, path: '/calendars/events', except: [:index,:create] do
           get 'calendars', to: 'events#calendars'
+          resources :attendees
         end
       end
       constraints(id: /[0-9a-z\-\_]+/i) do

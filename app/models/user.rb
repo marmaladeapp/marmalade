@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :memberships, :source => :collective, :source_type => 'Group'
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
+  has_many :attended_events, :through => :memberships, :source => :collective, :source_type => 'Calendar::Event'
 
   has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
 

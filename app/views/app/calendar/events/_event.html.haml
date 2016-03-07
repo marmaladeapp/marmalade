@@ -8,9 +8,12 @@
 
 %li
   %a.burnt-toast{:href => canonical_link}
-    .card{}
+    .card{:class => event.attending?(current_user) ? 'bg-ice-cream' : ''}
       .card-section.clearfix
         %div.float-left.text-overflow{:style => 'width:20%;padding:1px 1px 1px 10px;'}
           %strong= event.name
-        %div.float-left.text-overflow{:style => 'width:55%;padding:1px;'}= event.description
+        %div.float-left.text-overflow{:style => 'width:50%;padding:1px;'}= event.description
         %div.float-left.text-overflow{:style => 'width:25%;padding:1px;'}= event.starting_at.to_formatted_s(:long)
+        %div.float-left.text-overflow{:style => 'width:5%;padding:1px;'}
+          - if event.attending?(current_user)
+            %i.fa.fa-check.green

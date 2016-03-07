@@ -1,0 +1,28 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @event, @membership]
+  - url = user_home_event_attendee_path(@user,@event,@membership)
+- when 'Business', 'User'
+  - path_array = [@resource, @event, @membership]
+  - url = resource_event_attendee_path(@resource,@event,@membership)
+- when 'Group'
+  - path_array = [@resource, @event, @membership]
+  - url = group_event_attendee_path(@group,@event,@membership)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit attendee
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Attendee
+        %ul
+          %li
+            .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @membership.member.name
+
+      %button.button.expanded.bg-blueberry Save
+
+      %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+        %i.fa.fa-trash
+        Delete

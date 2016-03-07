@@ -1,0 +1,24 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @event, @membership]
+  - url = user_home_event_attendees_path(@user,@event)
+- when 'Business', 'User'
+  - path_array = [@resource, @event, @membership]
+  - url = resource_event_attendees_path(@resource,@event)
+- when 'Group'
+  - path_array = [@resource, @event, @membership]
+  - url = group_event_attendees_path(@group,@event)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New attendee
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Choose from collaborators
+        %ul
+          %li.with-dropdown
+            = f.grouped_collection_select :global_member, [@options_for_member_select], :all, :human_name, :to_global_id, :name, {:prompt => true}
+
+      %button.button.expanded.bg-blueberry Save

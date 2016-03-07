@@ -42,3 +42,26 @@
         %i.fa.fa-fw.fa-pencil
     %h4.text-center= @event.starting_at.to_formatted_s(:long) + " - " + @event.ending_at.to_formatted_s(:long)
     %p= @event.description
+
+  .grid-content.small-12
+    %h4 Attendees
+
+    %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
+      - @event.memberships.each do |membership|
+        .float-left{:style => 'margin-left:5px;'}
+          %a{:href => request.path + "/attendees/" + membership.id.to_s + "/edit"}
+            %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
+
+      .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+        .align-center.text-center{:style => 'width:40px;'}
+          - case @context.class.name
+          - when "Household"
+            %a.burnt-toast{:href => new_user_home_event_attendee_path(current_user,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+          - when "Group"
+            %a.burnt-toast{:href => new_group_event_attendee_path(@context,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+          - else
+            %a.burnt-toast{:href => new_resource_event_attendee_path(@context,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+
