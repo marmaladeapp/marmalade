@@ -91,7 +91,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @hourly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "daily"
-      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
+      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
@@ -126,7 +126,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @daily_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "weekly"
-      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
+      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
@@ -160,7 +160,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @weekly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "monthly"
-      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
+      payments = @wallet.payments.where(:created_at => @wallet.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
@@ -279,7 +279,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @hourly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "daily"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
+      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
@@ -314,7 +314,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @daily_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "weekly"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
+      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
@@ -348,7 +348,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @weekly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "monthly"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
+      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
@@ -463,7 +463,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @hourly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "daily"
-      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
+      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.net_worth}
       end
@@ -492,7 +492,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @daily_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "weekly"
-      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
+      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.net_worth}
@@ -520,7 +520,7 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @weekly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "monthly"
-      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::Time_Zone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
+      payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.net_worth}
       end
