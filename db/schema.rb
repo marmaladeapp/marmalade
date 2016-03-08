@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308003912) do
+ActiveRecord::Schema.define(version: 20160308141601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -350,11 +350,13 @@ ActiveRecord::Schema.define(version: 20160308003912) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.integer  "time_timer_id"
+    t.integer  "user_id"
   end
 
   add_index "time_intervals", ["started_at"], name: "index_time_intervals_on_started_at", using: :btree
   add_index "time_intervals", ["stopped_at"], name: "index_time_intervals_on_stopped_at", using: :btree
   add_index "time_intervals", ["time_timer_id"], name: "index_time_intervals_on_time_timer_id", using: :btree
+  add_index "time_intervals", ["user_id"], name: "index_time_intervals_on_user_id", using: :btree
 
   create_table "time_time_sheets", force: :cascade do |t|
     t.string   "name"
@@ -466,6 +468,7 @@ ActiveRecord::Schema.define(version: 20160308003912) do
   add_foreign_key "payment_methods", "users"
   add_foreign_key "projects", "users"
   add_foreign_key "time_intervals", "time_timers"
+  add_foreign_key "time_intervals", "users"
   add_foreign_key "time_time_sheets", "users"
   add_foreign_key "users", "plans"
 end

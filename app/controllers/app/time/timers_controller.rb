@@ -59,6 +59,7 @@ class App::Time::TimersController < App::AppController
       @timer = ::TimeTracking::Timer.find(params[:id])
       @time_sheets = @timer.time_sheets
     end
+    @interval = ::TimeTracking::Interval.new
   end
 
   def new

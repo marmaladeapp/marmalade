@@ -2,27 +2,25 @@
   - if @context.class.name == 'Group'
     - edit_timer = edit_group_timer_path(@context,@timer)
     - add_time_sheet = group_timer_time_sheets_path(@context,@timer)
-    - new_interval = new_group_timer_interval_path(@context,@timer)
 
   - else
     - edit_timer = @context.class.name == "Household" ? edit_user_home_timer_path(current_user,@timer) : edit_resource_timer_path(@resource,@timer)
     - add_time_sheet = @context.class.name == "Household" ? user_home_timer_time_sheets_path(current_user,@timer) : resource_timer_time_sheets_path(@resource,@timer)
-    - new_interval = @context.class.name == "Household" ? new_user_home_timer_interval_path(current_user,@timer) : new_resource_timer_interval_path(@resource,@timer)
 
 - if @context
   - case @context.class.name
   - when 'User', 'Business'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = resource_timer_intervals_path(@context, @timer)
+    - interval_url = resource_timer_interval_path(@context, @timer,@interval)
   - when 'Household'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = user_home_timer_intervals_path(@user, @timer)
+    - interval_url = user_home_timer_interval_path(@user, @timer,@interval)
   - when 'Group'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = group_timer_intervals_path(@context, @timer)
+    - interval_url = group_timer_interval_path(@context, @timer,@interval)
 - else
   - interval_path_array = [@timer, @interval]
-  - interval_url = timer_intervals_path(@timer)
+  - interval_url = timer_interval_path(@timer,@interval)
 
 .grid-container.small-12.medium-10
 
@@ -53,39 +51,14 @@
       = @timer.name
       %a.olive{:href => edit_timer}
         %i.fa.fa-fw.fa-pencil
-    - seconds = @timer.elapsed_time.to_i % 60
-    - minutes = (@timer.elapsed_time.to_i / 60) % 60
-    - hours = @timer.elapsed_time.to_i / (60 * 60)
     %h2.text-center
-      = format("%02d:%02d:%02d", hours, minutes, seconds)
+      = timer(@interval.started_at)
 
       - if @timer.assigned?(current_user)
         %div{:style => 'display:inline-block;'}
           = form_for interval_path_array, :url => interval_url do |f|
             = f.hidden_field :user_id, :value => current_user.id
-            %button.button.expanded.bg-blueberry Start
+            %button.button.expanded.bg-strawberry-jam Stop
 
     %p= @timer.description
 
-
-  .grid-content.small-12
-    %h4 Assigned to
-
-    %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
-      - @timer.memberships.each do |membership|
-        .float-left{:style => 'margin-left:5px;'}
-          %a{:href => request.path + "/assignees/" + membership.id.to_s + "/edit"}
-            %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
-
-      .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
-        .align-center.text-center{:style => 'width:40px;'}
-          - case @context.class.name
-          - when "Household"
-            %a.burnt-toast{:href => new_user_home_timer_assignee_path(current_user,@timer)}
-              %i.fa.fa-plus-circle.fa-lg
-          - when "Group"
-            %a.burnt-toast{:href => new_group_timer_assignee_path(@context,@timer)}
-              %i.fa.fa-plus-circle.fa-lg
-          - else
-            %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
-              %i.fa.fa-plus-circle.fa-lg

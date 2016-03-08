@@ -42,8 +42,9 @@ Rails.application.routes.draw do
         resources :timers, only: [:create]
         resources :timers, path: '/time', only: [:index], as: 'timers'
         resources :timers, path: '/time/timers', except: [:index,:create] do
-          get 'time_sheets', to: 'timers#time_sheets'
+          get 'time-sheets', to: 'timers#time_sheets'
           resources :assignees
+          resources :intervals
         end
       end
       constraints(id: /[0-9a-z\-\_]+/i) do
@@ -135,7 +136,7 @@ Rails.application.routes.draw do
         resources :timers, only: [:create]
         resources :timers, path: '/time', only: [:index], as: 'timers'
         resources :timers, path: '/time/timers', except: [:index,:create] do
-          get 'time_sheets', to: 'timers#time_sheets'
+          get 'time-sheets', to: 'timers#time_sheets'
           #resources :attendees
         end
       end

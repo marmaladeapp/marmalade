@@ -9,7 +9,7 @@ class TimeTracking::Timer < ActiveRecord::Base
   has_many :memberships, :as => :collective, :dependent => :destroy
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
-  has_many :intervals, :dependent => :destroy, :class_name => 'TimeTracking::Interval'
+  has_many :intervals, :dependent => :destroy, :class_name => 'TimeTracking::Interval', :foreign_key => 'time_timer_id'
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
