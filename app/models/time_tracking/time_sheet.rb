@@ -1,4 +1,5 @@
 class TimeTracking::TimeSheet < ActiveRecord::Base
+  include HumanizeName
   belongs_to :owner, polymorphic: true
   belongs_to :user
 

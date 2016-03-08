@@ -1,0 +1,39 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @timer]
+    - url = resource_timers_path(@resource)
+  - when 'Household'
+    - path_array = [@resource, @timer]
+    - url = user_home_timers_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @timer]
+    - url = group_timers_path(@resource)
+- else
+  - path_array = @timer
+  - url = timers_path
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New timer
+
+    = form_for path_array, :url => url do |f|
+
+      = f.fields_for :owners, @timer.owners.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? @resource.id : @resource.user.id
+        %section.block-list
+          %header Time sheet
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_owner, [@resource.time_sheets], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:time_sheet_id] ? @time_sheet.to_global_id : ''}
+
+      %section.block-list
+        %header Timer
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+
+      %button.button.expanded.bg-blueberry Save

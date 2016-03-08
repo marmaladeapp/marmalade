@@ -1,0 +1,19 @@
+- case timer.context.class.name
+- when "User", "Business"
+  - canonical_link = resource_timer_path(timer.context,timer)
+- when "Household"
+  - canonical_link = user_home_timer_path(current_user,timer)
+- when "Group"
+  - canonical_link = group_timer_path(timer.context,timer)
+
+%li
+  %a.burnt-toast{:href => canonical_link}
+    .card{:class => timer.assigned?(current_user) ? 'bg-ice-cream' : ''}
+      .card-section.clearfix
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px 1px 1px 10px;'}
+          %strong= timer.name
+        %div.float-left.text-overflow{:style => 'width:50%;padding:1px;'}= timer.description
+        %div.float-left.text-overflow{:style => 'width:25%;padding:1px;'}= timer.elapsed_time.to_i
+        %div.float-left.text-overflow{:style => 'width:5%;padding:1px;'}
+          - if timer.assigned?(current_user)
+            %i.fa.fa-clock-o.green

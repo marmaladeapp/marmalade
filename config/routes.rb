@@ -38,7 +38,20 @@ Rails.application.routes.draw do
       end
     end
     scope module: 'time' do
-      resources :time_sheets, path: 'time'
+      constraints(id: /\d+/) do
+        resources :timers, only: [:create]
+        resources :timers, path: '/time', only: [:index], as: 'timers'
+        resources :timers, path: '/time/timers', except: [:index,:create] do
+          get 'time_sheets', to: 'timers#time_sheets'
+          resources :assignees
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :time_sheets, path: '/time', except: [:index]
+      end
+      scope '/time/:time_sheet_id', as: 'time_sheet' do
+        resources :timers, path: ''
+      end
     end
     scope module: 'finances' do
       get '/finances', to: 'finances#index', as: 'finances'
@@ -118,7 +131,20 @@ Rails.application.routes.draw do
       end
     end
     scope module: 'time' do
-      resources :time_sheets, path: 'time'
+      constraints(id: /\d+/) do
+        resources :timers, only: [:create]
+        resources :timers, path: '/time', only: [:index], as: 'timers'
+        resources :timers, path: '/time/timers', except: [:index,:create] do
+          get 'time_sheets', to: 'timers#time_sheets'
+          #resources :attendees
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :time_sheets, path: '/time', except: [:index]
+      end
+      scope '/time/:time_sheet_id', as: 'time_sheet' do
+        resources :timers, path: ''
+      end
     end
     scope '/finances', module: 'finances' do
       get 'charts/wallet_balance'

@@ -15,6 +15,8 @@ module HasModules
     has_many :contact_profiles, :as => :item, :class_name => 'Contacts::Contact'
 
     has_many :events, :as => :context, :dependent => :destroy, :class_name => 'Calendar::Event'
+
+    has_many :timers, :as => :context, :dependent => :destroy, :class_name => 'TimeTracking::Timer'
   end
 
   def net_worth

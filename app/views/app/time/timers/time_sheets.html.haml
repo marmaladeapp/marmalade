@@ -1,0 +1,49 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @timer]
+    - url = resource_timer_path(@resource,@timer)
+  - when 'Household'
+    - path_array = [@resource, @timer]
+    - url = user_home_timer_path(@user,@timer)
+  - when 'Group'
+    - path_array = [@resource, @timer]
+    - url = group_timer_path(@resource,@timer)
+- else
+  - path_array = @timer
+  - url = timer_path(@timer)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @timer.name
+
+  .grid-content.small-12
+    %section.block-list
+      %header Time sheets
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @time_sheets.each do |time_sheet|
+            - if time_sheet.owner.class.name == "Group"
+              - canonical_time_sheet = group_time_sheet_path(time_sheet.owner,time_sheet)
+            - else
+              - canonical_time_sheet = time_sheet.owner.class.name == "Household" ? user_home_time_sheet_path(current_user,time_sheet) : resource_time_sheet_path(time_sheet.owner,time_sheet)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_time_sheet}
+                %strong= time_sheet.name
+              - unless time_sheet == @timer.time_sheets.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+
+    = form_for path_array, :url => url do |f|
+
+      = f.fields_for :owners, @timer.owners.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? @resource.id : @resource.user.id
+        %section.block-list
+          %header Add to
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_owner, [@resource.time_sheets.where.not(:id => @time_sheets.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:time_sheet_id] ? @time_sheet.to_global_id : ''}
+
+      %button.button.expanded.bg-blueberry Save

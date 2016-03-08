@@ -1,0 +1,28 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @timer, @membership]
+  - url = user_home_timer_assignee_path(@user,@timer,@membership)
+- when 'Business', 'User'
+  - path_array = [@resource, @timer, @membership]
+  - url = resource_timer_assignee_path(@resource,@timer,@membership)
+- when 'Group'
+  - path_array = [@resource, @timer, @membership]
+  - url = group_timer_assignee_path(@group,@timer,@membership)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit assignee
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Assigned to
+        %ul
+          %li
+            .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @membership.member.name
+
+      %button.button.expanded.bg-blueberry Save
+
+      %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+        %i.fa.fa-trash
+        Delete

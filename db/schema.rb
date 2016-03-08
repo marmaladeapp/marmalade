@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304080053) do
+ActiveRecord::Schema.define(version: 20160308003912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -343,6 +343,19 @@ ActiveRecord::Schema.define(version: 20160304080053) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
   add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
+  create_table "time_intervals", force: :cascade do |t|
+    t.datetime "started_at"
+    t.datetime "stopped_at"
+    t.integer  "duration"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "time_timer_id"
+  end
+
+  add_index "time_intervals", ["started_at"], name: "index_time_intervals_on_started_at", using: :btree
+  add_index "time_intervals", ["stopped_at"], name: "index_time_intervals_on_stopped_at", using: :btree
+  add_index "time_intervals", ["time_timer_id"], name: "index_time_intervals_on_time_timer_id", using: :btree
+
   create_table "time_time_sheets", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -357,6 +370,19 @@ ActiveRecord::Schema.define(version: 20160304080053) do
   add_index "time_time_sheets", ["owner_type", "owner_id"], name: "index_time_time_sheets_on_owner_type_and_owner_id", using: :btree
   add_index "time_time_sheets", ["slug"], name: "index_time_time_sheets_on_slug", using: :btree
   add_index "time_time_sheets", ["user_id"], name: "index_time_time_sheets_on_user_id", using: :btree
+
+  create_table "time_timers", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.integer  "estimated_time"
+    t.integer  "elapsed_time"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "time_timers", ["context_type", "context_id"], name: "index_time_timers_on_context_type_and_context_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                     default: "",      null: false
@@ -439,6 +465,7 @@ ActiveRecord::Schema.define(version: 20160304080053) do
   add_foreign_key "ownerships", "users"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "projects", "users"
+  add_foreign_key "time_intervals", "time_timers"
   add_foreign_key "time_time_sheets", "users"
   add_foreign_key "users", "plans"
 end

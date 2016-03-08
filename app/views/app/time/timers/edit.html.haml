@@ -1,0 +1,31 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @timer]
+    - url = resource_timer_path(@resource,@timer)
+  - when 'Household'
+    - path_array = [@resource, @timer]
+    - url = user_home_timer_path(@user,@timer)
+  - when 'Group'
+    - path_array = [@resource, @timer]
+    - url = group_timer_path(@resource,@timer)
+- else
+  - path_array = @timer
+  - url = timer_path(@timer)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @timer.name + " - Edit"
+
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Timer
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+
+      %button.button.expanded.bg-blueberry Save
