@@ -38,7 +38,12 @@
       = @timer.name
       %a.olive{:href => edit_timer}
         %i.fa.fa-fw.fa-pencil
+    - seconds = @timer.elapsed_time.to_i % 60
+    - minutes = (@timer.elapsed_time.to_i / 60) % 60
+    - hours = @timer.elapsed_time.to_i / (60 * 60)
+    %h2.text-center= format("%02d:%02d:%02d", hours, minutes, seconds)
     %p= @timer.description
+
 
   .grid-content.small-12
     %h4 Assigned to
@@ -46,7 +51,7 @@
     %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
       - @timer.memberships.each do |membership|
         .float-left{:style => 'margin-left:5px;'}
-          %a{:href => request.path + "/assigned/" + membership.id.to_s + "/edit"}
+          %a{:href => request.path + "/assignees/" + membership.id.to_s + "/edit"}
             %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
 
       .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
