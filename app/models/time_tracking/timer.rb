@@ -1,4 +1,6 @@
 class TimeTracking::Timer < ActiveRecord::Base
+  default_scope { order(updated_at: :desc) }
+
   belongs_to :context, polymorphic: true
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
