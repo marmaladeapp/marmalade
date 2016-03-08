@@ -60,6 +60,7 @@ class App::Time::TimersController < App::AppController
       @time_sheets = @timer.time_sheets
     end
     @interval = ::TimeTracking::Interval.new
+    @intervals = @timer.intervals.page(params[:page]) #.per(2)
   end
 
   def new
