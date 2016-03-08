@@ -3,6 +3,9 @@ class TimeTracking::TimeSheet < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
+  has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'
+  has_many :timers, :through => :ownerships, :source => :item, :source_type => 'TimeTracking::Timer'
+
   extend FriendlyId
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner

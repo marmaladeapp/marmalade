@@ -23,6 +23,23 @@ class App::Time::TimeSheetsController < App::AppController
   end
 
   def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @time_sheet =  @resource.time_sheets.find(params[:id])
+      @timers = @time_sheet.timers.page(params[:page]) #.per(2)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @time_sheet = @household.time_sheets.find(params[:id])
+      @timers = @time_sheet.timers.page(params[:page]) #.per(2)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @time_sheet = @group.time_sheets.find(params[:id])
+      @timers = @time_sheet.timers.page(params[:page]) #.per(2)
+    end
   end
 
   def new
@@ -41,6 +58,22 @@ class App::Time::TimeSheetsController < App::AppController
   end
 
   def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @time_sheet =  @resource.time_sheets.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      @time_sheet = @household.time_sheets.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      @time_sheet = @group.time_sheets.find(params[:id])
+    end
   end
 
   def create
@@ -65,6 +98,25 @@ class App::Time::TimeSheetsController < App::AppController
   end
 
   def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @time_sheet =  @resource.time_sheets.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @time_sheet = @household.time_sheets.find(params[:id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @time_sheet = @group.time_sheets.find(params[:id])
+    end
+    if @time_sheet.update_attributes(time_sheet_params)
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy
