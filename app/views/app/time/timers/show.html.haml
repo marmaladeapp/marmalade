@@ -90,5 +90,27 @@
             %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
               %i.fa.fa-plus-circle.fa-lg
 
+
   .grid-content.small-12
-    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/intervals/interval', collection: @intervals
+    - range = ['Active']
+
+    - first_not_nil = @intervals.find { |x| !x["stopped_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.stopped_at.to_date : Date.current
+    - end_date = @intervals.last && @intervals.last.stopped_at ? @intervals.last.stopped_at.to_date : Date.current
+
+    - (start_date.downto(end_date)).each do |date|
+      - range << date
+
+    - range.each do |active_or_date|
+      %h4.clearfix
+        - if active_or_date == 'Active'
+          %span.pull-left= active_or_date
+        - else
+          %span.pull-left= active_or_date.strftime("%A")
+          %span.silver.pull-right= active_or_date.strftime("%-d %b")
+      - if !([active_or_date] & @intervals.group_by(&:active_or_day).keys).empty?
+        - @intervals.group_by(&:active_or_day).slice(active_or_date).each do |active_or_day, intervals|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/intervals/interval', collection: intervals
+      - else
+        %p 
+          %em.silver No records
