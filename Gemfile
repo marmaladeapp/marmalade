@@ -35,6 +35,7 @@ gem "kaminari"
 gem 'possessive'
 
 gem "timepiece"
+#gem "timepiece", :path => '/Users/thombruce/Developer/Rails/Gems/timepiece'
 
 #gem "stripe"
 gem "braintree"
