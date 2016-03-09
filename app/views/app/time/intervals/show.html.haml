@@ -54,15 +54,25 @@
 
     %p= @timer.description
 
-    %h2.text-center
-      = timer(@interval.started_at)
+    - if !@interval.stopped_at
+      %h2.text-center
+        = timer(@interval.started_at)
 
-      - if @timer.assigned?(current_user)
-        %div{:style => 'display:inline-block;'}
-          = form_for interval_path_array, :url => interval_url do |f|
-            = f.hidden_field :user_id, :value => current_user.id
-            %button.button.expanded.bg-strawberry-jam Stop
-
-    %h3.text-center
-      Total:
-      = timer(@interval.started_at - @timer.elapsed_time.seconds)
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-strawberry-jam Stop
+      %h3.text-center
+        Total:
+        = timer(@interval.started_at - @timer.elapsed_time.seconds)
+    - else
+      %h2.text-center
+        - seconds = @interval.duration.to_i % 60
+        - minutes = (@interval.duration.to_i / 60) % 60
+        - hours = @interval.duration.to_i / (60 * 60)
+        = format("%02d:%02d:%02d", hours, minutes, seconds)
+      %h3.text-center
+        = @interval.started_at.strftime("%I:%M:%S %p")
+        = '-'
+        = @interval.stopped_at.strftime("%I:%M:%S %p")
