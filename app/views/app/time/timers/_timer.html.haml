@@ -14,10 +14,16 @@
           %strong= timer.name
         %div.float-left.text-overflow{:style => 'width:50%;padding:1px;'}= timer.description
         %div.float-left.text-overflow{:style => 'width:25%;padding:1px;'}
-          - seconds = timer.elapsed_time.to_i % 60
-          - minutes = (timer.elapsed_time.to_i / 60) % 60
-          - hours = timer.elapsed_time.to_i / (60 * 60)
-          = format("%02d:%02d:%02d", hours, minutes, seconds)
+          - if timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+            = timer(timer.intervals.where(:stopped_at => nil, :user => current_user).first.started_at - timer.elapsed_time.seconds)
+          - else
+            - seconds = timer.elapsed_time.to_i % 60
+            - minutes = (timer.elapsed_time.to_i / 60) % 60
+            - hours = timer.elapsed_time.to_i / (60 * 60)
+            = format("%02d:%02d:%02d", hours, minutes, seconds)
         %div.float-left.text-overflow{:style => 'width:5%;padding:1px;'}
           - if timer.assigned?(current_user)
-            %i.fa.fa-clock-o.green
+            - if timer.intervals.where(:stopped_at => nil).any?
+              %i.fa.fa-circle.strawberry-jam
+            - else
+              %i.fa.fa-clock-o.orange-juice

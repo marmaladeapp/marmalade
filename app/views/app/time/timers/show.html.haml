@@ -47,23 +47,46 @@
               %a.burnt-toast{:href => add_time_sheet}
                 %i.fa.fa-plus-circle.fa-lg
 
-
   .grid-content.small-12
     %h3
       = @timer.name
       %a.olive{:href => edit_timer}
         %i.fa.fa-fw.fa-pencil
-    - seconds = @timer.elapsed_time.to_i % 60
-    - minutes = (@timer.elapsed_time.to_i / 60) % 60
-    - hours = @timer.elapsed_time.to_i / (60 * 60)
-    %h2.text-center
-      = format("%02d:%02d:%02d", hours, minutes, seconds)
+    - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+      %h2.text-center
+        = timer(@interval.started_at - @timer.elapsed_time.seconds)
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            - if @context
+              - case @context.class.name
+              - when 'User', 'Business'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = resource_timer_interval_path(@context, @timer,@interval)
+              - when 'Household'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = user_home_timer_interval_path(@user, @timer,@interval)
+              - when 'Group'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = group_timer_interval_path(@context, @timer,@interval)
+            - else
+              - interval_path_array = [@timer, @interval]
+              - interval_url = timer_interval_path(@timer,@interval)
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-strawberry-jam Stop
+    - else
+      - seconds = @timer.elapsed_time.to_i % 60
+      - minutes = (@timer.elapsed_time.to_i / 60) % 60
+      - hours = @timer.elapsed_time.to_i / (60 * 60)
+      %h2.text-center
+        = format("%02d:%02d:%02d", hours, minutes, seconds)
 
-      - if @timer.assigned?(current_user)
-        %div{:style => 'display:inline-block;'}
-          = form_for interval_path_array, :url => interval_url do |f|
-            = f.hidden_field :user_id, :value => current_user.id
-            %button.button.expanded.bg-blueberry Start
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-blueberry Start
 
     %p= @timer.description
 
