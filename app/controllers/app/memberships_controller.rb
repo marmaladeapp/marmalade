@@ -4,8 +4,8 @@ class App::MembershipsController < App::AppController
   def show
   end
   def new
-    if params[:business_id]
-      @business = Business.find(params[:business_id])
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
       @resource = @business
       @context = @business
       @membership = Membership.new
@@ -28,8 +28,8 @@ class App::MembershipsController < App::AppController
     @options_for_member_select = current_user.collaborator_users.where.not(:id => ids)
   end
   def create
-    if params[:business_id]
-      @business = Business.find(params[:business_id])
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
       @resource = @business
       @context = @business
       @membership = @resource.memberships.new(membership_params)
@@ -59,7 +59,7 @@ class App::MembershipsController < App::AppController
         current_user.collaborators.create(:collaborator => @membership.member)
       end
     end
-    unless params[:business_id] || params[:group_id]
+    unless params[:resource_id] || params[:group_id]
       if @membership.member.home.present?
         ## Should rescue us from assigning secondary households.
         redirect_to user_home_path(@user) and return
@@ -67,7 +67,7 @@ class App::MembershipsController < App::AppController
     end
     @membership.user = @resource.user
     if !@membership.member.is_member?(@membership.collective) && @membership.save
-      if params[:business_id]
+      if params[:resource_id]
         redirect_to vanity_path(@business)
       elsif params[:group_id]
         redirect_to group_path(@group)
@@ -85,8 +85,8 @@ class App::MembershipsController < App::AppController
     end
   end
   def edit
-    if params[:business_id]
-      @business = Business.find(params[:business_id])
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
       @resource = @business
       @context = @business
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
@@ -104,8 +104,8 @@ class App::MembershipsController < App::AppController
     end
   end
   def update
-    if params[:business_id]
-      @business = Business.find(params[:business_id])
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
       @resource = @business
       @context = @business
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
@@ -126,8 +126,8 @@ class App::MembershipsController < App::AppController
     end
   end
   def destroy
-    if params[:business_id]
-      @business = Business.find(params[:business_id])
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
       unless @membership.member == @business.user
         @membership.destroy

@@ -132,7 +132,7 @@ class Ownership < ActiveRecord::Base
         end
       end
     end
-    unless self.item.class.name == "User"
+    unless self.item.class.name == "User" || self.item.class.name == "Business"
       self.item.destroy if self.item.owners.empty?
     end
   end

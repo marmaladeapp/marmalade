@@ -17,19 +17,6 @@
             %li.with-dropdown
               = f.select :business_type, [["Sole Trader", "SoleTrader"], ["Partnership", "Partnership"], ["Limited Partnership", "LimitedPartnership"], ["Limited Liability Partnership", "LimitedLiabilityPartnership"], ["Limited Company", "LimitedCompany"], ["Unincorporated Association", "UnincorporatedAssociation"]], {selected: "LimitedCompany", prompt: true}
 
-        = f.fields_for :owners, @business.owners.build do |ff|
-          = ff.hidden_field :user_id, :value => current_user.id
-          %section.block-list
-            %header Owned by
-            %ul
-              %li.with-dropdown
-                = ff.grouped_collection_select :global_owner, [User.where(:id => current_user.id), current_user.subscriber_businesses], :all, :human_name, :to_global_id, :name, {:selected => params[:parent_id] ? Business.find(params[:parent_id]).to_global_id : current_user.to_global_id}
-          %section.block-list
-            %header Equity (%)
-            %ul
-              %li
-                = ff.number_field :equity, :step => 'any', :max => 100, :min => 0, :value => 100
-
         %section.block-list
           %header About your business
           %ul

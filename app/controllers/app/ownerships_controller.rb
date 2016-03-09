@@ -72,9 +72,7 @@ class App::OwnershipsController < App::AppController
   def destroy
     @business = Business.find(params[:business_id])
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
-    unless @ownership.owner == @business.user
-      @ownership.destroy
-    end
+    @ownership.destroy
     redirect_to vanity_path(@business)
   end
   private
