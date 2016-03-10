@@ -53,4 +53,12 @@
       %h3 Your contacts
 
   .grid-content.small-12
-    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/contacts/contacts/contact', collection: @contacts
+
+    - @contacts.group_by(&:first_letter).each do |first_letter, contacts|
+      %h4.clearfix
+        %span.silver.pull-left= first_letter
+      - if contacts.any?
+        %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/contacts/contacts/contact', collection: contacts
+      - else
+        %p 
+          %em.silver No records
