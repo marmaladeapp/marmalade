@@ -1,2 +1,14 @@
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
+
+  .grid-content.small-12
+    .card{:style => 'margin-top:16px;'}
+      = form_for @message, :url => request.path do |f|
+        .card-section{:style => 'padding:6px 16px;'}
+          %label
+            New message
+            = f.text_area :content, {:placeholder => 'Say something...', :style => 'margin:8px 0 0 0;'}
+        .card-divider{:style => 'padding:6px 16px;'}
+          .clearfix
+            .pull-right
+              %button.button.expanded.bg-blueberry{:style => 'margin:0;'} Send

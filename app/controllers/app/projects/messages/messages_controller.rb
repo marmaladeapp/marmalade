@@ -17,6 +17,7 @@ class App::Projects::Messages::MessagesController < App::AppController
     else
       @project = current_user.projects.find(params[:project_id])
     end
+    @message = ::Messages::Message.new
   end
 
   def show
@@ -40,6 +41,6 @@ class App::Projects::Messages::MessagesController < App::AppController
   private
 
   def message_params
-    params.require(:messages_message).permit()
+    params.require(:messages_message).permit(:title,:content)
   end
 end
