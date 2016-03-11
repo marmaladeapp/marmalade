@@ -1,13 +1,13 @@
 - if @context
   - if @context.class.name == 'Group'
     - project_canonical = group_project_path(@context,@project)
-    - project_messages = group_project_contacts_path(@context, @project)
+    - project_messages = group_project_messages_path(@context, @project)
     - project_calendar = group_project_events_path(@context, @project)
     - project_time = group_project_timers_path(@context, @project)
     - project_budget = group_project_finances_path(@context, @project)
   - else
     - project_canonical = @context.class.name == "Household" ? user_home_project_path(current_user, @project) : resource_project_path(@resource, @project)
-    - project_messages = @context.class.name == "Household" ? user_home_project_contacts_path(current_user, @project) : resource_project_contacts_path(@resource, @project)
+    - project_messages = @context.class.name == "Household" ? user_home_project_messages_path(current_user, @project) : resource_project_messages_path(@resource, @project)
     - project_calendar = @context.class.name == "Household" ? user_home_project_events_path(current_user, @project) : resource_project_events_path(@resource, @project)
     - project_time = @context.class.name == "Household" ? user_home_project_timers_path(current_user, @project) : resource_project_timers_path(@resource, @project)
     - project_budget = @context.class.name == "Household" ? user_home_project_finances_path(current_user, @project) : resource_project_finances_path(@resource, @project)

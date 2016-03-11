@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   #########################################################
   require 'constraints/short_dispatcher'
   concern :modules do
+    scope module: 'messages' do
+      resources :messages
+    end
     scope module: 'contacts' do
       resources :contacts, only: [:index]
       constraints(id: /\d+/) do
@@ -78,7 +81,9 @@ Rails.application.routes.draw do
     concerns :modules
     resources :projects do
       resources :memberships, path: 'members'
-      concerns :modules
+      scope module: 'projects' do
+        concerns :modules
+      end
     end
   end
   ###############  Requirements & Concerns  ###############
