@@ -17,4 +17,12 @@ class TimeTracking::Timer < ActiveRecord::Base
     memberships.find_by(:member => user)
   end
 
+  def active?
+    intervals.where(:stopped_at => nil).any?
+  end
+
+  def active_or_day
+    active? ? 'Active' : self.updated_at.to_date
+  end
+
 end

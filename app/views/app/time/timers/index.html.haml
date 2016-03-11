@@ -54,4 +54,25 @@
       %h3 Your timers
 
   .grid-content.small-12
-    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/timers/timer', collection: @timers
+    - range = ['Active']
+
+    - first_not_nil = @timers.find { |x| !x["updated_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.updated_at.to_date : Date.current
+    - end_date = @timers.last && @timers.last.updated_at ? @timers.last.updated_at.to_date : Date.current
+
+    - (start_date.downto(end_date)).each do |date|
+      - range << date
+
+    - range.each do |active_or_date|
+      %h4.clearfix
+        - if active_or_date == 'Active'
+          %span.pull-left= active_or_date
+        - else
+          %span.pull-left= active_or_date.strftime("%A")
+          %span.silver.pull-right= active_or_date.strftime("%-d %b")
+      - if !([active_or_date] & @timers.group_by(&:active_or_day).keys).empty?
+        - @timers.group_by(&:active_or_day).slice(active_or_date).each do |active_or_day, timers|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/timers/timer', collection: timers
+      - else
+        %p 
+          %em.silver No records
