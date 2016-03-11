@@ -1,0 +1,20 @@
+- case message.context.class.name
+- when "User", "Business"
+  - canonical_link = resource_project_message_path(message.context,message.project,message)
+- when "Household"
+  - canonical_link = user_home_project_message_path(current_user,message.project,message)
+- when "Group"
+  - canonical_link = group_project_message_path(message.context,message.project,message)
+
+%li
+  %a.burnt-toast{:href => canonical_link}
+    .card{}
+      .card-section
+        .clearfix
+          %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+            %img{:src => avatar_url(message.user,50), :style => 'border-radius:50%;'}
+          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}
+            %strong= message.user.name
+        .clearfix
+          %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}= message.content

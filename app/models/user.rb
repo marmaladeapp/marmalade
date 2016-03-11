@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
 
   has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
 
+  has_many :messages, :dependent => :destroy, :class_name => 'Messages::Message'
+
   has_many :intervals
 
   def full_name

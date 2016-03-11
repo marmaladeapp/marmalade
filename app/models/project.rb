@@ -5,6 +5,8 @@ class Project < ActiveRecord::Base
   has_many :memberships, :as => :collective, :dependent => :destroy
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
+  has_many :messages, :dependent => :destroy, :class_name => 'Messages::Message'
+
   #after_create do |project|
   #  project.memberships.create(:member => project.user, :user => project.user)
   #end
