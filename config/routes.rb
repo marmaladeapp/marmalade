@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   require 'constraints/short_dispatcher'
   concern :modules do
     scope module: 'contacts' do
+      resources :contacts, only: [:index]
       constraints(id: /\d+/) do
-        resources :contacts do
+        resources :contacts, except: [:index] do
           resources :emails, only: [:new,:edit,:create,:update,:destroy]
           resources :telephones, only: [:new,:edit,:create,:update,:destroy]
           resources :addresses, only: [:new,:edit,:create,:update,:destroy]

@@ -1,15 +1,16 @@
 - if @context
   - if @context.class.name == 'Group'
+    - project_canonical = group_project_path(@context,@project)
     - project_messages = group_project_address_books_path(@context, @project)
     - project_calendar = group_project_calendars_path(@context, @project)
     - project_time = group_project_time_sheets_path(@context, @project)
     - project_budget = group_project_finances_path(@context, @project)
   - else
-    - project_messages = @context.class.name == "Household" ? user_home_project_address_books_path(current_user, @project) : resource_project_address_books_path(@resource, @project)
+    - project_canonical = @context.class.name == "Household" ? user_home_project_path(current_user, @project) : resource_project_path(@resource, @project)
+    - project_messages = @context.class.name == "Household" ? user_home_project_contacts_path(current_user, @project) : resource_project_contacts_path(@resource, @project)
     - project_calendar = @context.class.name == "Household" ? user_home_project_calendars_path(current_user, @project) : resource_project_calendars_path(@resource, @project)
     - project_time = @context.class.name == "Household" ? user_home_project_time_sheets_path(current_user, @project) : resource_project_time_sheets_path(@resource, @project)
     - project_budget = @context.class.name == "Household" ? user_home_project_finances_path(current_user, @project) : resource_project_finances_path(@resource, @project)
-
 
 .grid-container.small-12.medium-10
 
@@ -17,7 +18,8 @@
 
     .grid-content.small-7
       %div{:style => 'margin-top:20px;margin-bottom:20px;'}
-        %h3= @project.name
+        %a{:href => project_canonical}
+          %h3= @project.name
         %p= @project.description
         - if current_user == @project.user
           %a{:href => '#'} Edit project
