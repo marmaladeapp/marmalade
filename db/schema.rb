@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309002510) do
+ActiveRecord::Schema.define(version: 20160311014254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -378,10 +378,11 @@ ActiveRecord::Schema.define(version: 20160309002510) do
     t.text     "description"
     t.integer  "context_id"
     t.string   "context_type"
-    t.integer  "estimated_time", default: 0
-    t.integer  "elapsed_time",   default: 0
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "estimated_time",  default: 0
+    t.integer  "elapsed_time",    default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "intervals_count", default: 0
   end
 
   add_index "time_timers", ["context_type", "context_id"], name: "index_time_timers_on_context_type_and_context_id", using: :btree
