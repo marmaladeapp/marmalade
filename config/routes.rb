@@ -7,7 +7,8 @@ Rails.application.routes.draw do
     scope module: 'contacts' do
       resources :contacts, only: [:index]
       constraints(id: /\d+/) do
-        resources :contacts, except: [:index] do
+        resources :contacts, only: [:create], as: 'contacts_create'
+        resources :contacts, except: [:index, :create] do
           resources :emails, only: [:new,:edit,:create,:update,:destroy]
           resources :telephones, only: [:new,:edit,:create,:update,:destroy]
           resources :addresses, only: [:new,:edit,:create,:update,:destroy]
@@ -23,9 +24,9 @@ Rails.application.routes.draw do
       end # ????
     end
     scope module: 'calendar' do
+      resources :events, path: '/calendars', only: [:index]
       constraints(id: /\d+/) do
-        resources :events, only: [:create]
-        resources :events, path: '/calendars', only: [:index], as: 'events'
+        resources :events, only: [:create], as: 'events_create'
         resources :events, path: '/calendars/events', except: [:index,:create] do
           get 'calendars', to: 'events#calendars'
           resources :attendees
@@ -39,9 +40,9 @@ Rails.application.routes.draw do
       end
     end
     scope module: 'time' do
+      resources :timers, path: '/time', only: [:index]
       constraints(id: /\d+/) do
-        resources :timers, only: [:create]
-        resources :timers, path: '/time', only: [:index], as: 'timers'
+        resources :timers, only: [:create], as: 'timers_create'
         resources :timers, path: '/time/timers', except: [:index,:create] do
           get 'time-sheets', to: 'timers#time_sheets'
           resources :assignees

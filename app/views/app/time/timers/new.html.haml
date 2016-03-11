@@ -2,16 +2,16 @@
   - case @resource.class.name
   - when 'User', 'Business'
     - path_array = [@resource, @timer]
-    - url = resource_timers_path(@resource)
+    - url = resource_timers_create_index_path(@resource)
   - when 'Household'
     - path_array = [@resource, @timer]
-    - url = user_home_timers_path(@user)
+    - url = user_home_timers_create_index_path(@user)
   - when 'Group'
     - path_array = [@resource, @timer]
-    - url = group_timers_path(@resource)
+    - url = group_timers_create_index_path(@resource)
 - else
   - path_array = @timer
-  - url = timers_path
+  - url = timers_create_index_path
 
 .grid-container.small-12.medium-10
 

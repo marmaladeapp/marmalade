@@ -2,16 +2,16 @@
   - case @resource.class.name
   - when 'User', 'Business'
     - path_array = [@resource, @event]
-    - url = resource_events_path(@resource)
+    - url = resource_events_create_index_path(@resource)
   - when 'Household'
     - path_array = [@resource, @event]
-    - url = user_home_events_path(@user)
+    - url = user_home_events_create_index_path(@user)
   - when 'Group'
     - path_array = [@resource, @event]
-    - url = group_events_path(@resource)
+    - url = group_events_create_index_path(@resource)
 - else
   - path_array = @event
-  - url = events_path
+  - url = events_create_index_path
 
 .grid-container.small-12.medium-10
 

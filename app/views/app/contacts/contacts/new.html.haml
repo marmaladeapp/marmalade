@@ -2,16 +2,16 @@
   - case @resource.class.name
   - when 'User', 'Business'
     - path_array = [@resource, @contact]
-    - url = resource_contacts_path(@resource)
+    - url = resource_contacts_create_index_path(@resource)
   - when 'Household'
     - path_array = [@resource, @contact]
-    - url = user_home_contacts_path(@user)
+    - url = user_home_contacts_create_index_path(@user)
   - when 'Group'
     - path_array = [@resource, @contact]
-    - url = group_contacts_path(@resource)
+    - url = group_contacts_create_index_path(@resource)
 - else
   - path_array = @contact
-  - url = contacts_path
+  - url = contacts_create_index_path
 
 .grid-container.small-12.medium-10
 
