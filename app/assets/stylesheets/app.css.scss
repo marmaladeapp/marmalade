@@ -148,6 +148,17 @@ body{
 
 }
 
+.menu-bar li.active {
+  @extend %menu-bar;
+  @include menu-bar-style(
+    $background: $ice-cream, // Background color of items
+    $background-hover: $ice-cream, // Background color of item on hover
+    $background-active: $ice-cream, // Background color of an active item
+    $color: $burnt-toast
+  );
+
+}
+
 
 th, td{
   padding:5px 10px;
