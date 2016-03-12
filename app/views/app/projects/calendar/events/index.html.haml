@@ -11,11 +11,8 @@
 
   .grid-content.small-12
 
-    - if @context
-      %h3 #{@context.name.possessive} events
-      %a.button.bg-blueberry{:href => new_event} New event
-    - else
-      %h3 Your events
+    %h3 #{@project.name} events
+    %a.button.bg-blueberry{:href => new_event} New event
 
 
   = form_tag request.path, method: 'get' do
@@ -45,7 +42,7 @@
         %span.silver.pull-right= date.strftime("%-d %b")
       - if !([date] & @events.group_by(&:day).keys).empty?
         - @events.group_by(&:day).slice(date).each do |day, events|
-          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: events
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/projects/calendar/events/event', collection: events
       - else
         %p 
           %em.silver No records

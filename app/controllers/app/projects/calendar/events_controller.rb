@@ -29,12 +29,52 @@ class App::Projects::Calendar::EventsController < App::AppController
   end
 
   def new
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @project =  @resource.projects.find(params[:project_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @resource = @household
+      @context = @household
+      @project = @household.projects.find(params[:project_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
+      @project = @group.projects.find(params[:project_id])
+    end
+    @event = ::Calendar::Event.new
   end
 
   def edit
   end
 
   def create
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      @project =  @resource.projects.find(params[:project_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @resource = @household
+      @context = @household
+      @project = @household.projects.find(params[:project_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @resource = @group
+      @context = @group
+      @project = @group.projects.find(params[:project_id])
+    end
+    @event = @project.events.new(event_params)
+    @event.context = @resource
+    if @event.save
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def update
@@ -46,7 +86,7 @@ class App::Projects::Calendar::EventsController < App::AppController
   private
 
   def event_params
-    params.require(:calendar_events).permit()
+    params.require(:calendar_event).permit(:name,:description,:"starting_at(1i)",:"starting_at(2i)",:"starting_at(3i)",:"starting_at(4i)",:"starting_at(5i)",:"ending_at(1i)",:"ending_at(2i)",:"ending_at(3i)",:"ending_at(4i)",:"ending_at(5i)",:owners_attributes => [:user_id,:global_owner])
   end
 end
 
@@ -73,23 +113,6 @@ if false
     end
   end
 
-  def new
-    if params[:resource_id]
-      @resource = VanityUrl.find(params[:resource_id]).owner
-      @context = @resource
-    elsif params[:user_id]
-      @user = User.find(params[:user_id])
-      @resource = @user.home
-      @context = @resource
-    elsif params[:group_id]
-      @resource = Group.find(params[:group_id])
-      @context = @resource
-    end
-    if params[:calendar_id]
-      @calendar = @resource.calendars.find(params[:calendar_id])
-    end
-    @event = ::Calendar::Event.new
-  end
 
   def edit
     if params[:resource_id]

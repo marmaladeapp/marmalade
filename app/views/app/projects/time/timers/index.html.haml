@@ -1,2 +1,40 @@
+
+- if @context
+  - if @context.class.name == 'Group'
+    - new_timer = new_group_project_timer_path(:group_id => @context.id,:project_id => @project.slug)
+  - else
+    - new_timer = @context.class.name == "Household" ? new_user_home_project_timer_path(:user_id => current_user.username,:project_id => @project.slug) : new_resource_project_timer_path(:resource_id => @resource.class.name == 'User' ? @resource.username : @resource.slug,:project_id => @project.slug)
+
+
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
+
+
+  .grid-content.small-12
+
+    %h3 #{@project.name} timers
+    %a.button.bg-blueberry{:href => new_timer} New timer
+
+  .grid-content.small-12
+    - range = ['Active']
+
+    - first_not_nil = @timers.find { |x| !x["updated_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.updated_at.to_date : Date.current
+    - end_date = @timers.last && @timers.last.updated_at ? @timers.last.updated_at.to_date : Date.current
+
+    - (start_date.downto(end_date)).each do |date|
+      - range << date
+
+    - range.each do |active_or_date|
+      %h4.clearfix
+        - if active_or_date == 'Active'
+          %span.pull-left= active_or_date
+        - else
+          %span.pull-left= active_or_date.strftime("%A")
+          %span.silver.pull-right= active_or_date.strftime("%-d %b")
+      - if !([active_or_date] & @timers.group_by(&:active_or_day).keys).empty?
+        - @timers.group_by(&:active_or_day).slice(active_or_date).each do |active_or_day, timers|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/projects/time/timers/timer', collection: timers
+      - else
+        %p 
+          %em.silver No records

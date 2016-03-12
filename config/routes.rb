@@ -86,16 +86,14 @@ Rails.application.routes.draw do
           resources :messages
         end
       scope module: 'calendar' do
-        resources :events, path: '/calendars', only: [:index]
-        resources :events, only: [:create], as: 'events_create'
+        resources :events, path: '/calendars', only: [:index, :create]
         resources :events, path: '/calendars/events', except: [:index,:create] do
           get 'calendars', to: 'events#calendars'
           resources :attendees
         end
       end
       scope module: 'time' do
-        resources :timers, path: '/time', only: [:index]
-        resources :timers, only: [:create], as: 'timers_create'
+        resources :timers, path: '/time', only: [:index, :create]
         resources :timers, path: '/time/timers', except: [:index,:create] do
           get 'time-sheets', to: 'timers#time_sheets'
           resources :assignees

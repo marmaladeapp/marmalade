@@ -1,0 +1,29 @@
+- case timer.context.class.name
+- when "User", "Business"
+  - canonical_link = resource_project_timer_path(timer.context,@project,timer)
+- when "Household"
+  - canonical_link = user_home_project_timer_path(current_user,@project,timer)
+- when "Group"
+  - canonical_link = group_project_timer_path(timer.context,@project,timer)
+
+%li
+  %a.burnt-toast{:href => canonical_link}
+    .card{:class => timer.assigned?(current_user) ? 'bg-ice-cream' : ''}
+      .card-section.clearfix
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px 1px 1px 10px;'}
+          %strong= timer.name
+        %div.float-left.text-overflow{:style => 'width:50%;padding:1px;'}= timer.description
+        %div.float-left.text-overflow{:style => 'width:25%;padding:1px;'}
+          - if timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+            = timer(timer.intervals.where(:stopped_at => nil, :user => current_user).first.started_at - timer.elapsed_time.seconds)
+          - else
+            - seconds = timer.elapsed_time.to_i % 60
+            - minutes = (timer.elapsed_time.to_i / 60) % 60
+            - hours = timer.elapsed_time.to_i / (60 * 60)
+            = format("%02d:%02d:%02d", hours, minutes, seconds)
+        %div.float-left.text-overflow{:style => 'width:5%;padding:1px;'}
+          - if timer.assigned?(current_user)
+            - if timer.intervals.where(:stopped_at => nil).any?
+              %i.fa.fa-circle.strawberry-jam
+            - else
+              %i.fa.fa-clock-o.orange-juice
