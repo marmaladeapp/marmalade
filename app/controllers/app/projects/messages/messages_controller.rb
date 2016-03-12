@@ -35,15 +35,18 @@ class App::Projects::Messages::MessagesController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       @project =  @resource.projects.find(params[:project_id])
+      redirect = resource_project_messages_path(@resource,@project)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @project = @household.projects.find(params[:project_id])
+      redirect = user_home_project_messages_path(@user,@project)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @project = @group.projects.find(params[:project_id])
+      redirect = group_project_messages_path(@group,@project)
     end
 
     @message = @project.messages.new(message_params)
@@ -51,7 +54,7 @@ class App::Projects::Messages::MessagesController < App::AppController
     @message.context = @context
 
     if @message.save
-      redirect_to root_path
+      redirect_to redirect
     else
       render 'new'
     end
