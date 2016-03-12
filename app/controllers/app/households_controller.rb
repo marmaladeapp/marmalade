@@ -5,6 +5,7 @@ class App::HouseholdsController < App::AppController
     @user = User.find(params[:user_id])
     @household = @user.home
     @context = @household
+    @abstracts = @household.abstracts
   end
   def new
     @user = User.find(params[:user_id])

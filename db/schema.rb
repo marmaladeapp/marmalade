@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312003545) do
+ActiveRecord::Schema.define(version: 20160312173907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "abstracts", force: :cascade do |t|
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.integer  "project_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "abstracts", ["context_type", "context_id"], name: "index_abstracts_on_context_type_and_context_id", using: :btree
+  add_index "abstracts", ["item_type", "item_id"], name: "index_abstracts_on_item_type_and_item_id", using: :btree
+  add_index "abstracts", ["project_id"], name: "index_abstracts_on_project_id", using: :btree
 
   create_table "businesses", force: :cascade do |t|
     t.string   "name"
@@ -476,6 +490,7 @@ ActiveRecord::Schema.define(version: 20160312003545) do
   add_index "vanity_urls", ["owner_type", "owner_id"], name: "index_vanity_urls_on_owner_type_and_owner_id", using: :btree
   add_index "vanity_urls", ["slug"], name: "index_vanity_urls_on_slug", unique: true, using: :btree
 
+  add_foreign_key "abstracts", "projects"
   add_foreign_key "businesses", "users"
   add_foreign_key "calendar_calendars", "users"
   add_foreign_key "calendar_events", "projects"

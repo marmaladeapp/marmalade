@@ -9,9 +9,11 @@ class Project < ActiveRecord::Base
   has_many :events, :dependent => :destroy, :class_name => 'Calendar::Event'
   has_many :timers, :dependent => :destroy, :class_name => 'TimeTracking::Timer'
 
-  #after_create do |project|
-  #  project.memberships.create(:member => project.user, :user => project.user)
-  #end
+  has_many :abstracts
+
+  after_create do |project|
+    project.abstracts.create(:context => project.owner, :item => project)
+  end
 
   extend FriendlyId
 

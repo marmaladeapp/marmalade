@@ -1,2 +1,4 @@
-.grid-content
-  %h2 Alright, alright, alright.
+.grid-container.small-12.medium-10
+  .grid-content.small-12
+    - @abstracts.each do |abstract|
+      = abstract.item.name

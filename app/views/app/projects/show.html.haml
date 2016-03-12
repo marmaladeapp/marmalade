@@ -55,3 +55,8 @@
           %a{:href => project_budget}
             %i.fa.fa-usd
             Budget
+
+
+  .grid-content.small-12
+    - @abstracts.each do |abstract|
+      = abstract.item.name
