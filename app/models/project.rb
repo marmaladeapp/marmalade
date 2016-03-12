@@ -12,7 +12,7 @@ class Project < ActiveRecord::Base
   has_many :abstracts
 
   after_create do |project|
-    project.abstracts.create(:context => project.owner, :item => project)
+    project.abstracts.create(:context => project.owner, :item => project, :user => project.user, :action => 'create')
   end
 
   extend FriendlyId

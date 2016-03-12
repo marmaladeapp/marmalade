@@ -1,0 +1,14 @@
+%li
+  %a.burnt-toast{:href => '#'}
+    .card{}
+      .card-section
+        .clearfix
+          %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+            %img{:src => avatar_url(message.user,50), :style => 'border-radius:50%;'}
+          %div.float-left.text-overflow{:style => 'width:75%;padding:1px 1px 1px 10px;'}
+            %strong= message.user.name
+          %div.float-left.text-overflow.text-right{:style => 'width:20%;padding:1px;'}
+            %small= time_ago_in_words(message.created_at) + " ago"
+        .clearfix
+          %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}= message.content
