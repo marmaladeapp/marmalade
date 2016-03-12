@@ -1,6 +1,7 @@
 class Calendar::Calendar < ActiveRecord::Base
   include HumanizeName
   belongs_to :owner, polymorphic: true
+  belongs_to :project
   belongs_to :user
 
   has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'

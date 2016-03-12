@@ -1,2 +1,51 @@
+
+- if @context
+  - if @context.class.name == 'Group'
+    - new_event = new_group_project_event_path(:group_id => @context.id,:project_id => @project.slug)
+  - else
+    - new_event = @context.class.name == "Household" ? new_user_home_project_event_path(:user_id => current_user.username,:project_id => @project.slug) : new_resource_project_event_path(:resource_id => @resource.class.name == 'User' ? @resource.username : @resource.slug,:project_id => @project.slug)
+
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
+
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} events
+      %a.button.bg-blueberry{:href => new_event} New event
+    - else
+      %h3 Your events
+
+
+  = form_tag request.path, method: 'get' do
+    .grid-block.wrap.small-12
+      .grid-content.small-6
+        %section.block-list
+          %header Starting at
+          %ul
+            %li.with-dropdown.clearfix
+              = date_select 's', :start_date, {:selected => @start_date}, {:class => 'small-4 float-left'}
+      .grid-content.small-6
+        %section.block-list
+          %header Ending at
+          %ul
+            %li.with-dropdown.clearfix
+              = date_select 's', :end_date, {:selected => @end_date}, {:class => 'small-4 float-left'}
+      .grid-content.small-12.clearfix
+        .pull-right
+          %button.button.expanded.bg-blueberry Search
+
+  .grid-content.small-12
+    - range = (@start_date.to_date..@end_date.to_date).to_a
+
+    - range.each do |date|
+      %h4.clearfix
+        %span.pull-left= date.strftime("%A")
+        %span.silver.pull-right= date.strftime("%-d %b")
+      - if !([date] & @events.group_by(&:day).keys).empty?
+        - @events.group_by(&:day).slice(date).each do |day, events|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: events
+      - else
+        %p 
+          %em.silver No records

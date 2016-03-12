@@ -82,7 +82,30 @@ Rails.application.routes.draw do
     resources :projects do
       resources :memberships, path: 'members'
       scope module: 'projects' do
-        concerns :modules
+        scope module: 'messages' do
+          resources :messages
+        end
+      scope module: 'calendar' do
+        resources :events, path: '/calendars', only: [:index]
+        resources :events, only: [:create], as: 'events_create'
+        resources :events, path: '/calendars/events', except: [:index,:create] do
+          get 'calendars', to: 'events#calendars'
+          resources :attendees
+        end
+      end
+      scope module: 'time' do
+        resources :timers, path: '/time', only: [:index]
+        resources :timers, only: [:create], as: 'timers_create'
+        resources :timers, path: '/time/timers', except: [:index,:create] do
+          get 'time-sheets', to: 'timers#time_sheets'
+          resources :assignees
+          resources :intervals
+        end
+      end
+      scope module: 'finances' do
+        get '/finances', to: 'finances#index', as: 'finances'
+      end
+
       end
     end
   end

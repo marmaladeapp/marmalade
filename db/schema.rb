@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160311154528) do
+ActiveRecord::Schema.define(version: 20160312003545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,10 +55,12 @@ ActiveRecord::Schema.define(version: 20160311154528) do
     t.datetime "updated_at",   null: false
     t.datetime "starting_at"
     t.datetime "ending_at"
+    t.integer  "project_id"
   end
 
   add_index "calendar_events", ["context_type", "context_id"], name: "index_calendar_events_on_context_type_and_context_id", using: :btree
   add_index "calendar_events", ["ending_at"], name: "index_calendar_events_on_ending_at", using: :btree
+  add_index "calendar_events", ["project_id"], name: "index_calendar_events_on_project_id", using: :btree
   add_index "calendar_events", ["starting_at"], name: "index_calendar_events_on_starting_at", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
@@ -398,9 +400,11 @@ ActiveRecord::Schema.define(version: 20160311154528) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "intervals_count", default: 0
+    t.integer  "project_id"
   end
 
   add_index "time_timers", ["context_type", "context_id"], name: "index_time_timers_on_context_type_and_context_id", using: :btree
+  add_index "time_timers", ["project_id"], name: "index_time_timers_on_project_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                     default: "",      null: false
@@ -474,6 +478,7 @@ ActiveRecord::Schema.define(version: 20160311154528) do
 
   add_foreign_key "businesses", "users"
   add_foreign_key "calendar_calendars", "users"
+  add_foreign_key "calendar_events", "projects"
   add_foreign_key "collaborators", "users"
   add_foreign_key "contacts_address_books", "users"
   add_foreign_key "finances_wallets", "users"
@@ -488,5 +493,6 @@ ActiveRecord::Schema.define(version: 20160311154528) do
   add_foreign_key "time_intervals", "time_timers"
   add_foreign_key "time_intervals", "users"
   add_foreign_key "time_time_sheets", "users"
+  add_foreign_key "time_timers", "projects"
   add_foreign_key "users", "plans"
 end

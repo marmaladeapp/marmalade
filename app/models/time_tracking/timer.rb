@@ -2,6 +2,7 @@ class TimeTracking::Timer < ActiveRecord::Base
   default_scope { order(updated_at: :desc) }
 
   belongs_to :context, polymorphic: true
+  belongs_to :project
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_many :time_sheets, :through => :owners, :source => :owner, :source_type => 'TimeTracking::TimeSheet'
