@@ -12,17 +12,20 @@ class App::Calendar::EventsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       @calendars =  @resource.calendars
+      @ongoing_events = @resource.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events =  @resource.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @calendars = @household.calendars
+      @ongoing_events = @household.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @household.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @calendars = @group.calendars
+      @ongoing_events = @group.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @group.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     else
       @calendars = ::Calendar::Calendar.where(
@@ -35,6 +38,16 @@ class App::Calendar::EventsController < App::AppController
         'Household', current_user.households.ids, 
         'Group', current_user.groups.ids
       ).page(params[:page]) #.per(2)
+      @ongoing_events = ::Calendar::Event.where(
+        '(context_type = ? AND context_id = ?) OR 
+        (context_type = ? AND context_id IN (?)) OR 
+        (context_type = ? AND context_id IN (?)) OR 
+        (context_type = ? AND context_id IN (?))', 
+        'User', current_user.id, 
+        'Business', current_user.businesses.ids, 
+        'Household', current_user.households.ids, 
+        'Group', current_user.groups.ids
+      ).where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = ::Calendar::Event.where(
         '(context_type = ? AND context_id = ?) OR 
         (context_type = ? AND context_id IN (?)) OR 

@@ -22,6 +22,7 @@ class App::Projects::Calendar::EventsController < App::AppController
       @context = @group
       @project = @group.projects.find(params[:project_id])
     end
+    @ongoing_events = @project.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
     @events = @project.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
   end
 

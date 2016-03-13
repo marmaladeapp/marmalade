@@ -34,17 +34,20 @@ class App::Calendar::CalendarsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       @calendar =  @resource.calendars.find(params[:id])
+      @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @calendar = @household.calendars.find(params[:id])
+      @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @calendar = @group.calendars.find(params[:id])
+      @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     end
     if false # clndr
