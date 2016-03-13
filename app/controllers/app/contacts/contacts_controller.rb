@@ -114,6 +114,7 @@ class App::Contacts::ContactsController < App::AppController
 
     @contact = @resource.contacts.new(contact_params)
     if @contact.save
+      @context.abstracts.create(:item => @contact, :user => current_user, :action => 'create')
       redirect_to root_path
     else
       render 'new'

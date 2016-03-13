@@ -20,6 +20,7 @@ class App::Projects::Finances::WalletsController < App::AppController
     end
     @project_wallet = @project.item_wallets.new(item_wallet_params)
     if @project_wallet.save
+      @context.abstracts.create(:item => @project_wallet, :user => current_user, :action => 'create')
       redirect_to redirect
     else
       render 'new'

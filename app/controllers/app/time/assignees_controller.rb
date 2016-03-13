@@ -55,6 +55,7 @@ class App::Time::AssigneesController < App::AppController
     end
     @membership.user = @resource.class.name == 'User' ? @resource : @resource.user
     if !@membership.member.is_member?(@membership.collective) && @membership.save
+      @context.abstracts.create(:item => @membership, :user => current_user, :action => 'create')
       if params[:resource_id]
         redirect_to resource_timer_path(@resource,@timer)
       elsif params[:group_id]

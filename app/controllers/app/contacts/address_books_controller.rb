@@ -91,6 +91,7 @@ class App::Contacts::AddressBooksController < App::AppController
     @address_book = @resource.address_books.new(address_book_params)
     @address_book.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @address_book.save
+      @context.abstracts.create(:item => @address_book, :user => current_user, :action => 'create')
       redirect_to root_path
     else
       render 'new'

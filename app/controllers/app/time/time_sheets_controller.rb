@@ -91,6 +91,7 @@ class App::Time::TimeSheetsController < App::AppController
     @time_sheet = @resource.time_sheets.new(time_sheet_params)
     @time_sheet.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @time_sheet.save
+      @context.abstracts.create(:item => @time_sheet, :user => current_user, :action => 'create')
       redirect_to root_path
     else
       render 'new'

@@ -3,6 +3,7 @@ class Calendar::Event < ActiveRecord::Base
 
   belongs_to :context, polymorphic: true
   belongs_to :item, polymorphic: true
+  belongs_to :project
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_many :calendars, :through => :owners, :source => :owner, :source_type => 'Calendar::Calendar'

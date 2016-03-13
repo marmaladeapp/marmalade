@@ -116,6 +116,7 @@ class App::Time::TimersController < App::AppController
 
     @timer = @resource.timers.new(timer_params)
     if @timer.save
+      @context.abstracts.create(:item => @timer, :user => current_user, :action => 'create')
       redirect_to root_path
     else
       render 'new'

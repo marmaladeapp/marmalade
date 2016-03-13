@@ -37,6 +37,7 @@ class App::OwnershipsController < App::AppController
     end
     @ownership.user = @resource.user
     if !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
+      @context.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
       unless @resource.memberships.where(:member => @ownership.owner).any?
         @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
       end

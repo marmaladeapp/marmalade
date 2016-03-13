@@ -44,6 +44,7 @@ class App::Time::IntervalsController < App::AppController
     @interval = @timer.intervals.new(interval_params)
     @interval.started_at = DateTime.now
     if @interval.save
+      @context.abstracts.create(:item => @interval, :user => current_user, :action => 'create')
       if params[:resource_id]
         redirect_to resource_timer_interval_path(@resource,@timer,@interval)
       elsif params[:user_id]
@@ -77,6 +78,7 @@ class App::Time::IntervalsController < App::AppController
     @interval.duration = (@interval.stopped_at - @interval.started_at).to_i
 
     if @interval.update_attributes(interval_params)
+      @context.abstracts.create(:item => @interval, :user => current_user, :action => 'update')
       @timer.update_attributes(:elapsed_time => @timer.elapsed_time + @interval.duration)
       if params[:resource_id]
         redirect_to resource_timer_path(@resource,@timer)

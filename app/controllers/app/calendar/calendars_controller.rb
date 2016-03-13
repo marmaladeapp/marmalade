@@ -111,6 +111,7 @@ class App::Calendar::CalendarsController < App::AppController
     @calendar = @resource.calendars.new(calendar_params)
     @calendar.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @calendar.save
+      @context.abstracts.create(:item => @calendar, :user => current_user, :action => 'create')
       redirect_to root_path
     else
       render 'new'
