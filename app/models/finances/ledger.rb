@@ -1,4 +1,5 @@
 class Finances::Ledger < ActiveRecord::Base
+  include Abstractable
   has_many :ownerships, :dependent => :destroy, :as => :owner
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
 

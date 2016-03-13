@@ -1,4 +1,5 @@
 class Project < ActiveRecord::Base
+  include Abstractable
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
@@ -17,6 +18,10 @@ class Project < ActiveRecord::Base
   #after_create do |project|
   #  project.abstracts.create(:context => project.owner, :item => project, :user => project.user, :action => 'create') user here is subscriber - not correct.
   #end
+
+  before_destroy do |project|
+    project.abstracts.update_all(project_id: nil)
+  end
 
   extend FriendlyId
 

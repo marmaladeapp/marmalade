@@ -2,6 +2,7 @@ class Business < ActiveRecord::Base
   include HumanizeName
 
   include HasModules
+  include Abstractable
 
   validates :slug, format: { without: /\A(?:admin|about|login|signin|signup|register|terms-of-service|privacy-policy|businesses|households|groups|contacts|calendars|time|finances|projects)\Z/i, message: "restricted." }
 

@@ -1,4 +1,5 @@
 class TimeTracking::Timer < ActiveRecord::Base
+  include Abstractable
   default_scope { order(updated_at: :desc) }
 
   belongs_to :context, polymorphic: true

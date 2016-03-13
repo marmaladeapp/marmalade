@@ -1,6 +1,7 @@
 class Group < ActiveRecord::Base
   include HumanizeName
   include HasModules
+  include Abstractable
 
   belongs_to :user, :inverse_of => :subscriber_groups, counter_cache: true
 

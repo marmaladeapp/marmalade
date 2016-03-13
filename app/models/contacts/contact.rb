@@ -1,4 +1,5 @@
 class Contacts::Contact < ActiveRecord::Base
+  include Abstractable
   default_scope { order('lower(name)') }
   include Contactable
   belongs_to :context, polymorphic: true

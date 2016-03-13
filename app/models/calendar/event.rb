@@ -1,4 +1,5 @@
 class Calendar::Event < ActiveRecord::Base
+  include Abstractable
   default_scope { order(starting_at: :asc) }
 
   belongs_to :context, polymorphic: true

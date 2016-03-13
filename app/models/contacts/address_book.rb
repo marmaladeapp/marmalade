@@ -1,5 +1,6 @@
 class Contacts::AddressBook < ActiveRecord::Base
   include HumanizeName
+  include Abstractable
   belongs_to :owner, polymorphic: true
   belongs_to :user
 

@@ -88,7 +88,12 @@
           %div.float-left.text-overflow.text-center{:style => 'width:10%;min-height:1px;padding:0;'}
             %strong.silver= abstract.context.name
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-          %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}= abstract.item
+          %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}
+            - case abstract.item_type
+            - when 'Project'
+              Project
+            - else
+              = abstract.item
 
 
 

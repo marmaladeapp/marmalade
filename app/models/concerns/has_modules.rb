@@ -21,6 +21,7 @@ module HasModules
     has_many :timers, :as => :context, :dependent => :destroy, :class_name => 'TimeTracking::Timer'
 
     has_many :abstracts, :as => :context, :dependent => :destroy
+
   end
 
   def net_worth

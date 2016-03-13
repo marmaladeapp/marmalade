@@ -1,4 +1,5 @@
 class TimeTracking::Interval < ActiveRecord::Base
+  include Abstractable
   default_scope { order(stopped_at: :desc) }
   belongs_to :timer, :class_name => "TimeTracking::Timer", :foreign_key => 'time_timer_id', counter_cache: true, touch: true
   belongs_to :user

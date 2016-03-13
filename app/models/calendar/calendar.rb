@@ -1,5 +1,6 @@
 class Calendar::Calendar < ActiveRecord::Base
   include HumanizeName
+  include Abstractable
   belongs_to :owner, polymorphic: true
   belongs_to :project
   belongs_to :user
