@@ -2,19 +2,54 @@
   = render 'app/projects/header'
 
   - if @context
-    - if @context.class.name == 'Group'
-      - new_receipt = ''
-      - new_expense = ''
-    - else
-      - new_receipt = ''
-      - new_expense = ''
+    - case @context.class.name
+    - when 'Business', 'User'
+      - receivables = resource_project_receivables_path(@context,@project)
+      - debts = resource_project_debts_path(@context,@project)
+      - new_receipt = new_resource_project_receipt_path(@context,@project)
+      - new_expense = new_resource_project_expense_path(@context,@project)
+    - when 'Household'
+      - receivables = user_home_project_receivables_path(@user,@project)
+      - debts = user_home_project_debts_path(@user,@project)
+      - new_receipt = new_user_home_project_receipt_path(@user,@project)
+      - new_expense = new_user_home_project_expense_path(@user,@project)
+    - when 'Group'
+      - receivables = group_project_receivables_path(@context,@project)
+      - debts = group_project_debts_path(@context,@project)
+      - new_receipt = new_group_project_receipt_path(@context,@project)
+      - new_expense = new_group_project_expense_path(@context,@project)
 
+  .grid-block.wrap.small-12
+    - if @context.present?
+      .grid-content.small-6.text-center
+        %a{:href => receivables}
+          .card
+            .card-section.bg-ice-cream
+              %strong.burnt-toast Outstanding Receivables
+            .card-section.bg-ice-cream
+              %h3.green
+                %strong= humanized_money_with_symbol "#{@context.currency} #{@context.total_ledgers_receivable}".to_money, :no_cents_if_whole => false
+      .grid-content.small-6.text-center
+        %a{:href => debts}
+          .card
+            .card-section.bg-ice-cream
+              %strong.burnt-toast Outstanding Debts
+            .card-section.bg-ice-cream
+              %h3.strawberry-jam
+                %strong= humanized_money_with_symbol "#{@context.currency} #{@context.total_ledgers_debt}".to_money, :no_cents_if_whole => false
 
   - if !@project.wallets.any?
     - if @context_wallets
       .grid-content.small-12
         %h4 Add a wallet to track spending
-        = form_for [@context,@project,@project_wallet], url: user_home_project_wallets_path(@user,@project) do |f|
+        - case @context.class.name
+        - when 'User', 'Business'
+          - url = resource_project_wallets_path(@resource,@project)
+        - when 'Household'
+          - url = user_home_project_wallets_path(@user,@project)
+        - when 'Group'
+          - url = group_project_wallets_path(@group,@project)
+        = form_for [@context,@project,@project_wallet], url: url do |f|
           %section.block-list
             %header Project wallets
             %ul
@@ -23,7 +58,8 @@
           %button.button.expanded.bg-blueberry Save
   - else
     .grid-content.small-12
-      %h4= @project.wallets.first.name
+      %h4 Project wallets
+      = render partial: 'app/finances/wallets/wallet', collection: @project.wallets
     .grid-content.small-12.text-center
       - if @context
         %a.button.bg-green{:href => new_receipt} New receipt

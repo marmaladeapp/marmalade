@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160313021353) do
+ActiveRecord::Schema.define(version: 20160313045736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,11 +194,13 @@ ActiveRecord::Schema.define(version: 20160313021353) do
     t.integer  "counterparty_id"
     t.string   "counterparty_type"
     t.integer  "counterledger_id"
+    t.integer  "project_id"
   end
 
   add_index "finances_ledgers", ["context_type", "context_id"], name: "index_finances_ledgers_on_context_type_and_context_id", using: :btree
   add_index "finances_ledgers", ["counterledger_id"], name: "index_finances_ledgers_on_counterledger_id", using: :btree
   add_index "finances_ledgers", ["counterparty_type", "counterparty_id"], name: "index_finances_ledgers_on_counterparty_type_and_counterparty_id", using: :btree
+  add_index "finances_ledgers", ["project_id"], name: "index_finances_ledgers_on_project_id", using: :btree
 
   create_table "finances_payments", force: :cascade do |t|
     t.text     "description"
@@ -210,9 +212,11 @@ ActiveRecord::Schema.define(version: 20160313021353) do
     t.decimal  "ledger_balance"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.integer  "project_id"
   end
 
   add_index "finances_payments", ["ledger_id"], name: "index_finances_payments_on_ledger_id", using: :btree
+  add_index "finances_payments", ["project_id"], name: "index_finances_payments_on_project_id", using: :btree
   add_index "finances_payments", ["wallet_id"], name: "index_finances_payments_on_wallet_id", using: :btree
 
   create_table "finances_wallets", force: :cascade do |t|
@@ -511,6 +515,8 @@ ActiveRecord::Schema.define(version: 20160313021353) do
   add_foreign_key "calendar_events", "projects"
   add_foreign_key "collaborators", "users"
   add_foreign_key "contacts_address_books", "users"
+  add_foreign_key "finances_ledgers", "projects"
+  add_foreign_key "finances_payments", "projects"
   add_foreign_key "finances_wallets", "users"
   add_foreign_key "households", "users"
   add_foreign_key "item_wallets", "finances_wallets"
