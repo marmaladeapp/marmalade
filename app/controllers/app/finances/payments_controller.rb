@@ -55,10 +55,12 @@ class App::Finances::PaymentsController < App::AppController
     @payment.ledger_balance = @ledger.value - @payment.value
 
     if @payment.save
+      @context.abstracts.create(:item => @payment, :user => current_user, :action => 'create')
 
       if @ledger.counterledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
         @counter_payment = @counter_ledger.payments.create(:description => @payment.description,:value => - @payment.value,:ledger_balance => @counter_ledger.value + @payment.value,:currency => @counter_ledger.currency)
+        @counter_ledger.context.abstracts.create(:item => @counter_payment, :user => current_user, :action => 'create')
       end
 
       if @wallet

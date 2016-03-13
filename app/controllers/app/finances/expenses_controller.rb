@@ -68,6 +68,7 @@ class App::Finances::ExpensesController < App::AppController
 
     @payment.wallet_balance = @wallet.balance + @payment.value
     if @payment.save
+      @context.abstracts.create(:item => @payment, :user => current_user, :action => 'create')
 
       set_adjustments(@payment.value,@wallet.balance)
 

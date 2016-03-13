@@ -64,6 +64,7 @@ class App::Finances::WalletsController < App::AppController
     @wallet.user = @resource.class.name == "User" ? current_user : @resource.user
     @wallet.context = @context
     if @wallet.save
+      @context.abstracts.create(:item => @wallet, :user => current_user, :action => 'create')
       @wallet.owners.each do |ownership|
         if @wallet.balance >= 0
           ownership.update_balance_sheets(:value => @wallet.balance,:current_assets => @wallet.balance,:cash => @wallet.balance, :wallets => @wallet.balance,:item => @wallet,:action => 'create')

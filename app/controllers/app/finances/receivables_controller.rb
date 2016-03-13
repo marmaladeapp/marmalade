@@ -91,13 +91,16 @@ class App::Finances::ReceivablesController < App::AppController
     @ledger.value = @ledger.starting_value
     @ledger.context = @context
     if @ledger.save
+      @context.abstracts.create(:item => @ledger, :user => current_user, :action => 'create')
 
       if @ledger.counterparty
         case @ledger.counterparty.class.name
         when "User", "Business"
           @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :counterledger_id => @ledger.id, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
+          @counter_ledger.context.abstracts.create(:item => @counter_ledger, :user => current_user, :action => 'create')
         when "Household"
           @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty, :counterledger_id => @ledger.id)
+          @counter_ledger.context.abstracts.create(:item => @counter_ledger, :user => current_user, :action => 'create')
           @ledger.counterparty.members.each do |member|
             member.ownerships.create(:item => @counter_ledger,:user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100) / @ledger.counterparty.members.count)
           end
