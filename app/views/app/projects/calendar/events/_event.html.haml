@@ -1,10 +1,10 @@
 - case event.context.class.name
 - when "User", "Business"
-  - canonical_link = resource_event_path(event.context,event)
+  - canonical_link = resource_project_event_path(event.context,event.project,event)
 - when "Household"
-  - canonical_link = user_home_event_path(current_user,event)
+  - canonical_link = user_home_project_event_path(current_user,event.project,event)
 - when "Group"
-  - canonical_link = group_event_path(event.context,event)
+  - canonical_link = group_project_event_path(event.context,event.project,event)
 
 %li
   %a.burnt-toast{:href => canonical_link}

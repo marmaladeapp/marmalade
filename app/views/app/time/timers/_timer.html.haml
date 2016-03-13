@@ -1,10 +1,19 @@
 - case timer.context.class.name
 - when "User", "Business"
-  - canonical_link = resource_timer_path(timer.context,timer)
+  - if timer.project
+    - canonical_link = resource_project_timer_path(timer.context,timer.project,timer)
+  - else
+    - canonical_link = resource_timer_path(timer.context,timer)
 - when "Household"
-  - canonical_link = user_home_timer_path(current_user,timer)
+  - if timer.project
+    - canonical_link = user_home_project_timer_path(current_user,timer.project,timer)
+  - else
+    - canonical_link = user_home_timer_path(current_user,timer)
 - when "Group"
-  - canonical_link = group_timer_path(timer.context,timer)
+  - if timer.project
+    - canonical_link = group_project_timer_path(timer.context,timer.project,timer)
+  - else
+    - canonical_link = group_timer_path(timer.context,timer)
 
 %li
   %a.burnt-toast{:href => canonical_link}
