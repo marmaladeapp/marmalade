@@ -66,6 +66,7 @@ class App::Projects::Time::TimersController < App::AppController
     @timer = @project.timers.new(timer_params)
     @timer.context = @context
     if @timer.save
+      @context.abstracts.create(:item => @timer, :user => current_user, :project => @project, :action => 'create')
       redirect_to root_path
     else
       render 'new'

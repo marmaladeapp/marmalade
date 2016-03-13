@@ -54,6 +54,7 @@ class App::Projects::Messages::MessagesController < App::AppController
     @message.context = @context
 
     if @message.save
+      @context.abstracts.create(:item => @message, :user => current_user, :project => @project, :action => 'create')
       redirect_to redirect
     else
       render 'new'

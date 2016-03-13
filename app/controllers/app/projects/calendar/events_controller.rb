@@ -71,6 +71,7 @@ class App::Projects::Calendar::EventsController < App::AppController
     @event = @project.events.new(event_params)
     @event.context = @resource
     if @event.save
+      @context.abstracts.create(:item => @event, :user => current_user, :project => @project, :action => 'create')
       redirect_to root_path
     else
       render 'new'

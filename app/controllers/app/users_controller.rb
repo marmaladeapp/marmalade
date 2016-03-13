@@ -3,6 +3,7 @@ class App::UsersController < App::AppController
     @user = User.find(params[:id])
     if @user == current_user
       @context = @user
+      @abstracts = @user.abstracts
     end
   end
   def edit

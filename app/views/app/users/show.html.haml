@@ -10,3 +10,7 @@
         %p= @user.bio
         - if @user == current_user
           %a{:href => user_profile_path(@user)} Edit profile
+
+  .grid-content.small-12
+    - if @user == current_user
+      %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: @abstracts

@@ -18,6 +18,6 @@
               %a.burnt-toast{:href => new_user_home_membership_path(@user)}
                 %i.fa.fa-plus-circle.fa-lg
 
+
   .grid-content.small-12
-    - @abstracts.each do |abstract|
-      = abstract.item.name
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: @abstracts

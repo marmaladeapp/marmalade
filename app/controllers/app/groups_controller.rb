@@ -4,6 +4,7 @@ class App::GroupsController < App::AppController
   def show
     @group = Group.find(params[:id])
     @context = @group
+    @abstracts = @group.abstracts
   end
   def new
     @user = current_user

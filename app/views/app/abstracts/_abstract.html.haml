@@ -1,14 +1,98 @@
+- case abstract.context.class.name
+- when 'User', 'Business'
+  - if abstract.project
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = resource_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = resource_project_message_path(abstract.context,abstract.project,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = resource_project_event_path(abstract.context,abstract.project,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = resource_project_timer_path(abstract.context,abstract.project,abstract.item)
+  - else
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = resource_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = resource_message_path(abstract.context,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = resource_event_path(abstract.context,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = resource_timer_path(abstract.context,abstract.item)
+- when 'Group'
+  - if abstract.project
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = group_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = group_project_message_path(abstract.context,abstract.project,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = group_project_event_path(abstract.context,abstract.project,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = group_project_timer_path(abstract.context,abstract.project,abstract.item)
+  - else
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = group_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = group_message_path(abstract.context,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = group_event_path(abstract.context,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = group_timer_path(abstract.context,abstract.item)
+- when 'Household'
+  - if abstract.project
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = user_home_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = user_home_project_message_path(abstract.context,abstract.project,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = user_home_project_event_path(abstract.context,abstract.project,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = user_home_project_timer_path(abstract.context,abstract.project,abstract.item)
+  - else
+    - case abstract.item.class.name
+    - when 'Project'
+      - canonical_link = user_home_project_path(abstract.context,abstract.item)
+    - when 'Messages::Message'
+      - canonical_link = user_home_message_path(abstract.context,abstract.item)
+    - when 'Calendar::Event'
+      - canonical_link = user_home_event_path(abstract.context,abstract.item)
+    - when 'TimeTracking::Timer'
+      - canonical_link = user_home_timer_path(abstract.context,abstract.item)
+
 %li
-  %a.burnt-toast{:href => '#'}
+  %a.burnt-toast{:href => canonical_link}
     .card{}
       .card-section
         .clearfix
+          %div.float-left.text-overflow.text-center{:style => 'width:10%;min-height:1px;padding:0;'}
+            - case abstract.context.class.name
+            - when 'User'
+              %i.fa.fa-2x.fa-user.silver
+            - when 'Business'
+              %i.fa.fa-2x.fa-briefcase.silver
+            - when 'Household'
+              %i.fa.fa-2x.fa-home.silver
+            - when 'Group'
+              %i.fa.fa-2x.fa-users.silver
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-            %img{:src => avatar_url(message.user,50), :style => 'border-radius:50%;'}
-          %div.float-left.text-overflow{:style => 'width:75%;padding:1px 1px 1px 10px;'}
-            %strong= message.user.name
+            %img{:src => avatar_url(abstract.user,50), :style => 'border-radius:50%;'}
+          %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
+            %strong= abstract.user.name
           %div.float-left.text-overflow.text-right{:style => 'width:20%;padding:1px;'}
-            %small= time_ago_in_words(message.created_at) + " ago"
+            %small= time_ago_in_words(abstract.created_at) + " ago"
         .clearfix
+          %div.float-left.text-overflow.text-center{:style => 'width:10%;min-height:1px;padding:0;'}
+            %strong.silver= abstract.context.name
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}= message.content
+          %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}= abstract.item
+
+
+
+
+
+
+

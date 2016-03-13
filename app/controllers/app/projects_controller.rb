@@ -71,6 +71,7 @@ class App::ProjectsController < App::AppController
     @project = @resource.projects.new(project_params)
     @project.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @project.save
+      @context.abstracts.create(:item => @project, :user => current_user, :project => @project, :action => 'create')
       redirect_to root_path
     else
       render 'new'

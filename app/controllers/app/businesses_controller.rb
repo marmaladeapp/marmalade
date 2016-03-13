@@ -4,6 +4,7 @@ class App::BusinessesController < App::AppController
   def show
     @business = Business.find(params[:id])
     @context = @business
+    @abstracts = @business.abstracts
   end
   def new
     @user = current_user

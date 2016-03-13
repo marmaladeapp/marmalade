@@ -1,4 +1,5 @@
 .grid-container.small-12.medium-10
   .grid-content.small-12
-    - @abstracts.each do |abstract|
-      = abstract.item.name
+    %h3 Welcome back, #{current_user.first_name}
+  .grid-content.small-12
+    %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: @abstracts
