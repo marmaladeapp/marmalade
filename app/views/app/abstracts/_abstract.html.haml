@@ -89,9 +89,8 @@
             %strong.silver= abstract.context.name
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
           %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}
-            - case abstract.item_type
-            - when 'Project'
-              Project
+            - if !abstract.item_id
+              = abstract.item_type
             - else
               = abstract.item
 
