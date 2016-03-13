@@ -85,24 +85,34 @@ Rails.application.routes.draw do
         scope module: 'messages' do
           resources :messages
         end
-      scope module: 'calendar' do
-        resources :events, path: '/calendars', only: [:index, :create]
-        resources :events, path: '/calendars/events', except: [:index,:create] do
-          get 'calendars', to: 'events#calendars'
-          resources :attendees
+        scope module: 'calendar' do
+          resources :events, path: '/calendars', only: [:index, :create]
+          resources :events, path: '/calendars/events', except: [:index,:create] do
+            get 'calendars', to: 'events#calendars'
+            resources :attendees
+          end
         end
-      end
-      scope module: 'time' do
-        resources :timers, path: '/time', only: [:index, :create]
-        resources :timers, path: '/time/timers', except: [:index,:create] do
-          get 'time-sheets', to: 'timers#time_sheets'
-          resources :assignees
-          resources :intervals
+        scope module: 'time' do
+          resources :timers, path: '/time', only: [:index, :create]
+          resources :timers, path: '/time/timers', except: [:index,:create] do
+            get 'time-sheets', to: 'timers#time_sheets'
+            resources :assignees
+            resources :intervals
+          end
         end
-      end
-      scope module: 'finances' do
-        get '/finances', to: 'finances#index', as: 'finances'
-      end
+        scope module: 'finances' do
+          get '/finances', to: 'finances#index', as: 'finances'
+          resources :wallets, path: '/finances/wallets', only: [:create, :destroy]
+          resources :payments, path: '/finances/payments'
+          resources :receipts, path: '/finances/receipts'
+          resources :expenses, path: '/finances/expenses'
+          resources :receivables, path: '/finances/receivables' do
+            resources :payments
+          end
+          resources :debts, path: '/finances/debts' do
+            resources :payments
+          end
+        end
 
       end
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312175915) do
+ActiveRecord::Schema.define(version: 20160313021353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,6 +269,17 @@ ActiveRecord::Schema.define(version: 20160312175915) do
 
   add_index "households", ["user_id"], name: "index_households_on_user_id", using: :btree
 
+  create_table "item_wallets", force: :cascade do |t|
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.integer  "finances_wallet_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "item_wallets", ["finances_wallet_id"], name: "index_item_wallets_on_finances_wallet_id", using: :btree
+  add_index "item_wallets", ["item_type", "item_id"], name: "index_item_wallets_on_item_type_and_item_id", using: :btree
+
   create_table "memberships", force: :cascade do |t|
     t.integer  "collective_id"
     t.string   "collective_type"
@@ -502,6 +513,7 @@ ActiveRecord::Schema.define(version: 20160312175915) do
   add_foreign_key "contacts_address_books", "users"
   add_foreign_key "finances_wallets", "users"
   add_foreign_key "households", "users"
+  add_foreign_key "item_wallets", "finances_wallets"
   add_foreign_key "memberships", "users"
   add_foreign_key "messages_messages", "projects"
   add_foreign_key "messages_messages", "users"

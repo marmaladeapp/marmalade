@@ -1,2 +1,42 @@
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
+
+  - if @context
+    - if @context.class.name == 'Group'
+      - new_receipt = ''
+      - new_expense = ''
+    - else
+      - new_receipt = ''
+      - new_expense = ''
+
+
+  - if !@project.wallets.any?
+    - if @context_wallets
+      .grid-content.small-12
+        %h4 Add a wallet to track spending
+        = form_for [@context,@project,@project_wallet], url: user_home_project_wallets_path(@user,@project) do |f|
+          %section.block-list
+            %header Project wallets
+            %ul
+              %li.with-dropdown
+                = f.collection_select :finances_wallet_id, @context_wallets, :id, :name, {:prompt => true}
+          %button.button.expanded.bg-blueberry Save
+  - else
+    .grid-content.small-12
+      %h4= @project.wallets.first.name
+    .grid-content.small-12.text-center
+      - if @context
+        %a.button.bg-green{:href => new_receipt} New receipt
+        %a.button.bg-red{:href => new_expense} New expense
+
+    .grid-content.small-12
+      %table{:style => 'width:100%;'}
+        %thead.text-left{:style => 'border-bottom:2px solid black;'}
+          %th Description
+          %th
+          %th IN
+          %th OUT
+          %th Time
+          %th Balance
+        %tbody.text-left
+          /= render partial: 'app/finances/payments/payment', collection: @payments

@@ -11,6 +11,9 @@ class Project < ActiveRecord::Base
 
   has_many :abstracts
 
+  has_many :item_wallets, :as => :item, :dependent => :destroy
+  has_many :wallets, :through => :item_wallets, :class_name => 'Finances::Wallet'
+
   #after_create do |project|
   #  project.abstracts.create(:context => project.owner, :item => project, :user => project.user, :action => 'create') user here is subscriber - not correct.
   #end

@@ -9,6 +9,9 @@ class Finances::Wallet < ActiveRecord::Base
 
   has_many :payments, :class_name => 'Finances::Payment'
 
+  has_many :item_wallets, :dependent => :destroy
+  has_many :projects, :through => :item_wallets, :source => :item, :source_type => 'Project'
+
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
   def global_context
