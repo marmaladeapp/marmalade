@@ -1,7 +1,7 @@
 class Project < ActiveRecord::Base
   include Abstractable
   belongs_to :owner, polymorphic: true
-  belongs_to :user
+  belongs_to :user, :inverse_of => :subscriber_projects, counter_cache: true
 
   has_many :memberships, :as => :collective, :dependent => :destroy
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'

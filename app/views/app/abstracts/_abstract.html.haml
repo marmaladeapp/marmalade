@@ -90,7 +90,7 @@
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
           %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}
             - if !abstract.item_id
-              = abstract.item_type
+              %span.silver #{abstract.item_type} deleted
             - else
               = abstract.item
 
