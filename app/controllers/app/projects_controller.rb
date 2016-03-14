@@ -35,7 +35,7 @@ class App::ProjectsController < App::AppController
       @context = @resource
     end
     @project = @context.projects.find(params[:id])
-    @abstracts = @project.abstracts
+    @abstracts = @context.abstracts.where(:project => @project)
   end
 
   def new
