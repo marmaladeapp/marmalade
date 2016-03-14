@@ -13,50 +13,7 @@
     - project_budget = @context.class.name == "Household" ? user_home_project_finances_path(current_user, @project) : resource_project_finances_path(@resource, @project)
 
 .grid-container.small-12.medium-10
-
-  .grid-block.small-12.wrap.bg-ice-cream-small
-
-    .grid-content.small-7
-      %div{:style => 'margin-top:20px;margin-bottom:20px;'}
-        %a{:href => project_canonical}
-          %h3= @project.name
-        %p= @project.description
-        - if current_user == @project.user
-          %a{:href => '#'} Edit project
-    .grid-content.small-5
-      %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
-        - @project.memberships.each do |membership|
-          .float-left{:style => 'margin-left:5px;'}
-            %a{:href => '#'}
-              %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
-        - if current_user == @project.user
-          .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
-            .align-center.text-center{:style => 'width:40px;'}
-              %a.burnt-toast{:href => '#'}
-                %i.fa.fa-plus-circle.fa-lg
-
-  .grid-block.small-12.wrap
-
-    .grid-content.small-12
-      %ul.menu-bar{:style => ''}
-        %li
-          %a{:href => project_messages}
-            %i.fa.fa-envelope-o
-            Messages
-        %li
-          %a{:href => project_calendar}
-            %i.fa.fa-calendar
-            Calendar
-        %li
-          %a{:href => project_time}
-            %i.fa.fa-clock-o
-            Time
-        %li
-          %a{:href => project_budget}
-            %i.fa.fa-usd
-            Budget
-
-
+  = render 'app/projects/header'
 
   .grid-content.small-12
     %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: @abstracts

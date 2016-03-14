@@ -54,6 +54,18 @@ class App::ProjectsController < App::AppController
   end
 
   def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+    end
+    @project = @resource.projects.find(params[:id])
   end
 
   def create
@@ -79,6 +91,23 @@ class App::ProjectsController < App::AppController
   end
 
   def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+    end
+    @project = @resource.projects.find(params[:id])
+    if @project.update_attributes(project_params)
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy

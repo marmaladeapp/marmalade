@@ -1,0 +1,24 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @membership]
+  - url = user_home_project_memberships_path(@user,@project)
+- when 'Business', 'User'
+  - path_array = [@resource, @membership]
+  - url = resource_project_memberships_path(@business,@project)
+- when 'Group'
+  - path_array = [@resource, @membership]
+  - url = group_project_memberships_path(@group,@project)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New member
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Choose from collaborators
+        %ul
+          %li.with-dropdown
+            = f.grouped_collection_select :global_member, [@options_for_member_select], :all, :human_name, :to_global_id, :name, {:prompt => true}
+
+      %button.button.expanded.bg-blueberry Save

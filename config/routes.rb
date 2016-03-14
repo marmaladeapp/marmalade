@@ -80,8 +80,8 @@ Rails.application.routes.draw do
     resources :memberships, path: 'members'
     concerns :modules
     resources :projects do
-      resources :memberships, path: 'members'
       scope module: 'projects' do
+        resources :memberships, path: 'members'
         scope module: 'messages' do
           resources :messages
         end

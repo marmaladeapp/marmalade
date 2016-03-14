@@ -1,11 +1,15 @@
 - if @context
   - if @context.class.name == 'Group'
+    - edit_project = edit_group_project_path(@context,@project)
+    - project_new_membership = new_group_project_membership_path(@context,@project)
     - project_canonical = group_project_path(@context,@project)
     - project_messages = group_project_messages_path(@context, @project)
     - project_calendar = group_project_events_path(@context, @project)
     - project_time = group_project_timers_path(@context, @project)
     - project_budget = group_project_finances_path(@context, @project)
   - else
+    - edit_project = @context.class.name == "Household" ? edit_user_home_project_path(current_user, @project) : edit_resource_project_path(@resource, @project)
+    - project_new_membership = @context.class.name == "Household" ? new_user_home_project_membership_path(current_user, @project) : new_resource_project_membership_path(@resource, @project)
     - project_canonical = @context.class.name == "Household" ? user_home_project_path(current_user, @project) : resource_project_path(@resource, @project)
     - project_messages = @context.class.name == "Household" ? user_home_project_messages_path(current_user, @project) : resource_project_messages_path(@resource, @project)
     - project_calendar = @context.class.name == "Household" ? user_home_project_events_path(current_user, @project) : resource_project_events_path(@resource, @project)
@@ -20,17 +24,25 @@
         %h3= @project.name
       %p= @project.description
       - if current_user == @project.user
-        %a{:href => '#'} Edit project
+        %a{:href => edit_project} Edit project
   .grid-content.small-5
     %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
       - @project.memberships.each do |membership|
         .float-left{:style => 'margin-left:5px;'}
-          %a{:href => '#'}
+          - case @context.class.name
+          - when 'User', 'Business'
+            - edit_member = edit_resource_project_membership_path(@context, @project, membership.member)
+          - when 'Household'
+            - edit_member = edit_user_home_project_membership_path(@user, @project, membership.member)
+          - when 'Group'
+            - edit_member = edit_group_project_membership_path(@context, @project, membership.member)
+          %a{:href => edit_member}
             %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
+
       - if current_user == @project.user
         .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
           .align-center.text-center{:style => 'width:40px;'}
-            %a.burnt-toast{:href => '#'}
+            %a.burnt-toast{:href => project_new_membership}
               %i.fa.fa-plus-circle.fa-lg
 
 .grid-block.small-12.wrap{:style => 'margin-bottom:10px;'}

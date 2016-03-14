@@ -1,0 +1,27 @@
+- case @resource.class.name
+- when 'Household'
+  - path_array = [@resource, @membership]
+  - url = user_home_project_membership_path(@user,@project, @membership.member)
+- when 'Business'
+  - path_array = [@resource, @membership]
+  - url = resource_project_membership_path(@business,@project, @membership.member)
+- when 'Group'
+  - path_array = [@resource, @membership]
+  - url = group_project_membership_path(@group,@project, @membership.member)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit member
+    = form_for path_array, url: url do |f|
+
+      %section.block-list
+        %header Member
+        %ul
+          %li
+            .static-field{:style => 'height:2.6rem;padding:0.6rem 1rem 0.6rem 1rem;'}= @membership.member.name
+
+      %button.button.expanded.bg-blueberry Save
+      %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+        %i.fa.fa-trash
+        Delete
