@@ -33,7 +33,9 @@ module Subscribable
   private
 
   def unsubscribe
-    Braintree::Customer.delete(braintree_customer_id)
+    if braintree_customer_id
+      Braintree::Customer.delete(braintree_customer_id)
+    end
   end
 
 end
