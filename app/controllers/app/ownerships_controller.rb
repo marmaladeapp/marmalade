@@ -9,11 +9,26 @@ class App::OwnershipsController < App::AppController
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = Ownership.new
-    ids = []
+    user_ids = []
+    business_ids = []
+    business_ids << @business.id
     @resource.owners.each do |ownership|
-      ids << ownership.owner.id
+      case ownership.owner.class.name
+      when 'User'
+        user_ids << ownership.owner.id
+      when 'Business'
+        business_ids << ownership.owner.id
+      end
     end
-    @options_for_owner_select = current_user.collaborator_users.where.not(:id => ids)
+    Ownership.where(:owner => @business).each do |ownership|
+      ownership.ancestries.each do |ancestry|
+        ancestry.subtree.each do |descendant|
+          business_ids << descendant.ownership.item.id
+        end
+      end
+    end
+    @users_for_owner_select = current_user.collaborator_users.where.not(:id => user_ids)
+    @businesses_for_owner_select = current_user.subscriber_businesses.where.not(:id => business_ids)
   end
   def create
     @business = Business.find(params[:business_id])
@@ -38,16 +53,34 @@ class App::OwnershipsController < App::AppController
     @ownership.user = @resource.user
     if !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
       @context.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
-      unless @resource.memberships.where(:member => @ownership.owner).any?
-        @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
+      @ownership.owner.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
+      if @ownership.owner.class.name == 'User'
+        unless @resource.memberships.where(:member => @ownership.owner).any?
+          @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
+        end
       end
       redirect_to vanity_path(@business)
     else
-      ids = []
+      user_ids = []
+      business_ids = []
+      business_ids << @business.id
       @resource.owners.each do |ownership|
-        ids << ownership.owner.id
+        case ownership.owner.class.name
+        when 'User'
+          user_ids << ownership.owner.id
+        when 'Business'
+          business_ids << ownership.owner.id
+        end
       end
-      @options_for_owner_select = current_user.collaborator_users.where.not(:id => ids)
+      Ownership.where(:owner => @business).each do |ownership|
+        ownership.ancestries.each do |ancestry|
+          ancestry.subtree.each do |descendant|
+            business_ids << descendant.ownership.item.id
+          end
+        end
+      end
+      @users_for_owner_select = current_user.collaborator_users.where.not(:id => user_ids)
+      @businesses_for_owner_select = current_user.subscriber_businesses.where.not(:id => business_ids)
       render 'new'
     end
   end

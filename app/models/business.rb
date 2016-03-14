@@ -38,4 +38,8 @@ class Business < ActiveRecord::Base
     slug.blank?
   end
 
+  def is_owner?(resource)
+    ownerships.find_by(:item => resource).present?
+  end
+
 end

@@ -68,6 +68,7 @@ class App::MembershipsController < App::AppController
     @membership.user = @resource.user
     if !@membership.member.is_member?(@membership.collective) && @membership.save
       @context.abstracts.create(:item => @membership, :user => current_user, :action => 'create')
+      @membership.member.abstracts.create(:item => @membership, :user => current_user, :action => 'create')
       if params[:resource_id]
         redirect_to vanity_path(@business)
       elsif params[:group_id]
