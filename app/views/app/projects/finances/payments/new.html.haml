@@ -1,0 +1,70 @@
+- if @resource
+  - if @ledger.starting_value > 0
+    - case @resource.class.name
+    - when 'User', 'Business'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = resource_project_receivable_payments_path(@resource, @project,@ledger)
+    - when 'Household'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = user_home_project_receivable_payments_path(@user, @project,@ledger)
+    - when 'Group'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = group_project_receivable_payments_path(@resource, @project,@ledger)
+  - elsif @ledger.starting_value < 0
+    - case @resource.class.name
+    - when 'User', 'Business'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = resource_project_debt_payments_path(@resource, @project,@ledger)
+    - when 'Household'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = user_home_project_debt_payments_path(@user, @project,@ledger)
+    - when 'Group'
+      - path_array = [@resource, @project, @ledger, @payment]
+      - url = group_project_debt_payments_path(@resource, @project,@ledger)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @ledger.starting_value > 0 ? "Receive" : "Debt"
+      payment -
+      = @ledger.name
+
+  .grid-block.wrap.small-12
+    - if @ledger.present?
+      .grid-content.small-3.text-center Total due
+      .grid-content.small-3.text-center Paid to date
+      .grid-content.small-3.text-center Expected in full by
+      .grid-content.small-3.text-center Remaining
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value - @ledger.value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = @ledger.due_in_full_at.strftime("%D")
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.value).abs}".to_money
+
+  .grid-content.small-12
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header= @ledger.starting_value > 0 ? "Pay into" : "Pay from"
+        %ul
+          %li.with-dropdown
+            = f.collection_select :wallet_id, (@resource.class.name != "Household" ? @resource.wallets : ::Finances::Wallet.where(:context => @resource)), :id, :name, {:include_blank => true}
+      %section.block-list
+        %header Payment
+        %ul
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+      %section.block-list
+        %header Value
+        %ul
+          %li
+            = f.number_field :value, {:step => 'any', :placeholder => 'Value', :min => 0}
+
+      %button.button.expanded.bg-blueberry Save

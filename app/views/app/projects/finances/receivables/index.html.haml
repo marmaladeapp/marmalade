@@ -1,0 +1,14 @@
+- if @context.class.name == 'Group'
+  - new_receivable = new_group_project_receivable_path(@context,@project)
+- else
+  - new_receivable = @context.class.name == "Household" ? new_user_home_project_receivable_path(current_user,@project) : new_resource_project_receivable_path(@resource,@project)
+
+
+.grid-container.small-12.medium-10
+  = render 'app/projects/header'
+
+  .grid-content.small-12
+    %h4 Receivables
+    %a.button.bg-blueberry{:href => new_receivable} New receivable
+  .grid-block.wrap.small-12
+    = render partial: 'app/finances/ledgers/ledger', collection: @ledgers

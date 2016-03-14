@@ -1,0 +1,69 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @ledger]
+    - url = resource_project_receivables_path(@resource,@project)
+  - when 'Household'
+    - path_array = [@resource, @ledger]
+    - url = user_home_project_receivables_path(@user,@project)
+  - when 'Group'
+    - path_array = [@resource, @ledger]
+    - url = group_project_receivables_path(@resource,@project)
+
+- supported_currencies = $redis.smembers("supported_currencies")
+- @currencies_for_select = []
+- Money::Currency.each do |currency|
+  - if supported_currencies.include? currency.iso_code
+    - @currencies_for_select << currency
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New receivable
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Recipients
+        %ul
+          %li.clearfix{:style => 'padding:10px;'}
+            - @ownerships.each do |ownership|
+              - if ownership.owner.class.name == "User"
+                %img.float-left{:src => avatar_url(ownership.owner,60), :title => ownership.owner.name + " - " + number_with_precision(ownership.equity, strip_insignificant_zeros: true) + "%", :style => 'margin-right:5px;border-radius:50%;'}
+              - else
+                .float-left.bg-burnt-toast.ice-cream{:style => 'padding:30px 10px;line-height:0;border-radius:30px;'}
+                  %strong= ownership.owner.name
+      = f.fields_for :owners, @ownerships do |ff|
+        = ff.hidden_field :global_owner
+        = ff.hidden_field :equity
+        = ff.hidden_field :user_id
+
+      %section.block-list
+        %header Owed by
+        %ul
+          %li.with-dropdown
+            = f.grouped_collection_select :global_counterparty, [User.where(:id => current_user.id),current_user.collaborator_users, current_user.businesses, current_user.households], :all, :human_name, :to_global_id, :name, {:include_blank => true}
+
+      = f.hidden_field :starting_date, :value => Time.current
+      %section.block-list
+        %header Receivable
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+      %section.block-list
+        %header Value
+        %ul
+          %li
+            = f.number_field :starting_value, {:step => 'any', :placeholder => 'Value', :min => 0}
+      %section.block-list
+        %header Currency
+        %ul
+          %li.with-dropdown
+            = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @resource.currency}
+      %section.block-list
+        %header Due in full at
+        %ul
+          %li.with-dropdown.clearfix
+            = f.date_select :due_in_full_at, {}, {:class => 'small-4 float-left'}
+
+      %button.button.expanded.bg-blueberry Save

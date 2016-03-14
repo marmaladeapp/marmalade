@@ -1,12 +1,22 @@
 .grid-content.small-12.medium-6.large-4
-  - if ledger.context && ledger.context.class.name == "Household"
-    - canonical_link = ledger.starting_value > 0 ? user_home_receivable_path(current_user,ledger) : user_home_debt_path(current_user,ledger)
+  - if ledger.project
+    - if ledger.context && ledger.context.class.name == "Household"
+      - canonical_link = ledger.starting_value > 0 ? user_home_project_receivable_path(current_user,ledger.project,ledger) : user_home_project_debt_path(current_user,ledger.project,ledger)
+    - else
+      - case ledger.owners.first.owner.class.name
+      - when "User", "Business"
+        - canonical_link = ledger.starting_value > 0 ? resource_project_receivable_path(ledger.owners.first.owner,ledger.project,ledger) : resource_project_debt_path(ledger.owners.first.owner,ledger.project,ledger)
+      - when "Group"
+        - canonical_link = ledger.starting_value > 0 ? group_project_receivable_path(ledger.owners.first.owner,ledger.project,ledger) : group_project_debt_path(ledger.owners.first.owner,ledger.project,ledger)
   - else
-    - case ledger.owners.first.owner.class.name
-    - when "User", "Business"
-      - canonical_link = ledger.starting_value > 0 ? resource_receivable_path(ledger.owners.first.owner,ledger) : resource_debt_path(ledger.owners.first.owner,ledger)
-    - when "Group"
-      - canonical_link = ledger.starting_value > 0 ? group_receivable_path(ledger.owners.first.owner,ledger) : group_debt_path(ledger.owners.first.owner,ledger)
+    - if ledger.context && ledger.context.class.name == "Household"
+      - canonical_link = ledger.starting_value > 0 ? user_home_receivable_path(current_user,ledger) : user_home_debt_path(current_user,ledger)
+    - else
+      - case ledger.owners.first.owner.class.name
+      - when "User", "Business"
+        - canonical_link = ledger.starting_value > 0 ? resource_receivable_path(ledger.owners.first.owner,ledger) : resource_debt_path(ledger.owners.first.owner,ledger)
+      - when "Group"
+        - canonical_link = ledger.starting_value > 0 ? group_receivable_path(ledger.owners.first.owner,ledger) : group_debt_path(ledger.owners.first.owner,ledger)
 
   %a{:href => canonical_link}
     .card{:style => 'height:250px;'}

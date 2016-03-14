@@ -1,0 +1,144 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_timer = edit_group_project_timer_path(@context, @project,@timer)
+    - add_time_sheet = group_project_timer_time_sheets_path(@context, @project,@timer)
+    - new_interval = new_group_project_timer_interval_path(@context, @project,@timer)
+
+  - else
+    - edit_timer = @context.class.name == "Household" ? edit_user_home_project_timer_path(current_user, @project,@timer) : edit_resource_project_timer_path(@resource, @project,@timer)
+    - add_time_sheet = @context.class.name == "Household" ? user_home_project_timer_time_sheets_path(current_user, @project,@timer) : resource_project_timer_time_sheets_path(@resource, @project,@timer)
+    - new_interval = @context.class.name == "Household" ? new_user_home_project_timer_interval_path(current_user, @project,@timer) : new_resource_project_timer_interval_path(@resource, @project,@timer)
+
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = resource_project_timer_intervals_path(@context, @project, @timer)
+  - when 'Household'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = user_home_project_timer_intervals_path(@user, @project, @timer)
+  - when 'Group'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = group_project_timer_intervals_path(@context, @project, @timer)
+
+.grid-container.small-12.medium-10
+  = render 'app/projects/header'
+
+  .grid-content.small-12
+    %section.block-list
+      %header Time sheets
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @timer.time_sheets.each do |time_sheet|
+            - if time_sheet.owner.class.name == "Group"
+              - canonical_time_sheet = group_time_sheet_path(time_sheet.owner,time_sheet)
+            - else
+              - canonical_time_sheet = time_sheet.owner.class.name == "Household" ? user_home_time_sheet_path(current_user,time_sheet) : resource_time_sheet_path(time_sheet.owner,time_sheet)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_time_sheet}
+                %strong= time_sheet.name
+              - unless time_sheet == @timer.time_sheets.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_time_sheet}
+                %i.fa.fa-plus-circle.fa-lg
+
+  .grid-content.small-12
+    %h3
+      = @timer.name
+      %a.olive{:href => edit_timer}
+        %i.fa.fa-fw.fa-pencil
+    - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+      %h2.text-center
+        = timer(@interval.started_at - @timer.elapsed_time.seconds)
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            - if @context
+              - case @context.class.name
+              - when 'User', 'Business'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = resource_project_timer_interval_path(@context, @project, @timer,@interval)
+              - when 'Household'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = user_home_project_timer_interval_path(@user, @project, @timer,@interval)
+              - when 'Group'
+                - interval_path_array = [@context, @timer, @interval]
+                - interval_url = group_project_timer_interval_path(@context, @project, @timer,@interval)
+            - else
+              - interval_path_array = [@timer, @interval]
+              - interval_url = timer_interval_path(@timer,@interval)
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-strawberry-jam Stop
+    - else
+      - seconds = @timer.elapsed_time.to_i % 60
+      - minutes = (@timer.elapsed_time.to_i / 60) % 60
+      - hours = @timer.elapsed_time.to_i / (60 * 60)
+      %h2.text-center
+        = format("%02d:%02d:%02d", hours, minutes, seconds)
+
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-blueberry Start
+
+    %p= @timer.description
+
+
+  .grid-content.small-12
+    %h4 Assigned to
+
+    %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
+      - @timer.memberships.each do |membership|
+        .float-left{:style => 'margin-left:5px;'}
+          - case @context.class.name
+          - when 'User', 'Business'
+            - edit_assignee = edit_resource_timer_assignee_path(@context, @timer, membership)
+          - when 'Household'
+            - edit_assignee = edit_user_home_timer_assignee_path(@user, @timer, membership)
+          - when 'Group'
+            - edit_assignee = edit_group_timer_assignee_path(@context, @timer, membership)
+          %a{:href => edit_assignee}
+            %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
+
+      .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+        .align-center.text-center{:style => 'width:40px;'}
+          - case @context.class.name
+          - when "Household"
+            %a.burnt-toast{:href => new_user_home_timer_assignee_path(current_user,@timer)}
+              %i.fa.fa-plus-circle.fa-lg
+          - when "Group"
+            %a.burnt-toast{:href => new_group_timer_assignee_path(@context,@timer)}
+              %i.fa.fa-plus-circle.fa-lg
+          - else
+            %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
+              %i.fa.fa-plus-circle.fa-lg
+
+
+  .grid-content.small-12
+    - range = ['Active']
+
+    - first_not_nil = @intervals.find { |x| !x["stopped_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.stopped_at.to_date : Date.current
+    - end_date = @intervals.last && @intervals.last.stopped_at ? @intervals.last.stopped_at.to_date : Date.current
+
+    - (start_date.downto(end_date)).each do |date|
+      - range << date
+
+    - range.each do |active_or_date|
+      %h4.clearfix
+        - if active_or_date == 'Active'
+          %span.pull-left= active_or_date
+        - else
+          %span.pull-left= active_or_date.strftime("%A")
+          %span.silver.pull-right= active_or_date.strftime("%-d %b")
+      - if !([active_or_date] & @intervals.group_by(&:active_or_day).keys).empty?
+        - @intervals.group_by(&:active_or_day).slice(active_or_date).each do |active_or_day, intervals|
+          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/intervals/interval', collection: intervals
+      - else
+        %p 
+          %em.silver No records

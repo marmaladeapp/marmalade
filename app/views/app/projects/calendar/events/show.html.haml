@@ -1,0 +1,78 @@
+
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_event = edit_group_project_event_path(@context,@project,@event)
+    - add_calendar = group_project_event_calendars_path(@context,@project,@event)
+
+  - else
+    - edit_event = @context.class.name == "Household" ? edit_user_home_project_event_path(current_user,@project,@event) : edit_resource_project_event_path(@resource,@project,@event)
+    - add_calendar = @context.class.name == "Household" ? user_home_project_event_calendars_path(current_user,@project,@event) : resource_project_event_calendars_path(@resource,@project,@event)
+
+
+
+.grid-container.small-12.medium-10
+  = render 'app/projects/header'
+
+
+
+  .grid-content.small-12
+    %section.block-list
+      %header Calendars
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @event.calendars.each do |calendar|
+            - if calendar.owner.class.name == "Group"
+              - canonical_calendar = group_calendar_path(calendar.owner,calendar)
+            - else
+              - canonical_calendar = calendar.owner.class.name == "Household" ? user_home_calendar_path(current_user,calendar) : resource_calendar_path(calendar.owner,calendar)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_calendar}
+                %strong= calendar.name
+              - unless calendar == @event.calendars.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_calendar}
+                %i.fa.fa-plus-circle.fa-lg
+
+
+  .grid-content.small-12
+    %h3    
+      - if @event.item
+        %img{:src => avatar_url(@event.item,50), :style => 'border-radius:50%;'}
+      = @event.name
+      %a.olive{:href => edit_event}
+        %i.fa.fa-fw.fa-pencil
+    %h4.text-center= @event.starting_at.to_formatted_s(:long) + " - " + @event.ending_at.to_formatted_s(:long)
+    %p= @event.description
+
+  .grid-content.small-12
+    %h4 Attendees
+
+    %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
+      - @event.memberships.each do |membership|
+        .float-left{:style => 'margin-left:5px;'}
+          - case @context.class.name
+          - when 'User', 'Business'
+            - edit_attendee = edit_resource_event_attendee_path(@context, @event, membership)
+          - when 'Household'
+            - edit_attendee = edit_user_home_event_attendee_path(@user, @event, membership)
+          - when 'Group'
+            - edit_attendee = edit_group_event_attendee_path(@context, @event, membership)
+          %a{:href => edit_attendee}
+            %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
+
+      .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+        .align-center.text-center{:style => 'width:40px;'}
+          - case @context.class.name
+          - when "Household"
+            %a.burnt-toast{:href => new_user_home_event_attendee_path(current_user,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+          - when "Group"
+            %a.burnt-toast{:href => new_group_event_attendee_path(@context,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+          - else
+            %a.burnt-toast{:href => new_resource_event_attendee_path(@context,@event)}
+              %i.fa.fa-plus-circle.fa-lg
+

@@ -24,7 +24,12 @@ class App::Projects::Finances::FinancesController < App::AppController
         'User', @group.members.ids
       )
     end
-    @project_wallet = ItemWallet.new
+    if @project.wallets.any?
+      @wallet = @project.wallets.first
+    else
+      @project_wallet = ItemWallet.new
+    end
+    @payments = @project.payments.page(params[:page]) #.per(2)
   end
 
   def show

@@ -28,7 +28,7 @@
               %strong.burnt-toast Outstanding Receivables
             .card-section.bg-ice-cream
               %h3.green
-                %strong= humanized_money_with_symbol "#{@context.currency} #{@context.total_ledgers_receivable}".to_money, :no_cents_if_whole => false
+                %strong= humanized_money_with_symbol "#{@context.currency} #{@project.ledgers.where('starting_value > ?', 0).sum(:value)}".to_money, :no_cents_if_whole => false
       .grid-content.small-6.text-center
         %a{:href => debts}
           .card
@@ -36,7 +36,7 @@
               %strong.burnt-toast Outstanding Debts
             .card-section.bg-ice-cream
               %h3.strawberry-jam
-                %strong= humanized_money_with_symbol "#{@context.currency} #{@context.total_ledgers_debt}".to_money, :no_cents_if_whole => false
+                %strong= humanized_money_with_symbol "#{@context.currency} #{@project.ledgers.where('starting_value < ?', 0).sum(:value).abs}".to_money, :no_cents_if_whole => false
 
   - if !@project.wallets.any?
     - if @context_wallets
@@ -75,4 +75,5 @@
           %th Time
           %th Balance
         %tbody.text-left
-          /= render partial: 'app/finances/payments/payment', collection: @payments
+          = render partial: 'app/finances/payments/payment', collection: @payments
+

@@ -1,0 +1,79 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_timer = edit_group_project_timer_path(@context,@project,@timer)
+    - add_time_sheet = group_project_timer_time_sheets_path(@context,@project,@timer)
+
+  - else
+    - edit_timer = @context.class.name == "Household" ? edit_user_home_project_timer_path(current_user,@project,@timer) : edit_resource_project_timer_path(@resource,@project,@timer)
+    - add_time_sheet = @context.class.name == "Household" ? user_home_project_timer_time_sheets_path(current_user,@project,@timer) : resource_project_timer_time_sheets_path(@resource,@project,@timer)
+
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = resource_project_timer_interval_path(@context,@project, @timer,@interval)
+  - when 'Household'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = user_home_project_timer_interval_path(@user,@project, @timer,@interval)
+  - when 'Group'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = group_project_timer_interval_path(@context,@project, @timer,@interval)
+- else
+  - interval_path_array = [@timer, @interval]
+  - interval_url = timer_interval_path(@timer,@interval)
+
+.grid-container.small-12.medium-10
+  = render 'app/projects/header'
+
+  .grid-content.small-12
+    %section.block-list
+      %header Time sheets
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @timer.time_sheets.each do |time_sheet|
+            - if time_sheet.owner.class.name == "Group"
+              - canonical_time_sheet = group_time_sheet_path(time_sheet.owner,time_sheet)
+            - else
+              - canonical_time_sheet = time_sheet.owner.class.name == "Household" ? user_home_time_sheet_path(current_user,time_sheet) : resource_time_sheet_path(time_sheet.owner,time_sheet)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_time_sheet}
+                %strong= time_sheet.name
+              - unless time_sheet == @timer.time_sheets.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_time_sheet}
+                %i.fa.fa-plus-circle.fa-lg
+
+
+  .grid-content.small-12
+    %h3
+      = @timer.name
+      %a.olive{:href => edit_timer}
+        %i.fa.fa-fw.fa-pencil
+
+    %p= @timer.description
+
+    - if !@interval.stopped_at
+      %h2.text-center
+        = timer(@interval.started_at)
+
+        - if @timer.assigned?(current_user)
+          %div{:style => 'display:inline-block;'}
+            = form_for interval_path_array, :url => interval_url do |f|
+              = f.hidden_field :user_id, :value => current_user.id
+              %button.button.expanded.bg-strawberry-jam Stop
+      %h3.text-center
+        Total:
+        = timer(@interval.started_at - @timer.elapsed_time.seconds)
+    - else
+      %h2.text-center
+        - seconds = @interval.duration.to_i % 60
+        - minutes = (@interval.duration.to_i / 60) % 60
+        - hours = @interval.duration.to_i / (60 * 60)
+        = format("%02d:%02d:%02d", hours, minutes, seconds)
+      %h3.text-center
+        = @interval.started_at.strftime("%I:%M:%S %p")
+        = '-'
+        = @interval.stopped_at.strftime("%I:%M:%S %p")

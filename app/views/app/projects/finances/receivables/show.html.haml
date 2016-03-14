@@ -1,0 +1,67 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_payment = new_group_project_receivable_payment_path(@context,@project,@ledger)
+  - else
+    - new_payment = @context.class.name == "Household" ? new_user_home_project_receivable_payment_path(current_user,@project,@ledger) : new_resource_project_receivable_payment_path(@resource,@project,@ledger)
+
+.grid-container.small-12.medium-10
+  = render 'app/projects/header'
+
+  .grid-content.small-12
+    %h3= @ledger.name
+
+  .grid-content.small-12.medium-10.medium-offset-1
+    - if @ledger.present?
+      - currency_symbol = Money::Currency.new(@ledger.currency).symbol
+      - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+      - if @payments.any?
+        - if @payments.first.created_at > 1.hour.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "minutely", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.week.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "hourly", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.month.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "daily", :id => "ledger" + @ledger.id.to_s}
+        - elsif @payments.first.created_at > 1.year.ago
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "weekly", :id => "ledger" + @ledger.id.to_s}
+        - else
+          .ct-chart.ledger-chart.ct-major-eleventh{'data-ledgerId' => @ledger.id.to_s, 'data-interval' => "monthly", :id => "ledger" + @ledger.id.to_s}
+      - else
+        .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+          %em.silver No records.
+
+
+  .grid-block.wrap.small-12
+    - if @ledger.present?
+      .grid-content.small-3.text-center Total due
+      .grid-content.small-3.text-center Paid to date
+      .grid-content.small-3.text-center Expected in full by
+      .grid-content.small-3.text-center Remaining
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.starting_value - @ledger.value).abs}".to_money
+      .grid-content.small-3.text-center
+        %h4
+          = @ledger.due_in_full_at.strftime("%D")
+      .grid-content.small-3.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@ledger.currency} #{(@ledger.value).abs}".to_money
+
+
+  .grid-content.small-12
+    - if @context
+      %a.button.bg-blueberry{:href => new_payment} New payment
+
+
+
+  .grid-content.small-12
+    %table{:style => 'width:100%;'}
+      %thead.text-left{:style => 'border-bottom:2px solid black;'}
+        %th Description
+        %th Value
+        %th Time
+        %th Receivable
+      %tbody.text-left
+        = render partial: 'app/finances/payments/payment', collection: @payments

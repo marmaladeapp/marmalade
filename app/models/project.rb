@@ -9,11 +9,15 @@ class Project < ActiveRecord::Base
   has_many :messages, :dependent => :destroy, :class_name => 'Messages::Message'
   has_many :events, :dependent => :destroy, :class_name => 'Calendar::Event'
   has_many :timers, :dependent => :destroy, :class_name => 'TimeTracking::Timer'
+  has_many :intervals, :dependent => :destroy, :class_name => 'TimeTracking::Interval'
 
   has_many :abstracts
 
   has_many :item_wallets, :as => :item, :dependent => :destroy
   has_many :wallets, :through => :item_wallets, :class_name => 'Finances::Wallet'
+
+  has_many :ledgers, :class_name => 'Finances::Ledger'
+  has_many :payments, :class_name => 'Finances::Payment'
 
   #after_create do |project|
   #  project.abstracts.create(:context => project.owner, :item => project, :user => project.user, :action => 'create') user here is subscriber - not correct.

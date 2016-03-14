@@ -6,6 +6,8 @@ class Finances::Ledger < ActiveRecord::Base
   belongs_to :context, polymorphic: true
   belongs_to :counterparty, polymorphic: true
 
+  belongs_to :project
+
   has_one :counterledger, :as => :counterledger, :class_name => 'Finances::Ledger'
 
   has_many :payments, :class_name => 'Finances::Payment'

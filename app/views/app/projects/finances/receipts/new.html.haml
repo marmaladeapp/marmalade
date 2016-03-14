@@ -1,0 +1,29 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @payment]
+    - url = resource_project_receipts_path(@resource,@project)
+  - when 'Household'
+    - path_array = [@resource, @payment]
+    - url = user_home_project_receipts_path(@user,@project)
+  - when 'Group'
+    - path_array = [@resource, @payment]
+    - url = group_project_receipts_path(@resource,@project)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New receipt
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Receipt
+        %ul
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+      %section.block-list
+        %header Value
+        %ul
+          %li
+            = f.number_field :value, {:step => 'any', :placeholder => 'Value', :min => 0}
+
+      %button.button.expanded.bg-blueberry Save
