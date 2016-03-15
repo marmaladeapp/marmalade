@@ -18,21 +18,21 @@
               %h6
                 Organizations
               %h3
-                #{(@user.businesses.size + @user.groups.size + @user.households.size).to_s}/#{@plan.business_limit ? (@plan.business_limit + @plan.household_limit).to_s : "&infin;".html_safe}
+                #{(@user.subscriber_businesses.size + @user.subscriber_groups.size + @user.subscriber_households.size).to_s}/#{@plan.business_limit ? (@plan.business_limit + @plan.household_limit).to_s : "&infin;".html_safe}
         .grid-content.small-6.large-3.text-center
           .card
             .card-section
               %h6
                 Wallets
               %h3
-                #{@user.wallets_count.to_s}/#{@plan.wallet_limit ? @plan.wallet_limit.to_s : "&infin;".html_safe}
+                #{@user.subscriber_wallets.size.to_s}/#{@plan.wallet_limit ? @plan.wallet_limit.to_s : "&infin;".html_safe}
         .grid-content.small-6.large-3.text-center
           .card
             .card-section
               %h6
                 Projects
               %h3
-                #{@user.projects_count.to_s}/#{@plan.project_limit ? @plan.project_limit.to_s : "&infin;".html_safe}
+                #{@user.subscriber_projects.size.to_s}/#{@plan.project_limit ? @plan.project_limit.to_s : "&infin;".html_safe}
       .grid-content.small-12
         = form_for @user, :url => user_update_subscription_path do |f|
           %section.block-list
