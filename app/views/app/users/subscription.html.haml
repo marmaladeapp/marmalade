@@ -18,7 +18,7 @@
               %h6
                 Organizations
               %h3
-                #{(@user.businesses.size + @user.households.size).to_s}/#{@plan.business_limit ? (@plan.business_limit + @plan.household_limit).to_s : "&infin;".html_safe}
+                #{(@user.businesses.size + @user.groups.size + @user.households.size).to_s}/#{@plan.business_limit ? (@plan.business_limit + @plan.household_limit).to_s : "&infin;".html_safe}
         .grid-content.small-6.large-3.text-center
           .card
             .card-section
