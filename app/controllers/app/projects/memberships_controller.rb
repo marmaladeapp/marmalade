@@ -7,21 +7,27 @@ class App::Projects::MembershipsController < App::AppController
     if params[:resource_id]
       @business = VanityUrl.find(params[:resource_id]).owner
       @resource = @business
+      authorize! :show, @resource, :message => ""
       @context = @business
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = Membership.new
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group
+      authorize! :show, @resource, :message => ""
       @context = @group
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = Membership.new
     else
       @user = User.find(params[:user_id])
       @household = @user.home
       @resource = @household
+      authorize! :show, @resource, :message => ""
       @context = @household
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = Membership.new
     end
     ids = []
@@ -34,21 +40,27 @@ class App::Projects::MembershipsController < App::AppController
     if params[:resource_id]
       @business = VanityUrl.find(params[:resource_id]).owner
       @resource = @business
+      authorize! :show, @resource, :message => ""
       @context = @business
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.new(membership_params)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group
+      authorize! :show, @resource, :message => ""
       @context = @group
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.new(membership_params)
     else
       @user = User.find(params[:user_id])
       @household = @user.home
       @resource = @household
+      authorize! :show, @resource, :message => ""
       @context = @household
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.new(membership_params)
     end
     @membership.user = @resource.user
@@ -75,12 +87,15 @@ class App::Projects::MembershipsController < App::AppController
     if params[:resource_id]
       @business = VanityUrl.find(params[:resource_id]).owner
       @resource = @business
+      authorize! :show, @resource, :message => ""
       @context = @business
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group
+      authorize! :show, @resource, :message => ""
       @context = @group
       @project = @resource.projects.find(params[:project_id])
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
@@ -88,8 +103,10 @@ class App::Projects::MembershipsController < App::AppController
       @user = User.find(params[:user_id])
       @household = @user.home
       @resource = @household
+      authorize! :show, @resource, :message => ""
       @context = @household
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
     end
   end
@@ -97,23 +114,29 @@ class App::Projects::MembershipsController < App::AppController
     if params[:resource_id]
       @business = VanityUrl.find(params[:resource_id]).owner
       @resource = @business
+      authorize! :show, @resource, :message => ""
       @context = @business
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       redirect_to resource_project_path(@business,@project)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group
+      authorize! :show, @resource, :message => ""
       @context = @group
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       redirect_to group_project_path(@group,@project)
     else
       @user = User.find(params[:user_id])
       @household = @user.home
       @resource = @household
+      authorize! :show, @resource, :message => ""
       @context = @household
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       redirect_to user_home_project_path(@user,@project)
     end
@@ -121,20 +144,26 @@ class App::Projects::MembershipsController < App::AppController
   def destroy
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       @membership.destroy
       redirect_to resource_project_path(@resource,@project)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @project = @group.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       @membership.destroy
       redirect_to group_project_path(@group,@project)
     else
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @project = @household.projects.find(params[:project_id])
+      authorize! :manage, @project, :message => ""
       @membership = @project.memberships.find_by(:member => User.find(params[:id]))
       @membership.destroy
       redirect_to user_home_project_path(@user,@project)

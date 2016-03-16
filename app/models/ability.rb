@@ -28,10 +28,21 @@ class Ability
           household.has_member?(user)
         end
 
+        can :manage, Membership do |membership|
+          membership.collective.user == user
+        end
+        can :manage, Ownership do |ownership|
+          ownership.owner == user || ownership.owner.user == user
+        end
+
         can :manage, Finances::Wallet, :user => user
         can :manage, Project, :user => user
         cannot :create, Finances::Wallet if user.plan.wallet_limit.present? && user.subscriber_wallets.size >= user.plan.wallet_limit
         cannot :create, Project if user.plan.project_limit.present? && user.subscriber_projects.size >= user.plan.project_limit
+
+        can :read, Project do |project|
+          project.owner == user || project.owner.has_member?(user)
+        end
 
         can :manage, Contacts::Contact, :context => user.business_ids # or something like that, right? Should be easy.
         can :manage, Contacts::Contact, :context => user.household_ids # and then we can add another set just like that, no?

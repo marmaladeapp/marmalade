@@ -42,4 +42,7 @@ class Project < ActiveRecord::Base
   def should_generate_new_friendly_id?
     slug.blank?
   end
+  def has_member?(resource)
+    memberships.find_by(:member => resource).present?
+  end
 end

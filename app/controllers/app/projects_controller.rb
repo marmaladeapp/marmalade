@@ -28,61 +28,77 @@ class App::ProjectsController < App::AppController
   def show
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     @project = @context.projects.find(params[:id])
+    authorize! :show, @project, :message => ""
     @abstracts = @context.abstracts.where(:project => @project)
   end
 
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
+    authorize! :new, Project, :message => ""
     @project = Project.new
   end
 
   def edit
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     @project = @resource.projects.find(params[:id])
+    authorize! :edit, @project, :message => ""
   end
 
   def create
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
+    authorize! :create, Project, :message => ""
     @project = @resource.projects.new(project_params)
     @project.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @project.save
@@ -96,16 +112,20 @@ class App::ProjectsController < App::AppController
   def update
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     @project = @resource.projects.find(params[:id])
+    authorize! :update, @project, :message => ""
     if @project.update_attributes(project_params)
       redirect_to root_path
     else

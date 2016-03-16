@@ -6,6 +6,7 @@ class App::OwnershipsController < App::AppController
   def new
     @business = Business.find(params[:business_id])
     @resource = @business
+    authorize! :show, @resource, :message => ""
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = Ownership.new
@@ -33,13 +34,16 @@ class App::OwnershipsController < App::AppController
   def create
     @business = Business.find(params[:business_id])
     @resource = @business
+    authorize! :show, @resource, :message => ""
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = @resource.owners.new(ownership_params)
+    authorize! :create, @ownership, :message => ""
     if params[:invite].present?
       if User.find_by(:email => params[:invite]).present?
         @ownership.owner = User.find_by(:email => params[:invite])
         unless current_user.collaborators.where(:collaborator => @ownership.owner).any?
+          authorize! :create, Collaborator, :message => ""
           current_user.collaborators.create(:collaborator => @ownership.owner)
         end
       else
@@ -47,6 +51,7 @@ class App::OwnershipsController < App::AppController
         new_user.username = "u_" + Array.new(8){ [*'0'..'9',*'A'..'Z',*'a'..'z'].sample }.join
         new_user.invite!(current_user)
         @ownership.owner = new_user
+        authorize! :create, Collaborator, :message => ""
         current_user.collaborators.create(:collaborator => @ownership.owner)
       end
     end
@@ -87,16 +92,20 @@ class App::OwnershipsController < App::AppController
   def edit
     @business = Business.find(params[:business_id])
     @resource = @business
+    authorize! :show, @resource, :message => ""
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    authorize! :edit, @ownership, :message => ""
   end
   def update
     @business = Business.find(params[:business_id])
     @resource = @business
+    authorize! :show, @resource, :message => ""
     # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
     @context = @business
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    authorize! :update, @ownership, :message => ""
     if @ownership.update_attributes(ownership_params)
       redirect_to vanity_path(@business)
     else
@@ -105,7 +114,9 @@ class App::OwnershipsController < App::AppController
   end
   def destroy
     @business = Business.find(params[:business_id])
+    authorize! :show, @business, :message => ""
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    authorize! :destroy, @ownership, :message => ""
     @ownership.destroy
     redirect_to vanity_path(@business)
   end
