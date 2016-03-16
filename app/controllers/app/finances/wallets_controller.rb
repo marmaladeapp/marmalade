@@ -7,15 +7,19 @@ class App::Finances::WalletsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.find(params[:id])
+    authorize! :show, @wallet, :message => ""
     @payments = @wallet.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @wallet.payments.first || @payments.empty?
       @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :wallet_balance => @wallet.starting_balance, :created_at => @wallet.created_at, :currency => @wallet.currency)
@@ -26,13 +30,16 @@ class App::Finances::WalletsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.new
     if @resource.class.name == "Household"
@@ -50,19 +57,23 @@ class App::Finances::WalletsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     params[:finances_wallet][:starting_balance] = BigDecimal.new(params[:finances_wallet][:starting_balance])
     @wallet = ::Finances::Wallet.new(wallet_params)
     @wallet.balance = @wallet.starting_balance
     @wallet.user = @resource.class.name == "User" ? current_user : @resource.user
     @wallet.context = @context
+    authorize! :create, @wallet, :message => ""
     if @wallet.save
       @context.abstracts.create(:item => @wallet, :user => current_user, :action => 'create')
       @wallet.owners.each do |ownership|

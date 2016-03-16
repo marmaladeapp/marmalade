@@ -3,17 +3,20 @@ class App::Contacts::ContactsController < App::AppController
   def index
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @address_books =  @resource.address_books
       @contacts =  @resource.contacts
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
       @address_books = @household.address_books
       @contacts = @household.contacts
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
       @address_books = @group.address_books
       @contacts = @group.contacts
@@ -44,19 +47,22 @@ class App::Contacts::ContactsController < App::AppController
   def show
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @contact =  ::Contacts::Contact.find(params[:id])
+      @contact =  @context.contacts.find(params[:id])
       @address_books =  @contact.address_books
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
-      @contact = ::Contacts::Contact.find(params[:id])
+      @contact = @context.contacts.find(params[:id])
       @address_books = @contact.address_books
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
-      @contact = ::Contacts::Contact.find(params[:id])
+      @contact = @context.contacts.find(params[:id])
       @address_books = @contact.address_books
     end
   end
@@ -64,13 +70,16 @@ class App::Contacts::ContactsController < App::AppController
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     if params[:address_book_id]
@@ -82,32 +91,38 @@ class App::Contacts::ContactsController < App::AppController
   def edit
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @contact =  ::Contacts::Contact.find(params[:id])
+      @contact =  @context.contacts.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:id])
     end
   end
 
   def create
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
 
@@ -124,19 +139,22 @@ class App::Contacts::ContactsController < App::AppController
   def update
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @contact =  ::Contacts::Contact.find(params[:id])
+      @contact =  @context.contacts.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:id])
     end
     if @contact.update_attributes(contact_params)
       redirect_to root_path
@@ -151,19 +169,22 @@ class App::Contacts::ContactsController < App::AppController
   def address_books
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @contact =  ::Contacts::Contact.find(params[:contact_id])
+      @contact =  @context.contacts.find(params[:contact_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:contact_id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:contact_id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @contact = ::Contacts::Contact.find(params[:contact_id])
+      authorize! :show, @resource, :message => ""
+      @contact = @context.contacts.find(params[:contact_id])
     end
     @address_books = @contact.address_books
   end

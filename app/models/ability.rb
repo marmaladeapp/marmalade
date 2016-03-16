@@ -9,6 +9,7 @@ class Ability
 
       if user.subscribed?
         can :manage, User, :id => user.id
+        can :read, User
         can :manage, Collaborator, :user => user
         can :manage, Group, :user => user
         can :manage, Business, :user => user
@@ -33,6 +34,13 @@ class Ability
         end
         can :manage, Ownership do |ownership|
           ownership.owner == user || ownership.owner.user == user
+        end
+
+        can :manage, Finances::Ledger do |ledger|
+          ledger.context == user || ledger.context.has_member?(user)
+        end
+        can :manage, Finances::Wallet do |wallet|
+          wallet.context == user || wallet.context.has_member?(user)
         end
 
         can :manage, Finances::Wallet, :user => user

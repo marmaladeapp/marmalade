@@ -6,19 +6,22 @@ class App::Time::AssigneesController < App::AppController
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = Membership.new
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = Membership.new
     else
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = Membership.new
     end
     if @resource.class.name == 'User'
@@ -38,19 +41,22 @@ class App::Time::AssigneesController < App::AppController
   def create
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = @timer.memberships.new(membership_params)
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = @timer.memberships.new(membership_params)
     else
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @resource.timers.find(params[:timer_id])
       @membership = @timer.memberships.new(membership_params)
     end
     @membership.user = @resource.class.name == 'User' ? @resource : @resource.user
@@ -83,65 +89,74 @@ class App::Time::AssigneesController < App::AppController
   def edit
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
     else
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
     end
   end
   def update
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       redirect_to resource_timer_path(@resource,@timer)
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       redirect_to group_timer_path(@group,@timer)
     else
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       redirect_to user_home_timer_path(@user,@timer)
     end
   end
   def destroy
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       @membership.destroy
       redirect_to resource_timer_path(@resource,@timer)
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       @membership.destroy
       redirect_to group_timer_path(@group,@timer)
     else
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
-      @membership = Membership.find(params[:id])
+      @timer = @resource.timers.find(params[:timer_id])
+      @membership = @timer.memberships.find(params[:id])
       @membership.destroy
       redirect_to user_home_timer_path(@user,@timer)
     end

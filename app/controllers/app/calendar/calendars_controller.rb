@@ -3,15 +3,18 @@ class App::Calendar::CalendarsController < App::AppController
   def index
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @calendars =  @resource.calendars
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
       @calendars = @household.calendars
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
       @calendars = @group.calendars
     else
@@ -32,6 +35,7 @@ class App::Calendar::CalendarsController < App::AppController
     end
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @calendar =  @resource.calendars.find(params[:id])
       @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
@@ -39,12 +43,14 @@ class App::Calendar::CalendarsController < App::AppController
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
       @calendar = @household.calendars.find(params[:id])
       @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @calendar.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
       @calendar = @group.calendars.find(params[:id])
       @ongoing_events = @calendar.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
@@ -65,13 +71,16 @@ class App::Calendar::CalendarsController < App::AppController
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     @calendar = ::Calendar::Calendar.new
@@ -80,6 +89,7 @@ class App::Calendar::CalendarsController < App::AppController
   def edit
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @calendar =  @resource.calendars.find(params[:id])
     elsif params[:user_id]
@@ -87,11 +97,13 @@ class App::Calendar::CalendarsController < App::AppController
       @household = @user.home
       @context = @household
       @resource = @context
+      authorize! :show, @resource, :message => ""
       @calendar = @household.calendars.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
+      authorize! :show, @resource, :message => ""
       @calendar = @group.calendars.find(params[:id])
     end
   end
@@ -99,13 +111,16 @@ class App::Calendar::CalendarsController < App::AppController
   def create
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     @calendar = @resource.calendars.new(calendar_params)
@@ -121,15 +136,18 @@ class App::Calendar::CalendarsController < App::AppController
   def update
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @calendar =  @resource.calendars.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
       @calendar = @household.calendars.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
       @calendar = @group.calendars.find(params[:id])
     end

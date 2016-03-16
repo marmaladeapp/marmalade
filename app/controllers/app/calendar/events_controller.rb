@@ -10,6 +10,7 @@ class App::Calendar::EventsController < App::AppController
     end
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
       @calendars =  @resource.calendars
       @ongoing_events = @resource.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
@@ -17,12 +18,14 @@ class App::Calendar::EventsController < App::AppController
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
       @calendars = @household.calendars
       @ongoing_events = @household.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @household.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
       @calendars = @group.calendars
       @ongoing_events = @group.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
@@ -65,19 +68,22 @@ class App::Calendar::EventsController < App::AppController
   def show
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @event =  ::Calendar::Event.find(params[:id])
+      @event =  @context.events.find(params[:id])
       @calendars =  @event.calendars
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
+      authorize! :show, @household, :message => ""
       @context = @household
-      @event = ::Calendar::Event.find(params[:id])
+      @event = @context.events.find(params[:id])
       @calendars = @event.calendars
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
       @context = @group
-      @event = ::Calendar::Event.find(params[:id])
+      @event = @context.events.find(params[:id])
       @calendars = @event.calendars
     end
   end
@@ -85,13 +91,16 @@ class App::Calendar::EventsController < App::AppController
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
     if params[:calendar_id]
@@ -103,32 +112,38 @@ class App::Calendar::EventsController < App::AppController
   def edit
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @event =  ::Calendar::Event.find(params[:id])
+      @event =  @context.events.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @event = ::Calendar::Event.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @event = ::Calendar::Event.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
     end
   end
 
   def create
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
+      authorize! :show, @resource, :message => ""
       @context = @resource
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
+      authorize! :show, @resource, :message => ""
       @context = @resource
     end
 
@@ -145,19 +160,22 @@ class App::Calendar::EventsController < App::AppController
   def update
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @event =  ::Calendar::Event.find(params[:id])
+      @event =  @context.events.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @event = ::Calendar::Event.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @event = ::Calendar::Event.find(params[:id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
     end
     if @event.update_attributes(event_params)
       redirect_to root_path
@@ -172,19 +190,22 @@ class App::Calendar::EventsController < App::AppController
   def calendars
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
       @context = @resource
-      @event =  ::Calendar::Event.find(params[:event_id])
+      @event =  @context.events.find(params[:event_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
-      @event = ::Calendar::Event.find(params[:event_id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:event_id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
-      @event = ::Calendar::Event.find(params[:event_id])
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:event_id])
     end
     @calendars = @event.calendars
   end

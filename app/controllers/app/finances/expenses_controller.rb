@@ -4,15 +4,19 @@ class App::Finances::ExpensesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.find(params[:wallet_id])
+    authorize! :show, @wallet, :message => ""
     @payments = @wallet.payments.where("value > ?", 0)
   end
 
@@ -20,31 +24,39 @@ class App::Finances::ExpensesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.find(params[:wallet_id])
-    @payment = ::Finances::Payment.find(params[:id])
+    authorize! :show, @wallet, :message => ""
+    @payment = @wallet.payments.find(params[:id])
   end
 
   def new
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.find(params[:wallet_id])
+    authorize! :show, @wallet, :message => ""
     @payment = ::Finances::Payment.new
   end
 
@@ -52,15 +64,19 @@ class App::Finances::ExpensesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @wallet = ::Finances::Wallet.find(params[:wallet_id])
+    authorize! :show, @wallet, :message => ""
 
     params[:finances_payment][:value] = - BigDecimal.new(params[:finances_payment][:value])
     @payment = @wallet.payments.new(payment_params)

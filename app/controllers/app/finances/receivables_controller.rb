@@ -4,11 +4,13 @@ class App::Finances::ReceivablesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @ledgers = @resource.ledgers.where("starting_value > ?", 0)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @ledgers = @resource.ledgers.where("starting_value > ?", 0)
       @resource.ownerships.each do |ownership|
         @ledgers += ownership.item.ledgers.where("starting_value > ?", 0)
@@ -16,6 +18,7 @@ class App::Finances::ReceivablesController < App::AppController
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @ledgers = @resource.ledgers.where("starting_value > ?", 0)
     else
       @ledgers = current_user.ledgers.where("starting_value > ?", 0)
@@ -35,15 +38,19 @@ class App::Finances::ReceivablesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:id])
+    authorize! :show, @ledger, :message => ""
     @payments = @ledger.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @ledger.payments.first || @payments.empty
       @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :ledger_balance => @ledger.starting_value, :created_at => @ledger.created_at, :currency => @ledger.currency)
@@ -54,13 +61,16 @@ class App::Finances::ReceivablesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.new
     if @resource.class.name == "Household"
@@ -78,25 +88,29 @@ class App::Finances::ReceivablesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     params[:finances_ledger][:starting_value] = BigDecimal.new(params[:finances_ledger][:starting_value])
     @ledger = ::Finances::Ledger.new(ledger_params)
     @ledger.value = @ledger.starting_value
     @ledger.context = @context
+    authorize! :create, @ledger, :message => ""
     if @ledger.save
       @context.abstracts.create(:item => @ledger, :user => current_user, :action => 'create')
 
       if @ledger.counterparty
         case @ledger.counterparty.class.name
         when "User", "Business"
-          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :counterledger_id => @ledger.id, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
+          @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty, :counterledger_id => @ledger.id, :owners_attributes => [:owner => @ledger.counterparty, :user_id => @ledger.counterparty.user_id,:equity => BigDecimal.new(100)])
           @counter_ledger.context.abstracts.create(:item => @counter_ledger, :user => current_user, :action => 'create')
         when "Household"
           @counter_ledger = ::Finances::Ledger.create(:name => @ledger.name, :description => @ledger.description, :value => - @ledger.value, :starting_value => - @ledger.starting_value, :currency => @ledger.currency, :due_in_full_at => @ledger.due_in_full_at, :counterparty => @ledger.context ? @ledger.context : @ledger.owners.first, :context => @ledger.counterparty, :counterledger_id => @ledger.id)

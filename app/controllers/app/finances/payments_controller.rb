@@ -10,15 +10,19 @@ class App::Finances::PaymentsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    authorize! :show, @ledger, :message => ""
     @payment = ::Finances::Payment.new
   end
 
@@ -26,18 +30,23 @@ class App::Finances::PaymentsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    authorize! :show, @ledger, :message => ""
 
     unless params[:finances_payment][:wallet_id].blank?
       @wallet = ::Finances::Wallet.find(params[:finances_payment][:wallet_id])
+      authorize! :show, @wallet, :message => ""
     end
 
     if params[:receivable_id]

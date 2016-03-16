@@ -4,6 +4,7 @@ class App::Finances::FinancesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @balance_sheets = @resource.balance_sheets
       @wallets = @resource.wallets
       @ledgers = @resource.ledgers
@@ -12,6 +13,7 @@ class App::Finances::FinancesController < App::AppController
       @household = @user.home
       @resource = @household
       @context = @household
+      authorize! :show, @context, :message => ""
       @balance_sheets = @household.balance_sheets
       @wallets = Finances::Wallet.where(:context => @household)
       @ledgers = Finances::Ledger.where(:context => @household)
@@ -19,6 +21,7 @@ class App::Finances::FinancesController < App::AppController
       @group = Group.find(params[:group_id])
       @resource = @group
       @context = @group
+      authorize! :show, @context, :message => ""
       @balance_sheets = @group.balance_sheets
       @wallets = @group.wallets
       @ledgers = @group.ledgers

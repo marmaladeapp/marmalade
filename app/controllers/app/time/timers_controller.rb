@@ -4,17 +4,20 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @time_sheets =  @resource.time_sheets
       @timers =  @resource.timers.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @time_sheets = @household.time_sheets
       @timers = @household.timers.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @time_sheets = @group.time_sheets
       @timers = @group.timers.page(params[:page]) #.per(2)
     else
@@ -45,18 +48,21 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer =  ::TimeTracking::Timer.find(params[:id])
+      authorize! :show, @context, :message => ""
+      @timer =  @context.timers.find(params[:id])
       @time_sheets =  @timer.time_sheets
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:id])
       @time_sheets = @timer.time_sheets
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:id])
       @time_sheets = @timer.time_sheets
     end
     @interval = ::TimeTracking::Interval.new
@@ -67,13 +73,16 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
     if params[:time_sheet_id]
       @time_sheet = @resource.time_sheets.find(params[:time_sheet_id])
@@ -85,18 +94,21 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer =  ::TimeTracking::Timer.find(params[:id])
+      authorize! :show, @context, :message => ""
+      @timer =  @context.timers.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      @timer = @context.timers.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      @timer = @context.timers.find(params[:id])
     end
   end
 
@@ -104,13 +116,16 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
     end
 
 
@@ -127,18 +142,21 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer =  ::TimeTracking::Timer.find(params[:id])
+      authorize! :show, @context, :message => ""
+      @timer =  @context.timers.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      @timer = @context.timers.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:id])
+      @timer = @context.timers.find(params[:id])
     end
     if @timer.update_attributes(timer_params)
       redirect_to root_path
@@ -154,18 +172,21 @@ class App::Time::TimersController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer =  ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer =  @context.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @resource = @context
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      @timer = @context.timers.find(params[:timer_id])
     end
     @time_sheets = @timer.time_sheets
   end

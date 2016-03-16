@@ -6,16 +6,19 @@ class App::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.find(params[:id])
   end
@@ -30,16 +33,19 @@ class App::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.new(interval_params)
     @interval.started_at = DateTime.now
@@ -61,16 +67,19 @@ class App::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :show, @context, :message => ""
+      @timer = @context.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.find(params[:id])
     @interval.stopped_at = DateTime.now

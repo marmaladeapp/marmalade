@@ -13,6 +13,7 @@ class App::Finances::ChartsController < App::AppController
 
   def wallet_balance
     @wallet = ::Finances::Wallet.find(params[:wallet_id])
+    authorize! :show, @wallet, :message => ""
     @user = current_user
 
     balances = []
@@ -201,6 +202,7 @@ class App::Finances::ChartsController < App::AppController
 
   def ledger_balance
     @ledger = ::Finances::Ledger.find(params[:ledger_id])
+    authorize! :show, @ledger, :message => ""
     @user = current_user
 
     balances = []
@@ -400,6 +402,7 @@ class App::Finances::ChartsController < App::AppController
     when "Room"
       @resource = Room.find(params[:resource_id])
     end
+    authorize! :show, @resource, :message => "" # TODO: Modifications for can :finance ability. Clearly necessary.
     @user = current_user
 
     balances = []
