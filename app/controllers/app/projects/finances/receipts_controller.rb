@@ -4,16 +4,22 @@ class App::Projects::Finances::ReceiptsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
     @wallet = @project.wallets.first
     @payment = ::Finances::Payment.new
@@ -23,16 +29,22 @@ class App::Projects::Finances::ReceiptsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
     @wallet = @project.wallets.first
 

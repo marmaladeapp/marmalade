@@ -4,18 +4,24 @@ class App::Projects::Finances::PaymentsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
-    @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    @ledger = @project.ledgers.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
     @payment = ::Finances::Payment.new
   end
 
@@ -23,21 +29,27 @@ class App::Projects::Finances::PaymentsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
-    @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    @ledger = @project.ledgers.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
 
     unless params[:finances_payment][:wallet_id].blank?
-      @wallet = ::Finances::Wallet.find(params[:finances_payment][:wallet_id])
+      @wallet = @project.wallets.find(params[:finances_payment][:wallet_id])
     end
 
     if params[:receivable_id]
@@ -59,7 +71,7 @@ class App::Projects::Finances::PaymentsController < App::AppController
       @context.abstracts.create(:item => @payment, :user => current_user, :project => @project, :action => 'create')
 
       if @ledger.counterledger_id
-        @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        @counter_ledger = @project.ledgers.find(@ledger.counterledger_id)
         @counter_payment = @counter_ledger.payments.create(:description => @payment.description,:value => - @payment.value,:ledger_balance => @counter_ledger.value + @payment.value,:currency => @counter_ledger.currency)
         @counter_ledger.context.abstracts.create(:item => @counter_payment, :user => current_user, :project => @project, :action => 'create')
       end

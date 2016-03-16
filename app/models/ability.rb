@@ -51,6 +51,9 @@ class Ability
         can :read, Project do |project|
           project.owner == user || project.owner.has_member?(user)
         end
+        can :update, Project do |project|
+          project.owner == user || project.owner.has_member?(user)
+        end
 
         can :manage, Contacts::Contact, :context => user.business_ids # or something like that, right? Should be easy.
         can :manage, Contacts::Contact, :context => user.household_ids # and then we can add another set just like that, no?

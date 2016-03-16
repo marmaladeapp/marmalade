@@ -4,16 +4,22 @@ class App::Projects::Messages::MessagesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @project = @household.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @project = @group.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     else
       @project = current_user.projects.find(params[:project_id])
     end
@@ -34,18 +40,24 @@ class App::Projects::Messages::MessagesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       redirect = resource_project_messages_path(@resource,@project)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @project = @household.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       redirect = user_home_project_messages_path(@user,@project)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @project = @group.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       redirect = group_project_messages_path(@group,@project)
     end
 

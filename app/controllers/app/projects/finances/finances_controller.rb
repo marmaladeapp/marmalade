@@ -4,13 +4,17 @@ class App::Projects::Finances::FinancesController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @context_wallets = @resource.wallets
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
+      authorize! :show, @context, :message => ""
       @project = @household.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @context_wallets = ::Finances::Wallet.where(
         '(context_type = ? AND context_id IN (?))', 
         'User', @household.members.ids
@@ -18,7 +22,9 @@ class App::Projects::Finances::FinancesController < App::AppController
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
+      authorize! :show, @context, :message => ""
       @project = @group.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @context_wallets = ::Finances::Wallet.where(
         '(context_type = ? AND context_id IN (?))', 
         'User', @group.members.ids

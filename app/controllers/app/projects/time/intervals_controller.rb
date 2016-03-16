@@ -6,19 +6,25 @@ class App::Projects::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.find(params[:id])
   end
@@ -33,19 +39,25 @@ class App::Projects::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.new(interval_params)
     @interval.started_at = DateTime.now
@@ -68,19 +80,25 @@ class App::Projects::Time::IntervalsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project = @resource.projects.find(params[:project_id])
-      @timer = ::TimeTracking::Timer.find(params[:timer_id])
+      authorize! :update, @project, :message => ""
+      @timer = @project.timers.find(params[:timer_id])
     end
     @interval = @timer.intervals.find(params[:id])
     @interval.stopped_at = DateTime.now

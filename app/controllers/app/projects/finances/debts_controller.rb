@@ -4,18 +4,24 @@ class App::Projects::Finances::DebtsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @ledgers = @project.ledgers.where("starting_value < ?", 0)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @ledgers = @project.ledgers.where("starting_value < ?", 0)
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
       @ledgers = @project.ledgers.where("starting_value < ?", 0)
     end
   end
@@ -24,18 +30,24 @@ class App::Projects::Finances::DebtsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
-    @ledger = ::Finances::Ledger.find(params[:id])
+    @ledger = @project.ledgers.find(params[:id])
     @payments = @ledger.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @ledger.payments.first || @payments.empty
       @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :ledger_balance => @ledger.starting_value, :created_at => @ledger.created_at, :currency => @ledger.currency)
@@ -46,16 +58,22 @@ class App::Projects::Finances::DebtsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
     @ledger = ::Finances::Ledger.new
     if @resource.class.name == "Household"
@@ -73,22 +91,27 @@ class App::Projects::Finances::DebtsController < App::AppController
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
+      authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
     end
     params[:finances_ledger][:starting_value] = - BigDecimal.new(params[:finances_ledger][:starting_value])
-    @ledger = ::Finances::Ledger.new(ledger_params)
+    @ledger = @project.ledgers.new(ledger_params)
     @ledger.value = @ledger.starting_value
     @ledger.context = @context
-    @ledger.project = @project
     if @ledger.save
       @context.abstracts.create(:item => @ledger, :user => current_user, :project => @project, :action => 'create')
 
