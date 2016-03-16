@@ -19,4 +19,7 @@ class Group < ActiveRecord::Base
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
+  def has_member?(resource)
+    memberships.find_by(:member => resource).present?
+  end
 end

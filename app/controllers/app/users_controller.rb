@@ -8,21 +8,25 @@ class App::UsersController < App::AppController
   end
   def edit
     @user = User.find(params[:id])
+    authorize! :manage, @user, :message => ""
     @context = @user
     redirect_to root_path if current_user != @user
   end
   def profile
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     @context = @user
     redirect_to root_path if current_user != @user
   end
   def password
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     @context = @user
     redirect_to root_path if current_user != @user
   end
   def billing
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     @context = @user
     redirect_to root_path if current_user != @user
     if @user.payment_methods.any?
@@ -34,6 +38,7 @@ class App::UsersController < App::AppController
   end
   def update
     @user = User.find(params[:id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if !(@user.first_name || @user.last_name) && (params[:user][:first_name] && params[:user][:last_name])
       result = Braintree::Customer.create(
@@ -64,6 +69,7 @@ class App::UsersController < App::AppController
   end
   def update_password
     @user = User.find(current_user.id)
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if @user.update_with_password(user_params)
       # Sign in the user by passing validation in case their password changed
@@ -75,6 +81,7 @@ class App::UsersController < App::AppController
   end
   def subscription
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     @context = @user
     redirect_to root_path if current_user != @user
     if @user.plan
@@ -87,6 +94,7 @@ class App::UsersController < App::AppController
   end
   def payment
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if @user.braintree_subscription_id
       redirect_to root_path
@@ -100,6 +108,7 @@ class App::UsersController < App::AppController
   end
   def update_payment
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if params[:payment_method_nonce]
       r = Braintree::PaymentMethod.create(
@@ -124,6 +133,7 @@ class App::UsersController < App::AppController
 
   def subscribe
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if (params[:user][:first_name] && params[:user][:last_name])
       result = Braintree::Customer.create(
@@ -141,6 +151,7 @@ class App::UsersController < App::AppController
   end
   def update_subscription
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     plan = Plan.find(params[:user][:plan_id])
     unless @user.plan == plan
@@ -188,6 +199,7 @@ class App::UsersController < App::AppController
 
   def pay_subscription
     @user = User.find(params[:user_id])
+    authorize! :manage, @user, :message => ""
     redirect_to root_path if current_user != @user
     if params[:payment_method_nonce]
       r = Braintree::PaymentMethod.create(

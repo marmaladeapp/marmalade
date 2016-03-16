@@ -42,4 +42,7 @@ class Business < ActiveRecord::Base
     ownerships.find_by(:item => resource).present?
   end
 
+  def has_member?(resource)
+    memberships.find_by(:member => resource).present?
+  end
 end

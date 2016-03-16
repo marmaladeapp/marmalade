@@ -1,22 +1,26 @@
 class App::GroupsController < App::AppController
-  authorize_resource
+  #authorize_resource
 
   def show
     @group = Group.find(params[:id])
     @context = @group
+    authorize! :show, @group, :message => ""
     @abstracts = @group.abstracts
   end
   def new
     @user = current_user
+    authorize! :new, Group, :message => ""
     @group = Group.new
   end
   def edit
     @user = current_user
     @group = Group.find(params[:id])
+    authorize! :edit, @group, :message => ""
     @context = @group
   end
   def create
     @user = current_user
+    authorize! :create, Group, :message => ""
     @group = Group.new(group_params)
     @group.user_id = @user.id
     if @group.save
@@ -35,6 +39,7 @@ class App::GroupsController < App::AppController
     @user = current_user
     @group = Group.find(params[:id])
     @context = @group
+    authorize! :update, @group, :message => ""
     if @group.update_attributes(group_params)
       redirect_to group_path(@group)
     else

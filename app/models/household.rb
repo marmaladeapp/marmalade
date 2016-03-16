@@ -17,4 +17,8 @@ class Household < ActiveRecord::Base
     household.memberships.create(:member => household.user, :user => household.user)
   end
 
+  def has_member?(resource)
+    memberships.find_by(:member => resource).present?
+  end
+
 end

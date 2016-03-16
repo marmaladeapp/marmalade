@@ -1,23 +1,27 @@
 class App::BusinessesController < App::AppController
-  authorize_resource
+  #authorize_resource
 
   def show
     @business = Business.find(params[:id])
     @context = @business
+    authorize! :show, @business, :message => ""
     @abstracts = @business.abstracts
   end
   def new
     @user = current_user
+    authorize! :new, Business, :message => "You cannot create any more businesses. Please upgrade your plan to add another."
     @business = Business.new
   end
   def edit
     @user = current_user
     @business = Business.find(params[:business_id])
+    authorize! :edit, @business, :message => ""
     @context = @business
   end
   def create
     @user = current_user
     @business = Business.new(business_params)
+    authorize! :create, Business, :message => "You cannot create any more businesses. Please upgrade your plan to add another."
     @business.user_id = @user.id
     if @business.save
       @business.ownerships.each do |ownership|
@@ -35,6 +39,7 @@ class App::BusinessesController < App::AppController
     @user = current_user
     @business = Business.find(params[:business_id])
     @context = @business
+    authorize! :update, @business, :message => ""
     if @business.update_attributes(business_params)
       redirect_to vanity_path(@business)
     else

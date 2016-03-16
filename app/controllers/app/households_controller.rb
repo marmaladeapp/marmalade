@@ -1,23 +1,27 @@
 class App::HouseholdsController < App::AppController
-  authorize_resource
+  #authorize_resource
 
   def show
     @user = User.find(params[:user_id])
     @household = @user.home
     @context = @household
+    authorize! :show, @household, :message => ""
     @abstracts = @household.abstracts
   end
   def new
     @user = User.find(params[:user_id])
+    authorize! :create, Household, :message => ""
     @household = Household.new
   end
   def edit
     @user = User.find(params[:user_id])
     @household = @user.home
     @context = @household
+    authorize! :edit, @household, :message => ""
   end
   def create
     @user = User.find(params[:user_id])
+    authorize! :create, Household, :message => ""
     @household = Household.new(household_params)
     @household.currency = @user.currency
     @household.user_id = @user.id
@@ -38,6 +42,7 @@ class App::HouseholdsController < App::AppController
     @user = User.find(params[:user_id])
     @household = @user.home
     @context = @household
+    authorize! :update, @household, :message => ""
     if @household.update_attributes(household_params)
       redirect_to user_home_path(@user)
     else
@@ -48,6 +53,7 @@ class App::HouseholdsController < App::AppController
   def destroy
     @user = User.find(params[:user_id])
     @household = @user.home
+    authorize! :destroy, @household, :message => ""
     @household.destroy
     redirect_to vanity_path(@user)
   end
