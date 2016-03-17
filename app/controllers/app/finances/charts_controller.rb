@@ -20,12 +20,12 @@ class App::Finances::ChartsController < App::AppController
     balances << {:created_at => DateTime.now, :balance => @wallet.balance}
 
     if params[:interval_period] == "minutely"
-      payments = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.payments.unscoped.order(created_at: :asc).select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.hour.ago
-        last_hour = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.starting_date..(DateTime.now - 1.hour)).select(:wallet_balance).last
+        last_hour = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => @wallet.starting_date..(DateTime.now - 1.hour)).select(:wallet_balance).last
         if last_hour
           balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.wallet_balance}
         else
@@ -55,12 +55,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @minutely_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "hourly"
-      payments = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.payments.unscoped.order(created_at: :asc).select("max(created_at) as created_at").group("date_trunc('hour',created_at)"), :created_at => (DateTime.now - 24.hours)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).select("max(created_at) as created_at").group("date_trunc('hour',created_at)"), :created_at => (DateTime.now - 24.hours)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 24.hours.ago
-        last_yesterday = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.starting_date..(DateTime.now - 24.hours)).select(:wallet_balance).last
+        last_yesterday = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => @wallet.starting_date..(DateTime.now - 24.hours)).select(:wallet_balance).last
         if last_yesterday
           balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.wallet_balance}
         else
@@ -96,12 +96,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @hourly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "daily"
-      payments = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.payments.unscoped.order(created_at: :asc).select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.week.ago
-        last_week = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.starting_date..(DateTime.now - 1.week)).select(:wallet_balance).last
+        last_week = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => @wallet.starting_date..(DateTime.now - 1.week)).select(:wallet_balance).last
         if last_week
           balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.wallet_balance}
         else
@@ -134,13 +134,13 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @daily_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "weekly"
-      payments = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.payments.unscoped.order(created_at: :asc).select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.month.ago
-        last_month = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.starting_date..(DateTime.now - 1.month)).select(:wallet_balance).last
+        last_month = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => @wallet.starting_date..(DateTime.now - 1.month)).select(:wallet_balance).last
         if last_month
           balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.wallet_balance}
         else
@@ -171,12 +171,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @weekly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "monthly"
-      payments = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.payments.unscoped.order(created_at: :asc).select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.wallet_balance}
       end
       if @wallet.starting_date < 1.year.ago
-        last_year = @wallet.payments.unscoped.order(created_at: :asc).where(:created_at => @wallet.starting_date..(DateTime.now - 1.year)).select(:wallet_balance).last
+        last_year = ::Finances::Payment.unscoped.order(created_at: :asc).where(:wallet => @wallet).where(:created_at => @wallet.starting_date..(DateTime.now - 1.year)).select(:wallet_balance).last
         if last_year
           balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.wallet_balance}
         else
@@ -221,12 +221,12 @@ class App::Finances::ChartsController < App::AppController
     balances << {:created_at => DateTime.now, :balance => @ledger.value}
 
     if params[:interval_period] == "minutely"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
       if @ledger.created_at < 1.hour.ago
-        last_hour = @ledger.payments.where(:created_at => @ledger.created_at..(DateTime.now - 1.hour)).select(:ledger_balance).last
+        last_hour = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => @ledger.created_at..(DateTime.now - 1.hour)).select(:ledger_balance).last
         if last_hour
           balances << {:created_at => (DateTime.now - 1.hour), :balance => last_hour.ledger_balance}
         else
@@ -256,12 +256,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @minutely_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "hourly"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('hour',created_at)"), :created_at => (DateTime.now - 24.hours)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).select("max(created_at) as created_at").group("date_trunc('hour',created_at)"), :created_at => (DateTime.now - 24.hours)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
       if @ledger.created_at < 24.hours.ago
-        last_yesterday = @ledger.payments.where(:created_at => @ledger.created_at..(DateTime.now - 24.hours)).select(:ledger_balance).last
+        last_yesterday = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => @ledger.created_at..(DateTime.now - 24.hours)).select(:ledger_balance).last
         if last_yesterday
           balances << {:created_at => (DateTime.now - 24.hours), :balance => last_yesterday.ledger_balance}
         else
@@ -297,12 +297,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @hourly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "daily"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).select("max(created_at) as created_at").group("date_trunc('day',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.week)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
       if @ledger.created_at < 1.week.ago
-        last_week = @ledger.payments.where(:created_at => @ledger.created_at..(DateTime.now - 1.week)).select(:ledger_balance).last
+        last_week = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => @ledger.created_at..(DateTime.now - 1.week)).select(:ledger_balance).last
         if last_week
           balances << {:created_at => (DateTime.now - 1.week), :balance => last_week.ledger_balance}
         else
@@ -335,13 +335,13 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @daily_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "weekly"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).select("max(created_at) as created_at").group("date_trunc('week',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.month)..DateTime.now)
       # TODO FIXME fuck_it: A one month range is too short, offering only four results. Same applies to daily, only zeven days across a week. Try four (or five) months here and three or four weeks on daily.
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
       if @ledger.created_at < 1.month.ago
-        last_month = @ledger.payments.where(:created_at => @ledger.created_at..(DateTime.now - 1.month)).select(:ledger_balance).last
+        last_month = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => @ledger.created_at..(DateTime.now - 1.month)).select(:ledger_balance).last
         if last_month
           balances << {:created_at => (DateTime.now - 1.month), :balance => last_month.ledger_balance}
         else
@@ -372,12 +372,12 @@ class App::Finances::ChartsController < App::AppController
       end
       render json: @weekly_balance.to_a.reverse.to_h
     elsif params[:interval_period] == "monthly"
-      payments = @ledger.payments.where(:created_at => @ledger.payments.select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
+      payments = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).select("max(created_at) as created_at").group("date_trunc('month',created_at AT TIME ZONE '#{ActiveSupport::TimeZone.find_tzinfo(@user.time_zone).identifier}')"), :created_at => (DateTime.now - 1.year)..DateTime.now)
       payments.reverse_order.each do |p|
         balances << {:created_at => p.created_at, :balance => p.ledger_balance}
       end
       if @ledger.created_at < 1.year.ago
-        last_year = @ledger.payments.where(:created_at => @ledger.created_at..(DateTime.now - 1.year)).select(:ledger_balance).last
+        last_year = ::Finances::Payment.unscoped.order(created_at: :asc).where(:ledger => @ledger).where(:created_at => @ledger.created_at..(DateTime.now - 1.year)).select(:ledger_balance).last
         if last_year
           balances << {:created_at => (DateTime.now - 1.year), :balance => last_year.ledger_balance}
         else
