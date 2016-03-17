@@ -48,7 +48,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @minutes << t
-          @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @minutely_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @minutely_balance.to_a.reverse.to_h
@@ -87,7 +89,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @hours << t
-          @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @hourly_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @hourly_balance.to_a.reverse.to_h
@@ -121,7 +125,10 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @days << t
-          @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          
+          unless @daily_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
           # @daily_balance.merge!(time.in_time_zone(@user.time_zone).strftime("%A %D") => v[:balance].to_s)
         end
       end
@@ -156,7 +163,10 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @weeks << t
-          @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          
+          unless @weekly_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
         end
       end
       render json: @weekly_balance.to_a.reverse.to_h
@@ -189,7 +199,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @months << t
-          @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          unless @monthly_balance[t.in_time_zone(@user.time_zone).strftime("%b")]
+            @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          end
         end
       end
       render json: @monthly_balance.to_a.reverse.to_h
@@ -237,7 +249,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @minutes << t
-          @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @minutely_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @minutely_balance.to_a.reverse.to_h
@@ -276,7 +290,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @hours << t
-          @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @hourly_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @hourly_balance.to_a.reverse.to_h
@@ -310,7 +326,10 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @days << t
-          @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          
+          unless @daily_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
           # @daily_balance.merge!(time.in_time_zone(@user.time_zone).strftime("%A %D") => v[:balance].to_s)
         end
       end
@@ -345,7 +364,10 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @weeks << t
-          @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          
+          unless @weekly_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
         end
       end
       render json: @weekly_balance.to_a.reverse.to_h
@@ -378,7 +400,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @months << t
-          @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          unless @monthly_balance[t.in_time_zone(@user.time_zone).strftime("%b")]
+            @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          end
         end
       end
       render json: @monthly_balance.to_a.reverse.to_h
@@ -397,16 +421,14 @@ class App::Finances::ChartsController < App::AppController
       @resource = Business.find(params[:resource_id])
     when "Household"
       @resource = Household.find(params[:resource_id])
-    when "Department"
-      @resource = Department.find(params[:resource_id])
-    when "Room"
-      @resource = Room.find(params[:resource_id])
+    when "Group"
+      @resource = Group.find(params[:resource_id])
     end
     authorize! :show, @resource, :message => "" # TODO: Modifications for can :finance ability. Clearly necessary.
     @user = current_user
 
     balances = []
-    balances << {:created_at => DateTime.now, :balance => @resource.net_worth}
+    balances << {:created_at => DateTime.now, :balance => @resource.net_worth} # now why oh why is this not working?
 
     if params[:interval_period] == "minutely"
       payments = @resource.balance_sheets.where(:created_at => @resource.balance_sheets.select("max(created_at) as created_at").group("date_trunc('minute',created_at)"), :created_at => (DateTime.now - 1.hour)..DateTime.now)
@@ -431,7 +453,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @minutes << t
-          @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @minutely_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @minutely_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @minutely_balance.to_a.reverse.to_h
@@ -461,7 +485,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @hours << t
-          @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          unless @hourly_balance[t.in_time_zone(@user.time_zone).strftime("%H:%M")]
+            @hourly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%H:%M") => v[:balance].to_s)
+          end
         end
       end
       render json: @hourly_balance.to_a.reverse.to_h
@@ -489,7 +515,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @days << t
-          @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          unless @daily_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @daily_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
           # @daily_balance.merge!(time.in_time_zone(@user.time_zone).strftime("%A %D") => v[:balance].to_s)
         end
       end
@@ -518,7 +546,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @weeks << t
-          @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          unless @weekly_balance[t.in_time_zone(@user.time_zone).strftime("%-m/%e")]
+            @weekly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%-m/%e") => v[:balance].to_s)
+          end
         end
       end
       render json: @weekly_balance.to_a.reverse.to_h
@@ -545,7 +575,9 @@ class App::Finances::ChartsController < App::AppController
             end
           end
           @months << t
-          @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          unless @monthly_balance[t.in_time_zone(@user.time_zone).strftime("%b")]
+            @monthly_balance.merge!(t.in_time_zone(@user.time_zone).strftime("%b") => v[:balance].to_s)
+          end
         end
       end
       render json: @monthly_balance.to_a.reverse.to_h

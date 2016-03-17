@@ -1,4 +1,5 @@
 class Finances::BalanceSheet < ActiveRecord::Base
+  default_scope { order(created_at: :asc) }
   belongs_to :owner, polymorphic: true
   belongs_to :item, polymorphic: true
 
