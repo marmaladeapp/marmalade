@@ -22,6 +22,10 @@ module HasModules
 
     has_many :abstracts, :as => :context, :dependent => :destroy
 
+
+    has_many :contextual_wallets, :as => :context, :dependent => :destroy, :class_name => 'Finances::Wallet'
+    has_many :contextual_ledgers, :as => :context, :dependent => :destroy, :class_name => 'Finances::Ledger'
+
   end
 
   def net_worth
