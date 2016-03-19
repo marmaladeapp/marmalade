@@ -82,6 +82,9 @@
             %img{:src => avatar_url(abstract.user,50), :style => 'border-radius:50%;'}
           %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
             %strong= abstract.user.name
+            / abstract.action - created, destroyed, updated
+            / abstract.item.class.name
+            / in parent - parent being the context/project... wallet/ledger ? perhaps.. dependent upon.. stuff.
           %div.float-left.text-overflow.text-right{:style => 'width:20%;padding:1px;'}
             %small= time_ago_in_words(abstract.created_at) + " ago"
         .clearfix
@@ -93,6 +96,9 @@
               %span.silver #{abstract.item_type} deleted
             - else
               = abstract.item
+              / - case abstract.item.class.name
+              / - when "Messages::Message"
+              /   = abstract.item.content
 
 
 

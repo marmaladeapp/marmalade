@@ -90,7 +90,8 @@ class App::MembershipsController < App::AppController
       elsif params[:group_id]
         redirect_to group_path(@group)
       else
-        @household.ownerships.create(:owner => @household, :item => @membership.member, :equity => BigDecimal.new(100))
+        @ownership = @household.ownerships.create(:owner => @household, :item => @membership.member, :equity => BigDecimal.new(100))
+        @ownership.update_balance_sheets(:value => @membership.member.net_worth,:current_assets => @membership.member.current_assets,:fixed_assets => @membership.member.fixed_assets,:current_liabilities => @membership.member.current_liabilities,:long_term_liabilities => @membership.member.long_term_liabilities,:cash => @membership.member.cash,:ledgers_receivable => @membership.member.total_ledgers_receivable,:ledgers_debt => @membership.member.total_ledgers_debt,:wallets => @membership.member.total_wallets,:item => @membership.member,:action => 'update')
         redirect_to user_home_path(@user)
       end
     else

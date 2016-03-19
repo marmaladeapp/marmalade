@@ -64,6 +64,7 @@ class App::OwnershipsController < App::AppController
           @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
         end
       end
+      @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:item => @resource,:action => 'update')
       redirect_to vanity_path(@business)
     else
       user_ids = []
