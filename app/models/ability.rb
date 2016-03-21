@@ -6,9 +6,9 @@ class Ability
     if user.has_role? :admin
       can :manage, :all
     else
+      can :manage, User, :id => user.id
 
       if user.subscribed?
-        can :manage, User, :id => user.id
         can :read, User
         can :manage, Collaborator, :user => user
         can :manage, Group, :user => user
