@@ -1,0 +1,27 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @wallet]
+    - url = resource_wallet_path(@resource,@wallet)
+  - when 'Household'
+    - path_array = [@resource, @wallet]
+    - url = user_home_wallet_path(@user,@wallet)
+  - when 'Group'
+    - path_array = [@resource, @wallet]
+    - url = group_wallet_path(@resource,@wallet)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit wallet
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Wallet
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+
+      %button.button.expanded.bg-blueberry Save

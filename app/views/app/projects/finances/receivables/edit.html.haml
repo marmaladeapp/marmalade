@@ -1,0 +1,37 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @ledger]
+    - url = resource_project_receivable_path(@resource,@project,@ledger)
+  - when 'Household'
+    - path_array = [@resource, @ledger]
+    - url = user_home_project_receivable_path(@user,@project,@ledger)
+  - when 'Group'
+    - path_array = [@resource, @ledger]
+    - url = group_project_receivable_path(@resource,@project,@ledger)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 Edit receivable
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Receivable
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+      - if false
+        %section.block-list
+          %header Value
+          %ul
+            %li
+              = f.number_field :starting_value, {:step => 'any', :placeholder => 'Value', :min => 0}
+        %section.block-list
+          %header Due in full at
+          %ul
+            %li.with-dropdown.clearfix
+              = f.date_select :due_in_full_at, {}, {:class => 'small-4 float-left'}
+
+      %button.button.expanded.bg-blueberry Save
