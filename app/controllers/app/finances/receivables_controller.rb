@@ -162,6 +162,99 @@ class App::Finances::ReceivablesController < App::AppController
     end
   end
 
+  def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :edit, @ledger, :message => ""
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :edit, @ledger, :message => ""
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :edit, @ledger, :message => ""
+    end
+  end
+
+  def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :update, @ledger, :message => ""
+      if @ledger.update_attributes(ledger_params)
+        redirect_to resource_receivable_path(@resource,@ledger)
+      else
+        render 'edit'
+      end
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :update, @ledger, :message => ""
+      if @ledger.update_attributes(ledger_params)
+        redirect_to user_home_receivable_path(@user,@ledger)
+      else
+        render 'edit'
+      end
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :update, @ledger, :message => ""
+      if @ledger.update_attributes(ledger_params)
+        redirect_to group_receivable_path(@resource,@ledger)
+      else
+        render 'edit'
+      end
+    end
+  end
+
+  def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :destroy, @ledger, :message => ""
+      # balance_sheets
+      @ledger.destroy
+      redirect_to resource_receivables_path(@resource)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :destroy, @ledger, :message => ""
+      # balance_sheets
+      @ledger.destroy
+      redirect_to user_home_receivables_path(@user)
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @ledger = ::Finances::Ledger.find(params[:id])
+      authorize! :destroy, @ledger, :message => ""
+      # balance_sheets
+      @ledger.destroy
+      redirect_to group_receivables_path(@resource)
+    end
+  end
+
   private
 
   def ledger_params

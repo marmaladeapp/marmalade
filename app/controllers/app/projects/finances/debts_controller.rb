@@ -170,6 +170,108 @@ class App::Projects::Finances::DebtsController < App::AppController
     end
   end
 
+  def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+    end
+  end
+
+  def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      if @ledger.update_attributes(ledger_params)
+        redirect_to resource_project_debt_path(@resource,@project,@ledger)
+      else
+        render 'edit'
+      end
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      if @ledger.update_attributes(ledger_params)
+        redirect_to user_home_project_debt_path(@user,@project,@ledger)
+      else
+        render 'edit'
+      end
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      if @ledger.update_attributes(ledger_params)
+        redirect_to group_project_debt_path(@resource,@project,@ledger)
+      else
+        render 'edit'
+      end
+    end
+  end
+
+  def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      #balance_sheets
+      @ledger.destroy
+      redirect_to resource_project_debts_path(@resource,@project)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      #balance_sheets
+      @ledger.destroy
+      redirect_to user_home_project_debts_path(@user,@project)
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @ledger = @project.ledgers.find(params[:id])
+      #balance_sheets
+      @ledger.destroy
+      redirect_to group_project_debts_path(@resource,@project)
+    end
+  end
+
   private
 
   def ledger_params

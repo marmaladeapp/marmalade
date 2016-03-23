@@ -89,6 +89,99 @@ class App::Finances::WalletsController < App::AppController
     end
   end
 
+  def edit
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :edit, @wallet, :message => ""
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :edit, @wallet, :message => ""
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :edit, @wallet, :message => ""
+    end
+  end
+
+  def update
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :update, @wallet, :message => ""
+      if @wallet.update_attributes(wallet_params)
+        redirect_to resource_wallet_path(@resource,@wallet)
+      else
+        render 'edit'
+      end
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :update, @wallet, :message => ""
+      if @wallet.update_attributes(wallet_params)
+        redirect_to user_home_wallet_path(@user,@wallet)
+      else
+        render 'edit'
+      end
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :update, @wallet, :message => ""
+      if @wallet.update_attributes(wallet_params)
+        redirect_to group_wallet_path(@resource,@wallet)
+      else
+        render 'edit'
+      end
+    end
+  end
+
+  def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :destroy, @wallet, :message => ""
+      #balance_sheets
+      @wallet.destroy
+      redirect_to resource_finances_path(@resource)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @resource = @user.home
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :destroy, @wallet, :message => ""
+      #balance_sheets
+      @wallet.destroy
+      redirect_to user_home_finances_path(@user)
+    elsif params[:group_id]
+      @resource = Group.find(params[:group_id])
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @wallet = ::Finances::Wallet.find(params[:id])
+      authorize! :destroy, @wallet, :message => ""
+      #balance_sheets
+      @wallet.destroy
+      redirect_to group_finances_path(@resource)
+    end
+  end
+
   private
 
   def wallet_params
