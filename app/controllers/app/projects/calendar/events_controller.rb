@@ -182,6 +182,37 @@ class App::Projects::Calendar::EventsController < App::AppController
   end
 
   def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @event =  @project.events.find(params[:id])
+      @event.destroy
+      redirect_to resource_project_events_path(@resource,@project)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      authorize! :show, @context, :message => ""
+      @resource = @context
+      @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @event = @project.events.find(params[:id])
+      @event.destroy
+      redirect_to user_home_project_events_path(@user,@project)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      authorize! :show, @context, :message => ""
+      @resource = @context
+      @project = @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+      @event = @project.events.find(params[:id])
+      @event.destroy
+      redirect_to group_project_events_path(@group,@project)
+    end
   end
 
   def calendars
