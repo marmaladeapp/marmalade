@@ -48,7 +48,7 @@ class App::GroupsController < App::AppController
   end
 
   def destroy
-    @group = Group.find(params[:group_id])
+    @group = Group.find(params[:id])
     authorize! :destroy, @group, :message => ""
     @resource = @group
     @group.owners.each do |ownership|

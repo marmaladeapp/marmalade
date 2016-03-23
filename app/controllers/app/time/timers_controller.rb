@@ -166,6 +166,31 @@ class App::Time::TimersController < App::AppController
   end
 
   def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @timer =  @context.timers.find(params[:id])
+      @timer.destroy
+      redirect_to resource_timers_path(@resource)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      authorize! :show, @context, :message => ""
+      @resource = @context
+      @timer = @context.timers.find(params[:id])
+      @timer.destroy
+      redirect_to user_home_timers_path(@user)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      authorize! :show, @context, :message => ""
+      @resource = @context
+      @timer = @context.timers.find(params[:id])
+      @timer.destroy
+      redirect_to group_timers_path(@group)
+    end
   end
 
   def time_sheets

@@ -43,6 +43,10 @@
 
           %button.button.expanded.bg-blueberry Update subscription
 
+          %a.button.small.hollow.strawberry-jam{:href => registration_path(:user), :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+            %i.fa.fa-trash
+            Delete account
+
           %p
             %strong Note:
             If you are upgrading or downgrading from one monthly plan to another, or from one yearly plan to another, the price will be prorated to account for unspent time. So, if you downgrade from our Plus plan to the Light plan we'll take the prorated value for whatever time you haven't yet used and add that towards your next invoice(s).

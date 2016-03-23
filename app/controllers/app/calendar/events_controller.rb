@@ -185,6 +185,31 @@ class App::Calendar::EventsController < App::AppController
   end
 
   def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @event =  @context.events.find(params[:id])
+      @event.destroy
+      redirect_to resource_events_path(@resource)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
+      @event.destroy
+      redirect_to user_home_events_path(@user)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @event = @context.events.find(params[:id])
+      @event.destroy
+      redirect_to group_events_path(@group)
+    end
   end
 
   def calendars

@@ -45,3 +45,7 @@
         %h4= timepiece(current_user.time_zone)
 
       %button.button.expanded.bg-blueberry Save
+
+      %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+        %i.fa.fa-trash
+        Delete

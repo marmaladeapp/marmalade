@@ -134,6 +134,29 @@ class App::ProjectsController < App::AppController
   end
 
   def destroy
+    if params[:resource_id]
+      @business = Business.find(params[:resource_id])
+      authorize! :show, @business, :message => ""
+      @project = @business.projects.find(params[:id])
+      authorize! :destroy, @project, :message => ""
+      @project.destroy
+      redirect_to vanity_path(@business)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
+      @project = @group.projects.find(params[:id])
+      authorize! :destroy, @project, :message => ""
+      @project.destroy
+      redirect_to group_path(@group)
+    else
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      authorize! :show, @household, :message => ""
+      @project = @household.projects.find(params[:id])
+      authorize! :destroy, @project, :message => ""
+      @project.destroy
+      redirect_to user_home_path(@user)
+    end
   end
 
   private

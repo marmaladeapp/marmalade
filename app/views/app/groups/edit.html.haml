@@ -33,3 +33,6 @@
               = f.collection_select :currency, @currencies_for_select, :iso_code, :description
 
         %button.button.expanded.bg-blueberry Save
+        %a.button.small.hollow.strawberry-jam{:href => group_path(@group), :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+          %i.fa.fa-trash
+          Delete

@@ -139,6 +139,29 @@ class App::Contacts::AddressBooksController < App::AppController
   end
 
   def destroy
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @address_book =  @resource.address_books.find(params[:id])
+      @address_book.destroy
+      redirect_to resource_contacts_path(@resource)
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      authorize! :show, @household, :message => ""
+      @context = @household
+      @address_book = @household.address_books.find(params[:id])
+      @address_book.destroy
+      redirect_to user_home_contacts_path(@user)
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
+      @context = @group
+      @address_book = @group.address_books.find(params[:id])
+      @address_book.destroy
+      redirect_to group_contacts_path(@group)
+    end
   end
 
   private
