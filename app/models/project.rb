@@ -25,6 +25,8 @@ class Project < ActiveRecord::Base
 
   before_destroy do |project|
     project.abstracts.update_all(project_id: nil)
+    project.ledgers.update_all(project_id: nil)
+    project.payments.update_all(project_id: nil)
   end
 
   extend FriendlyId

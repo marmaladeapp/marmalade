@@ -47,11 +47,15 @@ class App::GroupsController < App::AppController
     end
   end
 
-  #def destroy
-  #  @group = Group.find(params[:group_id])
-  #  @group.destroy
-  #  redirect_to vanity_path(@user)
-  #end
+  def destroy
+    @group = Group.find(params[:group_id])
+    @resource = @group
+    @group.owners.each do |ownership|
+      ownership.update_balance_sheets(:value => - @resource.net_worth,:current_assets => - @resource.current_assets,:fixed_assets => - @resource.fixed_assets,:current_liabilities => - @resource.current_liabilities,:long_term_liabilities => - @resource.long_term_liabilities,:cash => - @resource.cash,:ledgers_receivable => - @resource.total_ledgers_receivable,:ledgers_debt => - @resource.total_ledgers_debt,:wallets => - @resource.total_wallets,:item => @resource,:action => 'update')
+    end
+    @group.destroy
+    redirect_to root_path
+  end
 
   private
 
