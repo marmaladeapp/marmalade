@@ -1,8 +1,10 @@
 - if @context
   - if @context.class.name == 'Group'
+    - edit_wallet = edit_group_wallet_path(@context,@wallet)
     - new_receipt = new_group_wallet_receipt_path(@context,@wallet)
     - new_expense = new_group_wallet_expense_path(@context,@wallet)
   - else
+    - edit_wallet = @context.class.name == "Household" ? edit_user_home_wallet_path(current_user,@wallet) : edit_resource_wallet_path(@resource,@wallet)
     - new_receipt = @context.class.name == "Household" ? new_user_home_wallet_receipt_path(current_user,@wallet) : new_resource_wallet_receipt_path(@resource,@wallet)
     - new_expense = @context.class.name == "Household" ? new_user_home_wallet_expense_path(current_user,@wallet) : new_resource_wallet_expense_path(@resource,@wallet)
 
@@ -10,7 +12,10 @@
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
-    %h3= @wallet.name
+    %h3
+      = @wallet.name
+      %a.olive{:href => edit_wallet}
+        %i.fa.fa-fw.fa-pencil
 
   .grid-content.small-12.medium-10.medium-offset-1
     - if @wallet.present?

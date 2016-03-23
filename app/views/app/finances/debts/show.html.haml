@@ -1,13 +1,18 @@
 - if @context
   - if @context.class.name == 'Group'
+    - edit_ledger = edit_group_debt_path(@context,@ledger)
     - new_payment = new_group_debt_payment_path(@context,@ledger)
   - else
+    - edit_ledger = @context.class.name == "Household" ? edit_user_home_debt_path(current_user,@ledger) : edit_resource_debt_path(@resource,@ledger)
     - new_payment = @context.class.name == "Household" ? new_user_home_debt_payment_path(current_user,@ledger) : new_resource_debt_payment_path(@resource,@ledger)
 
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
-    %h3= @ledger.name
+    %h3
+      = @ledger.name
+      %a.olive{:href => edit_ledger}
+        %i.fa.fa-fw.fa-pencil
 
   .grid-content.small-12.medium-10.medium-offset-1
     - if @ledger.present?
