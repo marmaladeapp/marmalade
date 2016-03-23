@@ -2,7 +2,7 @@ class Site::SiteController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  layout 'site/site'
+  layout :layout_by_resource
 
   before_filter :set_locale
 
@@ -32,4 +32,14 @@ class Site::SiteController < ActionController::Base
       'en'
     end
   end
+
+  def layout_by_resource
+    if devise_controller?
+      "auth/auth"
+    else
+      "site/site"
+    end
+  end
+
 end
+

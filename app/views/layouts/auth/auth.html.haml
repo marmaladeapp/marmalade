@@ -1,0 +1,20 @@
+!!!
+%html{:lang => 'en', :prefix => 'og: http://ogp.me/ns#', :class => 'no-js'}
+  %head
+    = render 'layouts/site/head'
+
+  %body
+    %div.site
+      %div.row.full-width
+        %header.small-12.columns.bg-ice-cream{:style => 'padding-top:10px;'}
+          %a.burnt-toast{:href => root_path}
+            %h1.pacifico.text-center Marmalade
+
+      .row.full-width.bg-ice-cream
+        .small-12.medium-8.medium-offset-2.large-4.large-offset-4.columns{:style => 'padding-top:10px;'}
+          .callout
+            = yield
+
+    = render 'layouts/site/footer'
+
+    = render 'layouts/site/analytics'
