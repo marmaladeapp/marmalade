@@ -55,7 +55,7 @@ class App::HouseholdsController < App::AppController
     @household = @user.home
     authorize! :destroy, @household, :message => ""
     @household.destroy
-    redirect_to vanity_path(@user)
+    redirect_to root_path
   end
 
   private
