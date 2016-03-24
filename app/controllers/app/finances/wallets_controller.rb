@@ -157,7 +157,13 @@ class App::Finances::WalletsController < App::AppController
       authorize! :show, @context, :message => ""
       @wallet = ::Finances::Wallet.find(params[:id])
       authorize! :destroy, @wallet, :message => ""
-      #balance_sheets
+      @wallet.owners.each do |ownership|
+        if @wallet.balance >= 0
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_assets => - @wallet.balance,:cash => - @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        else
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_liabilities => @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        end
+      end
       @wallet.destroy
       redirect_to resource_finances_path(@resource)
     elsif params[:user_id]
@@ -167,7 +173,13 @@ class App::Finances::WalletsController < App::AppController
       authorize! :show, @context, :message => ""
       @wallet = ::Finances::Wallet.find(params[:id])
       authorize! :destroy, @wallet, :message => ""
-      #balance_sheets
+      @wallet.owners.each do |ownership|
+        if @wallet.balance >= 0
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_assets => - @wallet.balance,:cash => - @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        else
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_liabilities => @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        end
+      end
       @wallet.destroy
       redirect_to user_home_finances_path(@user)
     elsif params[:group_id]
@@ -176,7 +188,13 @@ class App::Finances::WalletsController < App::AppController
       authorize! :show, @context, :message => ""
       @wallet = ::Finances::Wallet.find(params[:id])
       authorize! :destroy, @wallet, :message => ""
-      #balance_sheets
+      @wallet.owners.each do |ownership|
+        if @wallet.balance >= 0
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_assets => - @wallet.balance,:cash => - @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        else
+          ownership.update_balance_sheets(:value => - @wallet.balance,:current_liabilities => @wallet.balance, :wallets => - @wallet.balance,:item => @wallet,:action => 'destroy')
+        end
+      end
       @wallet.destroy
       redirect_to group_finances_path(@resource)
     end

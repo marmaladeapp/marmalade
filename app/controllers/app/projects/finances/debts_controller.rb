@@ -245,7 +245,43 @@ class App::Projects::Finances::DebtsController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
-      #balance_sheets
+
+      @ledger.owners.each do |ownership|
+        if @ledger.value >= 0
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:fixed_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        else
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:long_term_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        end
+      end
+
+      if @ledger.counterledger_id
+        @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        @counter_ledger.owners.each do |ownership|
+          if @counter_ledger.value >= 0
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:fixed_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          else
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:long_term_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          end
+        end
+        @counter_ledger.destroy
+      end
+
       @ledger.destroy
       redirect_to resource_project_debts_path(@resource,@project)
     elsif params[:user_id]
@@ -256,7 +292,43 @@ class App::Projects::Finances::DebtsController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
-      #balance_sheets
+
+      @ledger.owners.each do |ownership|
+        if @ledger.value >= 0
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:fixed_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        else
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:long_term_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        end
+      end
+
+      if @ledger.counterledger_id
+        @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        @counter_ledger.owners.each do |ownership|
+          if @counter_ledger.value >= 0
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:fixed_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          else
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:long_term_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          end
+        end
+        @counter_ledger.destroy
+      end
+
       @ledger.destroy
       redirect_to user_home_project_debts_path(@user,@project)
     elsif params[:group_id]
@@ -266,7 +338,43 @@ class App::Projects::Finances::DebtsController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
-      #balance_sheets
+
+      @ledger.owners.each do |ownership|
+        if @ledger.value >= 0
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:fixed_assets => - @ledger.value,:ledgers_receivable => - @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        else
+          if @ledger.due_in_full_at < 1.year.from_now
+            ownership.update_balance_sheets(:value => - @ledger.value,:current_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          else
+            ownership.update_balance_sheets(:value => - @ledger.value,:long_term_liabilities => @ledger.value,:ledgers_debt => @ledger.value,:item => @ledger,:action => 'destroy')
+          end
+        end
+      end
+
+      if @ledger.counterledger_id
+        @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        @counter_ledger.owners.each do |ownership|
+          if @counter_ledger.value >= 0
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:fixed_assets => - @counter_ledger.value,:ledgers_receivable => - @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          else
+            if @counter_ledger.due_in_full_at < 1.year.from_now
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:current_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            else
+              ownership.update_balance_sheets(:value => - @counter_ledger.value,:long_term_liabilities => @counter_ledger.value,:ledgers_debt => @counter_ledger.value,:item => @counter_ledger,:action => 'destroy')
+            end
+          end
+        end
+        @counter_ledger.destroy
+      end
+
       @ledger.destroy
       redirect_to group_project_debts_path(@resource,@project)
     end
