@@ -4,4 +4,5 @@ class Abstract < ActiveRecord::Base
   belongs_to :item, polymorphic: true
   belongs_to :project
   belongs_to :user
+  belongs_to :sub_item, polymorphic: true
 end

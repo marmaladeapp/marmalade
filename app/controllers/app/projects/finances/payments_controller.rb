@@ -74,7 +74,7 @@ class App::Projects::Finances::PaymentsController < App::AppController
     @payment.ledger_balance = @ledger.value - @payment.value
 
     if @payment.save
-      @context.abstracts.create(:item => @payment, :user => current_user, :project => @project, :action => 'create')
+      @context.abstracts.create(:item => @ledger, :sub_item => @payment, :user => current_user, :action => 'pay_ledger', :value => @payment.value, :currency => @payment.currency, :project => @project)
 
       if @ledger.counterledger_id
         @counter_ledger = @project.ledgers.find(@ledger.counterledger_id)
@@ -82,7 +82,7 @@ class App::Projects::Finances::PaymentsController < App::AppController
           @counter_ledger.update_fiscal_class
         end
         @counter_payment = @counter_ledger.payments.create(:description => @payment.description,:value => - @payment.value,:ledger_balance => @counter_ledger.value + @payment.value,:currency => @counter_ledger.currency)
-        @counter_ledger.context.abstracts.create(:item => @counter_payment, :user => current_user, :project => @project, :action => 'create')
+        @context.abstracts.create(:item => @counter_ledger, :sub_item => @counter_payment, :user => current_user, :action => 'pay_ledger', :value => @counter_payment.value, :currency => @counter_payment.currency, :project => @project)
       end
 
       if @wallet

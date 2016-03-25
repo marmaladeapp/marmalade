@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160324232558) do
+ActiveRecord::Schema.define(version: 20160325200429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,15 +22,20 @@ ActiveRecord::Schema.define(version: 20160324232558) do
     t.integer  "item_id"
     t.string   "item_type"
     t.integer  "project_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "user_id"
     t.string   "action"
+    t.decimal  "value"
+    t.string   "currency"
+    t.integer  "sub_item_id"
+    t.string   "sub_item_type"
   end
 
   add_index "abstracts", ["context_type", "context_id"], name: "index_abstracts_on_context_type_and_context_id", using: :btree
   add_index "abstracts", ["item_type", "item_id"], name: "index_abstracts_on_item_type_and_item_id", using: :btree
   add_index "abstracts", ["project_id"], name: "index_abstracts_on_project_id", using: :btree
+  add_index "abstracts", ["sub_item_type", "sub_item_id"], name: "index_abstracts_on_sub_item_type_and_sub_item_id", using: :btree
   add_index "abstracts", ["user_id"], name: "index_abstracts_on_user_id", using: :btree
 
   create_table "businesses", force: :cascade do |t|

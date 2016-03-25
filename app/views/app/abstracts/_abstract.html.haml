@@ -10,16 +10,52 @@
       - canonical_link = resource_project_event_path(abstract.context,abstract.project,abstract.item)
     - when 'TimeTracking::Timer'
       - canonical_link = resource_project_timer_path(abstract.context,abstract.project,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = resource_project_timer_path(abstract.context,abstract.project,abstract.item.timer)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = resource_project_receivable_path(abstract.context,abstract.project,abstract.item)
+      - else
+        - canonical_link = resource_project_debt_path(abstract.context,abstract.project,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = resource_project_finances_path(abstract.context,abstract.project)
+    - when 'ItemWallet'
+      - canonical_link = resource_project_finances_path(abstract.context,abstract.project)
+    - when 'Membership'
+      - canonical_link = resource_project_path(abstract.context,abstract.project)
   - else
     - case abstract.item.class.name
     - when 'Project'
       - canonical_link = resource_project_path(abstract.context,abstract.item)
+    - when 'Contacts::AddressBook'
+      - canonical_link = resource_address_book_path(abstract.context,abstract.item)
+    - when 'Contacts::Contact'
+      - canonical_link = resource_contact_path(abstract.context,abstract.item)
     - when 'Messages::Message'
       - canonical_link = resource_message_path(abstract.context,abstract.item)
+    - when 'Calendar::Calendar'
+      - canonical_link = resource_calendar_path(abstract.context,abstract.item)
     - when 'Calendar::Event'
       - canonical_link = resource_event_path(abstract.context,abstract.item)
+    - when 'TimeTracking::TimeSheet'
+      - canonical_link = resource_time_sheet_path(abstract.context,abstract.item)
     - when 'TimeTracking::Timer'
       - canonical_link = resource_timer_path(abstract.context,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = resource_timer_path(abstract.context,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = resource_wallet_path(abstract.context,abstract.item)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = resource_receivable_path(abstract.context,abstract.item)
+      - else
+        - canonical_link = resource_debt_path(abstract.context,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = resource_finances_path(abstract.context)
+    - when 'Ownership'
+      - canonical_link = vanity_path(abstract.context)
+    - when 'Membership'
+      - canonical_link = vanity_path(abstract.context)
 - when 'Group'
   - if abstract.project
     - case abstract.item.class.name
@@ -31,37 +67,105 @@
       - canonical_link = group_project_event_path(abstract.context,abstract.project,abstract.item)
     - when 'TimeTracking::Timer'
       - canonical_link = group_project_timer_path(abstract.context,abstract.project,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = group_project_timer_path(abstract.context,abstract.project,abstract.item.timer)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = group_project_receivable_path(abstract.context,abstract.project,abstract.item)
+      - else
+        - canonical_link = group_project_debt_path(abstract.context,abstract.project,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = group_project_finances_path(abstract.context,abstract.project)
+    - when 'ItemWallet'
+      - canonical_link = group_project_finances_path(abstract.context,abstract.project)
+    - when 'Membership'
+      - canonical_link = group_project_path(abstract.context,abstract.project)
   - else
     - case abstract.item.class.name
     - when 'Project'
       - canonical_link = group_project_path(abstract.context,abstract.item)
+    - when 'Contacts::AddressBook'
+      - canonical_link = group_address_book_path(abstract.context,abstract.item)
+    - when 'Contacts::Contact'
+      - canonical_link = group_contact_path(abstract.context,abstract.item)
     - when 'Messages::Message'
       - canonical_link = group_message_path(abstract.context,abstract.item)
+    - when 'Calendar::Calendar'
+      - canonical_link = group_calendar_path(abstract.context,abstract.item)
     - when 'Calendar::Event'
       - canonical_link = group_event_path(abstract.context,abstract.item)
+    - when 'TimeTracking::TimeSheet'
+      - canonical_link = group_time_sheet_path(abstract.context,abstract.item)
     - when 'TimeTracking::Timer'
       - canonical_link = group_timer_path(abstract.context,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = group_timer_path(abstract.context,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = group_wallet_path(abstract.context,abstract.item)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = group_receivable_path(abstract.context,abstract.item)
+      - else
+        - canonical_link = group_debt_path(abstract.context,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = group_finances_path(abstract.context)
+    - when 'Membership'
+      - canonical_link = group_path(abstract.context)
 - when 'Household'
   - if abstract.project
     - case abstract.item.class.name
     - when 'Project'
-      - canonical_link = user_home_project_path(abstract.context,abstract.item)
+      - canonical_link = user_home_project_path(current_user,abstract.item)
     - when 'Messages::Message'
-      - canonical_link = user_home_project_message_path(abstract.context,abstract.project,abstract.item)
+      - canonical_link = user_home_project_message_path(current_user,abstract.project,abstract.item)
     - when 'Calendar::Event'
-      - canonical_link = user_home_project_event_path(abstract.context,abstract.project,abstract.item)
+      - canonical_link = user_home_project_event_path(current_user,abstract.project,abstract.item)
     - when 'TimeTracking::Timer'
-      - canonical_link = user_home_project_timer_path(abstract.context,abstract.project,abstract.item)
+      - canonical_link = user_home_project_timer_path(current_user,abstract.project,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = user_home_project_timer_path(current_user,abstract.project,abstract.item.timer)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = user_home_project_receivable_path(current_user,abstract.project,abstract.item)
+      - else
+        - canonical_link = user_home_project_debt_path(current_user,abstract.project,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = user_home_project_finances_path(current_user,abstract.project)
+    - when 'ItemWallet'
+      - canonical_link = user_home_project_finances_path(current_user,abstract.project)
+    - when 'Membership'
+      - canonical_link = user_home_project_path(current_user,abstract.project)
   - else
     - case abstract.item.class.name
     - when 'Project'
-      - canonical_link = user_home_project_path(abstract.context,abstract.item)
+      - canonical_link = user_home_project_path(current_user,abstract.item)
+    - when 'Contacts::AddressBook'
+      - canonical_link = user_home_address_book_path(current_user,abstract.item)
+    - when 'Contacts::Contact'
+      - canonical_link = user_home_contact_path(current_user,abstract.item)
     - when 'Messages::Message'
-      - canonical_link = user_home_message_path(abstract.context,abstract.item)
+      - canonical_link = user_home_message_path(current_user,abstract.item)
+    - when 'Calendar::Calendar'
+      - canonical_link = user_home_calendar_path(current_user,abstract.item)
     - when 'Calendar::Event'
-      - canonical_link = user_home_event_path(abstract.context,abstract.item)
+      - canonical_link = user_home_event_path(current_user,abstract.item)
+    - when 'TimeTracking::TimeSheet'
+      - canonical_link = user_home_time_sheet_path(current_user,abstract.item)
     - when 'TimeTracking::Timer'
-      - canonical_link = user_home_timer_path(abstract.context,abstract.item)
+      - canonical_link = user_home_timer_path(current_user,abstract.item)
+    - when 'TimeTracking::Interval'
+      - canonical_link = user_home_timer_path(current_user,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = user_home_wallet_path(current_user,abstract.item)
+    - when 'Finances::Ledger'
+      - if abstract.item.starting_value > 0
+        - canonical_link = user_home_receivable_path(current_user,abstract.item)
+      - else
+        - canonical_link = user_home_debt_path(current_user,abstract.item)
+    - when 'Finances::Payment'
+      - canonical_link = user_home_finances_path(current_user)
+    - when 'Membership'
+      - canonical_link = user_home_path(current_user)
 
 %li
   %a.burnt-toast{:href => canonical_link}
@@ -82,9 +186,134 @@
             %img{:src => avatar_url(abstract.user,50), :style => 'border-radius:50%;'}
           %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
             %strong= abstract.user.name
-            / abstract.action - created, destroyed, updated
-            / abstract.item.class.name
-            / in parent - parent being the context/project... wallet/ledger ? perhaps.. dependent upon.. stuff.
+            - case abstract.item.class.name
+            - when 'Project'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Messages::Message'
+              - case abstract.action
+              - when 'create'
+                = 'wrote a'
+                = /[a-z]+\z/i.match(abstract.item_type)
+            - when 'Contacts::AddressBook'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Contacts::Contact'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Calendar::Calendar'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Calendar::Event'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+              - when 'attend'
+                - if abstract.sub_item && abstract.sub_item.member == abstract.user
+                  is attending
+                - else
+                  marked #{abstract.sub_item.member.name} as attending
+                %em #{abstract.item.name}
+            - when 'TimeTracking::TimeSheet'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'TimeTracking::Timer'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+              - when 'assign'
+                - if abstract.sub_item && abstract.sub_item.member == abstract.user
+                  was assigned to
+                - else
+                  assigned #{abstract.sub_item ? abstract.sub_item.member.name : ''} to
+                %em #{abstract.item.name}
+            - when 'TimeTracking::Interval'
+              - case abstract.action
+              - when 'create'
+                started #{abstract.item.timer.name}
+              - when 'update'
+                stopped #{abstract.item.timer.name}
+            - when 'Finances::Wallet'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                = abstract.item
+              - when 'receive'
+                received #{humanized_money_with_symbol "#{abstract.currency} #{abstract.value}".to_money} into
+                %em #{abstract.item.name}
+              - when 'expend'
+                spent #{humanized_money_with_symbol "#{abstract.currency} #{abstract.value.abs}".to_money} out of
+                %em #{abstract.item.name}
+            - when 'Finances::Ledger'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                = abstract.item
+              - when 'pay_ledger'
+                - if abstract.value > 0
+                  received #{humanized_money_with_symbol "#{abstract.currency} #{abstract.value}".to_money} on
+                - else
+                  paid #{humanized_money_with_symbol "#{abstract.currency} #{abstract.value.abs}".to_money} on
+                %em #{abstract.item.name}
+            - when 'ItemWallet'
+              - case abstract.action
+              - when 'create'
+                attached a Wallet
+              - when 'update'
+                = abstract.action + 'd'
+                = abstract.item
+            - when 'Ownership'
+              - case abstract.action
+              - when 'create'
+                assigned #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}% equity to #{abstract.item.owner.name}
+              - when 'update'
+                adjusted #{abstract.item.owner.name.possessive} equity to #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}%
+            - when 'Membership'
+              - case abstract.action
+              - when 'create'
+                added #{abstract.item.member.name} to #{/[a-z]+\z/i.match(abstract.item.collective.class.name)}
+            - if abstract.project && abstract.item.class.name != 'Project'
+              = abstract.item.class.name == 'ItemWallet' ? "to " : "in "
+              %strong= abstract.project.name
           %div.float-left.text-overflow.text-right{:style => 'width:20%;padding:1px;'}
             %small= time_ago_in_words(abstract.created_at) + " ago"
         .clearfix
@@ -93,16 +322,22 @@
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
           %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}
             - if !abstract.item_id
-              %span.silver #{abstract.item_type} deleted
+              %span.silver #{/[a-z]+\z/i.match(abstract.item_type)} deleted
             - else
-              = abstract.item
-              / - case abstract.item.class.name
-              / - when "Messages::Message"
-              /   = abstract.item.content
-
-
-
-
-
-
-
+              - case abstract.item.class.name
+              - when 'Project'
+              - when 'Messages::Message'
+              - when 'Contacts::AddressBook'
+              - when 'Contacts::Contact'
+              - when 'Messages::Message'
+              - when 'Calendar::Calendar'
+              - when 'Calendar::Event'
+              - when 'TimeTracking::TimeSheet'
+              - when 'TimeTracking::Timer'
+              - when 'TimeTracking::Interval'
+              - when 'Finances::Wallet'
+              - when 'Finances::Ledger'
+              - when 'Finances::Payment'
+              - when 'ItemWallet'
+              - when 'Ownership'
+              - when 'Membership'

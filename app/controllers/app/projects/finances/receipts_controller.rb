@@ -55,7 +55,7 @@ class App::Projects::Finances::ReceiptsController < App::AppController
 
     @payment.wallet_balance = @wallet.balance + @payment.value
     if @payment.save
-      @context.abstracts.create(:item => @payment, :user => current_user, :project => @project, :action => 'create')
+      @context.abstracts.create(:item => @wallet, :sub_item => @payment, :user => current_user, :action => 'receive', :value => @payment.value, :currency => @payment.currency, :project => @project)
 
       set_adjustments(@payment.value,@wallet.balance)
 

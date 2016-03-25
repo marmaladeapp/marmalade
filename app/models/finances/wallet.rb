@@ -15,6 +15,11 @@ class Finances::Wallet < ActiveRecord::Base
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
 
+  before_destroy do |wallet|
+    wallet.payments.where(:ledger_id => nil).destroy_all
+    wallet.payments.where.not(:ledger_id => nil).update_all(wallet_id: nil)
+  end
+
   def global_context
     self.context.to_global_id if self.context.present?
   end
