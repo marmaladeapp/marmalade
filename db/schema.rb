@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314055742) do
+ActiveRecord::Schema.define(version: 20160324232558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -195,6 +195,7 @@ ActiveRecord::Schema.define(version: 20160314055742) do
     t.string   "counterparty_type"
     t.integer  "counterledger_id"
     t.integer  "project_id"
+    t.string   "fiscal_class"
   end
 
   add_index "finances_ledgers", ["context_type", "context_id"], name: "index_finances_ledgers_on_context_type_and_context_id", using: :btree

@@ -28,4 +28,15 @@ class Finances::Ledger < ActiveRecord::Base
     self.counterparty = GlobalID::Locator.locate counterparty
   end
 
+  def update_fiscal_class
+    owners.each do |ownership|
+      if value >= 0
+        ownership.update_balance_sheets(:current_assets => value,:fixed_assets => - value,:item => self,:action => 'update')
+      else
+        ownership.update_balance_sheets(:current_liabilities => - value,:long_term_liabilities => value,:item => self,:action => 'update')
+      end
+    end
+    update_attributes(:fiscal_class => 'current')
+  end
+
 end

@@ -22,6 +22,9 @@ class App::Finances::PaymentsController < App::AppController
       authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+      @ledger.update_fiscal_class
+    end
     authorize! :show, @ledger, :message => ""
     @payment = ::Finances::Payment.new
   end
@@ -42,6 +45,9 @@ class App::Finances::PaymentsController < App::AppController
       authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:receivable_id] ? params[:receivable_id] : params[:debt_id])
+    if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+      @ledger.update_fiscal_class
+    end
     authorize! :show, @ledger, :message => ""
 
     unless params[:finances_payment][:wallet_id].blank?
@@ -68,6 +74,9 @@ class App::Finances::PaymentsController < App::AppController
 
       if @ledger.counterledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_payment = @counter_ledger.payments.create(:description => @payment.description,:value => - @payment.value,:ledger_balance => @counter_ledger.value + @payment.value,:currency => @counter_ledger.currency)
         @counter_ledger.context.abstracts.create(:item => @counter_payment, :user => current_user, :action => 'create')
       end

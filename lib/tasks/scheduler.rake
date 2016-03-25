@@ -19,3 +19,10 @@ task :update_exchange_rates_and_currencies => :environment do
     # $redis.smembers("supported_currencies")
   end
 end
+
+task :update_ledgers => :environment do
+  @ledgers = Finances::Ledger.where(:fiscal_class => ['long_term','fixed']).where("due_in_full_at < ?", 1.year.from_now)
+  @ledgers.each do |ledger|
+    ledger.update_fiscal_class
+  end
+end

@@ -48,6 +48,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       authorize! :update, @project, :message => ""
     end
     @ledger = @project.ledgers.find(params[:id])
+    if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+      @ledger.update_fiscal_class
+    end
     @payments = @ledger.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @ledger.payments.first || @payments.empty
       @payments << ::Finances::Payment.new(:description => 'Starting Balance', :value => 0, :ledger_balance => @ledger.starting_value, :created_at => @ledger.created_at, :currency => @ledger.currency)
@@ -112,6 +115,11 @@ class App::Projects::Finances::ReceivablesController < App::AppController
     @ledger = @project.ledgers.new(ledger_params)
     @ledger.value = @ledger.starting_value
     @ledger.context = @context
+    if @ledger.due_in_full_at < 1.year.from_now
+      @ledger.fiscal_class = 'current'
+    else
+      @ledger.fiscal_class = 'fixed'
+    end
     if @ledger.save
       @context.abstracts.create(:item => @ledger, :user => current_user, :project => @project, :action => 'create')
 
@@ -178,6 +186,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
@@ -186,6 +197,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
@@ -193,6 +207,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
     end
   end
 
@@ -204,6 +221,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       if @ledger.update_attributes(ledger_params)
         redirect_to resource_project_receivable_path(@resource,@project,@ledger)
       else
@@ -217,6 +237,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       if @ledger.update_attributes(ledger_params)
         redirect_to user_home_project_receivable_path(@user,@project,@ledger)
       else
@@ -229,6 +252,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       if @ledger.update_attributes(ledger_params)
         redirect_to group_project_receivable_path(@resource,@project,@ledger)
       else
@@ -245,6 +271,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
 
       @ledger.owners.each do |ownership|
         if @ledger.value >= 0
@@ -264,6 +293,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
 
       if @ledger.counter_ledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now
@@ -292,6 +324,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
 
       @ledger.owners.each do |ownership|
         if @ledger.value >= 0
@@ -311,6 +346,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
 
       if @ledger.counter_ledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now
@@ -338,6 +376,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
       @ledger = @project.ledgers.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
 
       @ledger.owners.each do |ownership|
         if @ledger.value >= 0
@@ -357,6 +398,9 @@ class App::Projects::Finances::ReceivablesController < App::AppController
 
       if @ledger.counter_ledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now

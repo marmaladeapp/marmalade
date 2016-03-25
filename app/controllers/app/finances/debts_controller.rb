@@ -50,6 +50,9 @@ class App::Finances::DebtsController < App::AppController
       authorize! :show, @context, :message => ""
     end
     @ledger = ::Finances::Ledger.find(params[:id])
+    if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+      @ledger.update_fiscal_class
+    end
     authorize! :show, @ledger, :message => ""
     @payments = @ledger.payments.order(created_at: :desc).page(params[:page]) #.per(2)
     if @payments.last == @ledger.payments.first || @payments.empty
@@ -103,6 +106,11 @@ class App::Finances::DebtsController < App::AppController
     @ledger = ::Finances::Ledger.new(ledger_params)
     @ledger.value = @ledger.starting_value
     @ledger.context = @context
+    if @ledger.due_in_full_at < 1.year.from_now
+      @ledger.fiscal_class = 'current'
+    else
+      @ledger.fiscal_class = 'long_term'
+    end
     authorize! :create, @ledger, :message => ""
     if @ledger.save
       @context.abstracts.create(:item => @ledger, :user => current_user, :action => 'create')
@@ -168,6 +176,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :edit, @ledger, :message => ""
     elsif params[:user_id]
       @user = User.find(params[:user_id])
@@ -175,12 +186,18 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :edit, @ledger, :message => ""
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :edit, @ledger, :message => ""
     end
   end
@@ -191,6 +208,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :update, @ledger, :message => ""
       if @ledger.update_attributes(ledger_params)
         redirect_to resource_debt_path(@resource,@ledger)
@@ -203,6 +223,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :update, @ledger, :message => ""
       if @ledger.update_attributes(ledger_params)
         redirect_to user_home_debt_path(@user,@ledger)
@@ -214,6 +237,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :update, @ledger, :message => ""
       if @ledger.update_attributes(ledger_params)
         redirect_to group_debt_path(@resource,@ledger)
@@ -229,6 +255,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :destroy, @ledger, :message => ""
 
       @ledger.owners.each do |ownership|
@@ -249,6 +278,9 @@ class App::Finances::DebtsController < App::AppController
 
       if @ledger.counterledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now
@@ -275,6 +307,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :destroy, @ledger, :message => ""
 
       @ledger.owners.each do |ownership|
@@ -295,6 +330,9 @@ class App::Finances::DebtsController < App::AppController
 
       if @ledger.counterledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now
@@ -320,6 +358,9 @@ class App::Finances::DebtsController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @ledger = ::Finances::Ledger.find(params[:id])
+      if @ledger.due_in_full_at < 1.year.from_now && (@ledger.fiscal_class == 'fixed' || @ledger.fiscal_class == 'long_term')
+        @ledger.update_fiscal_class
+      end
       authorize! :destroy, @ledger, :message => ""
 
       @ledger.owners.each do |ownership|
@@ -340,6 +381,9 @@ class App::Finances::DebtsController < App::AppController
 
       if @ledger.counterledger_id
         @counter_ledger = ::Finances::Ledger.find(@ledger.counterledger_id)
+        if @counter_ledger.due_in_full_at < 1.year.from_now && (@counter_ledger.fiscal_class == 'fixed' || @counter_ledger.fiscal_class == 'long_term')
+          @counter_ledger.update_fiscal_class
+        end
         @counter_ledger.owners.each do |ownership|
           if @counter_ledger.value >= 0
             if @counter_ledger.due_in_full_at < 1.year.from_now
