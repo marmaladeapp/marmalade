@@ -56,7 +56,13 @@ class App::Contacts::EmailsController < App::AppController
     @contact = @context.contacts.find(params[:contact_id])
     @email = @contact.emails.new(email_params)
     if @email.save
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end
@@ -80,7 +86,13 @@ class App::Contacts::EmailsController < App::AppController
     @contact = @context.contacts.find(params[:contact_id])
     @email = @contact.emails.find(params[:id])
     if @email.update_attributes(email_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end

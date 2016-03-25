@@ -164,7 +164,13 @@ class App::Finances::DebtsController < App::AppController
         end
       end
 
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_debt_path(@resource,@ledger)
+      elsif params[:user_id]
+        redirect_to user_home_debt_path(@user,@ledger)
+      elsif params[:group_id]
+        redirect_to group_debt_path(@context,@ledger)
+      end
     else
       render 'new'
     end

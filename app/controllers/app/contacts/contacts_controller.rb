@@ -130,7 +130,13 @@ class App::Contacts::ContactsController < App::AppController
     @contact = @resource.contacts.new(contact_params)
     if @contact.save
       @context.abstracts.create(:item => @contact, :user => current_user, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end
@@ -157,7 +163,13 @@ class App::Contacts::ContactsController < App::AppController
       @contact = @context.contacts.find(params[:id])
     end
     if @contact.update_attributes(contact_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end

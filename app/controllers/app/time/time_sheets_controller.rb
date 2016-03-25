@@ -107,7 +107,13 @@ class App::Time::TimeSheetsController < App::AppController
     @time_sheet.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @time_sheet.save
       @context.abstracts.create(:item => @time_sheet, :user => current_user, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_time_sheet_path(@resource,@time_sheet)
+      elsif params[:user_id]
+        redirect_to user_home_time_sheet_path(@user,@time_sheet)
+      elsif params[:group_id]
+        redirect_to group_time_sheet_path(@context,@time_sheet)
+      end
     else
       render 'new'
     end
@@ -132,7 +138,13 @@ class App::Time::TimeSheetsController < App::AppController
       @time_sheet = @group.time_sheets.find(params[:id])
     end
     if @time_sheet.update_attributes(time_sheet_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_time_sheet_path(@resource,@time_sheet)
+      elsif params[:user_id]
+        redirect_to user_home_time_sheet_path(@user,@time_sheet)
+      elsif params[:group_id]
+        redirect_to group_time_sheet_path(@context,@time_sheet)
+      end
     else
       render 'new'
     end

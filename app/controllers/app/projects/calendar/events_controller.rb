@@ -142,7 +142,13 @@ class App::Projects::Calendar::EventsController < App::AppController
     @event.context = @resource
     if @event.save
       @context.abstracts.create(:item => @event, :user => current_user, :project => @project, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_event_path(@resource,@project,@event)
+      elsif params[:user_id]
+        redirect_to user_home_project_event_path(@user,@project,@event)
+      elsif params[:group_id]
+        redirect_to group_project_event_path(@context,@project,@event)
+      end
     else
       render 'new'
     end
@@ -175,7 +181,13 @@ class App::Projects::Calendar::EventsController < App::AppController
       @event = @project.events.find(params[:id])
     end
     if @event.update_attributes(event_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_event_path(@resource,@project,@event)
+      elsif params[:user_id]
+        redirect_to user_home_project_event_path(@user,@project,@event)
+      elsif params[:group_id]
+        redirect_to group_project_event_path(@context,@project,@event)
+      end
     else
       render 'edit'
     end

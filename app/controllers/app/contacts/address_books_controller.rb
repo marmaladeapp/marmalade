@@ -107,7 +107,13 @@ class App::Contacts::AddressBooksController < App::AppController
     @address_book.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @address_book.save
       @context.abstracts.create(:item => @address_book, :user => current_user, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_address_book_path(@resource,@address_book)
+      elsif params[:user_id]
+        redirect_to user_home_address_book_path(@user,@address_book)
+      elsif params[:group_id]
+        redirect_to group_address_book_path(@context,@address_book)
+      end
     else
       render 'new'
     end
@@ -132,7 +138,13 @@ class App::Contacts::AddressBooksController < App::AppController
       @address_book = @group.address_books.find(params[:id])
     end
     if @address_book.update_attributes(address_book_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_address_book_path(@resource,@address_book)
+      elsif params[:user_id]
+        redirect_to user_home_address_book_path(@user,@address_book)
+      elsif params[:group_id]
+        redirect_to group_address_book_path(@context,@address_book)
+      end
     else
       render 'new'
     end

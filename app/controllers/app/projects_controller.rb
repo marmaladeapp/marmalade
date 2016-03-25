@@ -103,7 +103,13 @@ class App::ProjectsController < App::AppController
     @project.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @project.save
       @context.abstracts.create(:item => @project, :user => current_user, :project => @project, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_path(@resource,@project)
+      elsif params[:user_id]
+        redirect_to user_home_project_path(@user,@project)
+      elsif params[:group_id]
+        redirect_to group_project_path(@resource,@project)
+      end
     else
       render 'new'
     end
@@ -127,7 +133,13 @@ class App::ProjectsController < App::AppController
     @project = @resource.projects.find(params[:id])
     authorize! :update, @project, :message => ""
     if @project.update_attributes(project_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_path(@resource,@project)
+      elsif params[:user_id]
+        redirect_to user_home_project_path(@user,@project)
+      elsif params[:group_id]
+        redirect_to group_project_path(@resource,@project)
+      end
     else
       render 'new'
     end

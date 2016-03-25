@@ -127,7 +127,13 @@ class App::Calendar::CalendarsController < App::AppController
     @calendar.user = @resource.class.name == 'User' ? @resource : @resource.user
     if @calendar.save
       @context.abstracts.create(:item => @calendar, :user => current_user, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_calendar_path(@resource,@calendar)
+      elsif params[:user_id]
+        redirect_to user_home_calendar_path(@user,@calendar)
+      elsif params[:group_id]
+        redirect_to group_calendar_path(@context,@calendar)
+      end
     else
       render 'new'
     end
@@ -152,7 +158,13 @@ class App::Calendar::CalendarsController < App::AppController
       @calendar = @group.calendars.find(params[:id])
     end
     if @calendar.update_attributes(calendar_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_calendar_path(@resource,@calendar)
+      elsif params[:user_id]
+        redirect_to user_home_calendar_path(@user,@calendar)
+      elsif params[:group_id]
+        redirect_to group_calendar_path(@context,@calendar)
+      end
     else
       render 'new'
     end

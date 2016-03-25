@@ -132,7 +132,25 @@ class App::Projects::Finances::PaymentsController < App::AppController
       end
 
       flash[:notice] = "Payment registered!"
-      redirect_to root_path
+      if params[:resource_id]
+        if @ledger.starting_value > 0
+          redirect_to resource_project_receivable_path(@resource,@project,@ledger)
+        else
+          redirect_to resource_project_debt_path(@resource,@project,@ledger)
+        end
+      elsif params[:user_id]
+        if @ledger.starting_value > 0
+          redirect_to user_home_project_receivable_path(@user,@project,@ledger)
+        else
+          redirect_to resource_project_debt_path(@resource,@project,@ledger)
+        end
+      elsif params[:group_id]
+        if @ledger.starting_value > 0
+          redirect_to group_project_receivable_path(@context,@project,@ledger)
+        else
+          redirect_to resource_project_debt_path(@resource,@project,@ledger)
+        end
+      end
     else
       render 'new'
     end

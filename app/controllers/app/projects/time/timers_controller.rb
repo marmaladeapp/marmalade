@@ -139,7 +139,13 @@ class App::Projects::Time::TimersController < App::AppController
     @timer.context = @context
     if @timer.save
       @context.abstracts.create(:item => @timer, :user => current_user, :project => @project, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_timer_path(@resource,@project,@timer)
+      elsif params[:user_id]
+        redirect_to user_home_project_timer_path(@user,@project,@timer)
+      elsif params[:group_id]
+        redirect_to group_project_timer_path(@context,@project,@timer)
+      end
     else
       render 'new'
     end
@@ -172,7 +178,13 @@ class App::Projects::Time::TimersController < App::AppController
       @timer = @project.timers.find(params[:id])
     end
     if @timer.update_attributes(timer_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_timer_path(@resource,@project,@timer)
+      elsif params[:user_id]
+        redirect_to user_home_project_timer_path(@user,@project,@timer)
+      elsif params[:group_id]
+        redirect_to group_project_timer_path(@context,@project,@timer)
+      end
     else
       render 'edit'
     end

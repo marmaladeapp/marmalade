@@ -65,7 +65,13 @@ class App::Projects::Finances::ExpensesController < App::AppController
       end
 
       flash[:notice] = "Payment registered!"
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_project_finances_path(@resource,@project)
+      elsif params[:user_id]
+        redirect_to user_home_project_finances_path(@user,@project)
+      elsif params[:group_id]
+        redirect_to group_project_finances_path(@context,@project)
+      end
     else
       render 'new'
     end

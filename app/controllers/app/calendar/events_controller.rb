@@ -151,7 +151,13 @@ class App::Calendar::EventsController < App::AppController
     @event = @resource.events.new(event_params)
     if @event.save
       @context.abstracts.create(:item => @event, :user => current_user, :action => 'create')
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_event_path(@resource,@event)
+      elsif params[:user_id]
+        redirect_to user_home_event_path(@user,@event)
+      elsif params[:group_id]
+        redirect_to group_event_path(@context,@event)
+      end
     else
       render 'new'
     end
@@ -178,7 +184,13 @@ class App::Calendar::EventsController < App::AppController
       @event = @context.events.find(params[:id])
     end
     if @event.update_attributes(event_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_event_path(@resource,@event)
+      elsif params[:user_id]
+        redirect_to user_home_event_path(@user,@event)
+      elsif params[:group_id]
+        redirect_to group_event_path(@context,@event)
+      end
     else
       render 'edit'
     end

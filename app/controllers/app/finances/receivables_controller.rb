@@ -164,7 +164,13 @@ class App::Finances::ReceivablesController < App::AppController
         end
       end
 
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_receivable_path(@resource,@ledger)
+      elsif params[:user_id]
+        redirect_to user_home_receivable_path(@user,@ledger)
+      elsif params[:group_id]
+        redirect_to group_receivable_path(@context,@ledger)
+      end
     else
       render 'new'
     end

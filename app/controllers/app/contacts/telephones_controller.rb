@@ -56,7 +56,13 @@ class App::Contacts::TelephonesController < App::AppController
     @contact = @context.contacts.find(params[:contact_id])
     @telephone = @contact.telephones.new(telephone_params)
     if @telephone.save
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end
@@ -80,7 +86,13 @@ class App::Contacts::TelephonesController < App::AppController
     @contact = @context.contacts.find(params[:contact_id])
     @telephone = @contact.telephones.find(params[:id])
     if @telephone.update_attributes(telephone_params)
-      redirect_to root_path
+      if params[:resource_id]
+        redirect_to resource_contact_path(@resource,@contact)
+      elsif params[:user_id]
+        redirect_to user_home_contact_path(@user,@contact)
+      elsif params[:group_id]
+        redirect_to group_contact_path(@context,@contact)
+      end
     else
       render 'new'
     end
