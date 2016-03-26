@@ -13,6 +13,10 @@
               %i.fa.fa-user
             - when "Business"
               %i.fa.fa-briefcase
+            - when "Household"
+              %i.fa.fa-home
+            - when "Group"
+              %i.fa.fa-users
       .card-divider.bg-ice-cream.burnt-toast
         %strong Net worth:
         = humanized_money_with_symbol "#{resource.currency} #{resource.net_worth}".to_money

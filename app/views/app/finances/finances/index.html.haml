@@ -18,7 +18,7 @@
     - if @context
       %h3 #{@context.name.possessive} finances
     - else
-      %h3 Your finances
+      %h3 Home and personal finances
 
   .grid-content.small-12.medium-10.medium-offset-1
     - if @resource.present?
@@ -77,14 +77,14 @@
               %h3.strawberry-jam
                 %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_ledgers_debt}".to_money, :no_cents_if_whole => false
 
-  .grid-content.small-12
-    %h4 Wallets
-    - if @context
+  - if @context
+    .grid-content.small-12
+      %h4 Wallets
       %a.button.bg-blueberry{:href => new_wallet} New wallet
-  .grid-block.wrap.small-12
-    = render partial: 'app/finances/wallets/wallet', collection: @wallets
+      .grid-block.wrap.small-12
+        = render partial: 'app/finances/wallets/wallet', collection: @wallets
 
-  - if !@context
+  - if false #!@context
     .grid-content.small-12
       %h4 Ledgers
     .grid-block.wrap.small-12
@@ -101,4 +101,85 @@
       %h4= @context.name.possessive + (@context.class.name == "Business" ? " subsidiaries" : " businesses")
     .grid-block.wrap.small-12
       = render partial: 'app/finances/finances/resource', collection: @context.subsidiaries
+
+  - if !@context
+    .grid-block.wrap.small-12
+      - if @user_home
+        - resource = @user_home
+        .grid-content.small-12.medium-6
+          - case resource.class.name
+          - when "User", "Business"
+            - canonical_link = resource_finances_path(resource)
+          %a{:href => canonical_link}
+            .card{:style => ''}
+              .card-section.bg-burnt-toast
+                %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                  %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(resource.name, length: 12)
+                  %span.float-right
+                    %i.fa.fa-home
+              .card-divider.bg-ice-cream.burnt-toast
+                %strong Net worth:
+                = humanized_money_with_symbol "#{resource.currency} #{resource.net_worth}".to_money
+              .card-section
+                - if resource.present?
+                  - currency_symbol = Money::Currency.new(resource.currency).symbol
+                  - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+                  - if resource.balance_sheets.any?
+                    - if resource.balance_sheets.first.created_at > 1.hour.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "minutely", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.week.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "hourly", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.month.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "daily", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.year.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "weekly", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - else
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "monthly", :id => "resource" + resource.class.name + resource.id.to_s}
+                  - else
+                    .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+                      %em.silver No records.
+      - if @user
+        - resource = @user
+        .grid-content.small-12{:class => @user_home ? 'medium-6' : 'medium-12'}
+          - case resource.class.name
+          - when "User", "Business"
+            - canonical_link = resource_finances_path(resource)
+          %a{:href => canonical_link}
+            .card{:style => ''}
+              .card-section.bg-burnt-toast
+                %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
+                  %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(resource.name, length: 12)
+                  %span.float-right
+                    - case resource.class.name
+                    - when "User"
+                      %i.fa.fa-user
+                    - when "Business"
+                      %i.fa.fa-briefcase
+              .card-divider.bg-ice-cream.burnt-toast
+                %strong Net worth:
+                = humanized_money_with_symbol "#{resource.currency} #{resource.net_worth}".to_money
+              .card-section
+                - if resource.present?
+                  - currency_symbol = Money::Currency.new(resource.currency).symbol
+                  - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+                  - if resource.balance_sheets.any?
+                    - if resource.balance_sheets.first.created_at > 1.hour.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "minutely", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.week.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "hourly", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.month.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "daily", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - elsif resource.balance_sheets.first.created_at > 1.year.ago
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "weekly", :id => "resource" + resource.class.name + resource.id.to_s}
+                    - else
+                      .ct-chart.resource-chart-mini.ct-major-eleventh{'data-resourceId' => resource.id.to_s, 'data-resourceClass' => resource.class.name, 'data-interval' => "monthly", :id => "resource" + resource.class.name + resource.id.to_s}
+                  - else
+                    .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+                      %em.silver No records.
+
+    - if @groups_and_businesses.any?
+      .grid-content.small-12
+        %h3 Business and group finances
+      .grid-block.wrap.small-12
+        = render partial: 'app/finances/finances/resource', collection: @groups_and_businesses
 
