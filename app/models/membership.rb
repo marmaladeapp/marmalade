@@ -47,7 +47,11 @@ class Membership < ActiveRecord::Base
   def destroy_orphans
     if self.member.class.name == "User"
       unless Ownership.where(:owner => self.member, :user => self.user).any? || Membership.where(:member => self.member, :user => self.user).any?
-        Collaborator.find_by(:user => self.user, :collaborator => self.member).destroy
+        unless self.user == self.member
+          if collab = Collaborator.find_by(:user => self.user, :collaborator => self.member)
+            collab.destroy
+          end
+        end
       end
     end
   end

@@ -12,6 +12,8 @@
       - canonical_link = resource_project_timer_path(abstract.context,abstract.project,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = resource_project_timer_path(abstract.context,abstract.project,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = resource_project_finances_path(abstract.context,abstract.project)
     - when 'Finances::Ledger'
       - if abstract.item.starting_value > 0
         - canonical_link = resource_project_receivable_path(abstract.context,abstract.project,abstract.item)
@@ -25,6 +27,8 @@
       - canonical_link = resource_project_path(abstract.context,abstract.project)
   - else
     - case abstract.item.class.name
+    - when 'Business'
+      - canonical_link = vanity_path(abstract.context)
     - when 'Project'
       - canonical_link = resource_project_path(abstract.context,abstract.item)
     - when 'Contacts::AddressBook'
@@ -53,9 +57,9 @@
     - when 'Finances::Payment'
       - canonical_link = resource_finances_path(abstract.context)
     - when 'Ownership'
-      - canonical_link = vanity_path(abstract.context)
+      - canonical_link = vanity_path(abstract.item.item)
     - when 'Membership'
-      - canonical_link = vanity_path(abstract.context)
+      - canonical_link = vanity_path(abstract.item.collective)
 - when 'Group'
   - if abstract.project
     - case abstract.item.class.name
@@ -69,6 +73,8 @@
       - canonical_link = group_project_timer_path(abstract.context,abstract.project,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = group_project_timer_path(abstract.context,abstract.project,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = group_project_finances_path(abstract.context,abstract.project)
     - when 'Finances::Ledger'
       - if abstract.item.starting_value > 0
         - canonical_link = group_project_receivable_path(abstract.context,abstract.project,abstract.item)
@@ -82,6 +88,8 @@
       - canonical_link = group_project_path(abstract.context,abstract.project)
   - else
     - case abstract.item.class.name
+    - when 'Group'
+      - canonical_link = group_path(abstract.context)
     - when 'Project'
       - canonical_link = group_project_path(abstract.context,abstract.item)
     - when 'Contacts::AddressBook'
@@ -110,7 +118,7 @@
     - when 'Finances::Payment'
       - canonical_link = group_finances_path(abstract.context)
     - when 'Membership'
-      - canonical_link = group_path(abstract.context)
+      - canonical_link = group_path(abstract.item.collective)
 - when 'Household'
   - if abstract.project
     - case abstract.item.class.name
@@ -124,6 +132,8 @@
       - canonical_link = user_home_project_timer_path(current_user,abstract.project,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = user_home_project_timer_path(current_user,abstract.project,abstract.item.timer)
+    - when 'Finances::Wallet'
+      - canonical_link = user_home_project_finances_path(current_user,abstract.project)
     - when 'Finances::Ledger'
       - if abstract.item.starting_value > 0
         - canonical_link = user_home_project_receivable_path(current_user,abstract.project,abstract.item)
@@ -137,6 +147,8 @@
       - canonical_link = user_home_project_path(current_user,abstract.project)
   - else
     - case abstract.item.class.name
+    - when 'Household'
+      - canonical_link = user_home_path(current_user)
     - when 'Project'
       - canonical_link = user_home_project_path(current_user,abstract.item)
     - when 'Contacts::AddressBook'
@@ -187,6 +199,30 @@
           %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
             %strong= abstract.user.name
             - case abstract.item.class.name
+            - when 'Household'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Group'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Business'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
             - when 'Project'
               - case abstract.action
               - when 'create'
@@ -304,9 +340,9 @@
             - when 'Ownership'
               - case abstract.action
               - when 'create'
-                assigned #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}% equity to #{abstract.item.owner.name}
+                assigned #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}% equity of #{abstract.item.item.name} to #{abstract.item.owner.name}
               - when 'update'
-                adjusted #{abstract.item.owner.name.possessive} equity to #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}%
+                adjusted #{abstract.item.owner.name.possessive} equity in #{abstract.item.item.name} to #{number_with_precision(abstract.item.equity, strip_insignificant_zeros: true)}%
             - when 'Membership'
               - case abstract.action
               - when 'create'
@@ -320,24 +356,79 @@
           %div.float-left.text-overflow.text-center{:style => 'width:10%;min-height:1px;padding:0;'}
             %strong.silver= abstract.context.name
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-          %div.float-left.text-overflow{:style => 'width:85%;padding:1px 1px 1px 10px;'}
+          %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
             - if !abstract.item_id
               %span.silver #{/[a-z]+\z/i.match(abstract.item_type)} deleted
             - else
               - case abstract.item.class.name
+              - when 'Household'
+                %h3.text-center
+                  %i.fa.fa-home
+                  = abstract.item.name
+              - when 'Group'
+                %h3.text-center
+                  %i.fa.fa-users
+                  = abstract.item.name
+              - when 'Business'
+                %h3.text-center
+                  %i.fa.fa-briefcase
+                  = abstract.item.name
               - when 'Project'
+                %h3.text-center
+                  %i.fa.fa-folder-open
+                  = abstract.item.name
               - when 'Messages::Message'
+                = abstract.item.content
               - when 'Contacts::AddressBook'
+                %h3.text-center
+                  %i.fa.fa-book
+                  = abstract.item.name
               - when 'Contacts::Contact'
-              - when 'Messages::Message'
+                %h5.text-center
+                  %strong= abstract.item.name
               - when 'Calendar::Calendar'
+                %h3.text-center
+                  %i.fa.fa-calendar
+                  = abstract.item.name
               - when 'Calendar::Event'
+                %h4.text-center= abstract.item.name
+                %h5.text-center= abstract.item.starting_at.strftime("%-d %b") # + " - " + abstract.item.ending_at.strftime("%-d %b")
               - when 'TimeTracking::TimeSheet'
+                %h3.text-center
+                  %i.fa.fa-clock-o
+                  = abstract.item.name
               - when 'TimeTracking::Timer'
+                %h4.text-center
+                  = abstract.item.name
+                %h3.text-center
+                  - seconds = abstract.item.elapsed_time.to_i % 60
+                  - minutes = (abstract.item.elapsed_time.to_i / 60) % 60
+                  - hours = abstract.item.elapsed_time.to_i / (60 * 60)
+                  = format("%02d:%02d:%02d", hours, minutes, seconds)
               - when 'TimeTracking::Interval'
+                / TODO
               - when 'Finances::Wallet'
+                - if abstract.sub_item
+                  %h4.text-center= abstract.item.name
+                  %h3.text-center= humanized_money_with_symbol "#{abstract.sub_item.currency} #{abstract.sub_item.wallet_balance}".to_money
+                - else
+                  %h4.text-center= abstract.item.name
+                  %h3.text-center= humanized_money_with_symbol "#{abstract.item.currency} #{abstract.item.starting_balance}".to_money
               - when 'Finances::Ledger'
+                - if abstract.sub_item
+                  %h4.text-center= abstract.item.name
+                  %h3.text-center= humanized_money_with_symbol "#{abstract.sub_item.currency} #{abstract.sub_item.ledger_balance}".to_money
+                - else
+                  %h4.text-center= abstract.item.name
+                  %h3.text-center= humanized_money_with_symbol "#{abstract.item.currency} #{abstract.item.starting_value}".to_money
               - when 'Finances::Payment'
+                / TODO
               - when 'ItemWallet'
+                %h4.text-center
+                  = abstract.item.wallet.name
+                %h3.text-center= humanized_money_with_symbol "#{abstract.item.wallet.currency} #{abstract.item.wallet.balance}".to_money
               - when 'Ownership'
+                / TODO
               - when 'Membership'
+                / TODO
+          %div.float-left.text-overflow.text-right{:style => 'width:20%;padding:1px;'}
