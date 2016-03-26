@@ -100,18 +100,19 @@
           %a{:href => request.path + "/assignees/" + membership.id.to_s + "/edit"}
             %img{:src => avatar_url(membership.member,60), :style => 'border-radius:50%;'}
 
-      .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
-        .align-center.text-center{:style => 'width:40px;'}
-          - case @context.class.name
-          - when "Household"
-            %a.burnt-toast{:href => new_user_home_timer_assignee_path(current_user,@timer)}
-              %i.fa.fa-plus-circle.fa-lg
-          - when "Group"
-            %a.burnt-toast{:href => new_group_timer_assignee_path(@context,@timer)}
-              %i.fa.fa-plus-circle.fa-lg
-          - else
-            %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
-              %i.fa.fa-plus-circle.fa-lg
+      - unless @timer.memberships.any?
+        .float-left.v-align{:style => 'height:60px;margin-left:5px;'}
+          .align-center.text-center{:style => 'width:40px;'}
+            - case @context.class.name
+            - when "Household"
+              %a.burnt-toast{:href => new_user_home_timer_assignee_path(current_user,@timer)}
+                %i.fa.fa-plus-circle.fa-lg
+            - when "Group"
+              %a.burnt-toast{:href => new_group_timer_assignee_path(@context,@timer)}
+                %i.fa.fa-plus-circle.fa-lg
+            - else
+              %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
+                %i.fa.fa-plus-circle.fa-lg
 
 
   .grid-content.small-12
