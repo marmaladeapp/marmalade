@@ -401,12 +401,30 @@
                 %h4.text-center
                   = abstract.item.name
                 %h3.text-center
-                  - seconds = abstract.item.elapsed_time.to_i % 60
-                  - minutes = (abstract.item.elapsed_time.to_i / 60) % 60
-                  - hours = abstract.item.elapsed_time.to_i / (60 * 60)
-                  = format("%02d:%02d:%02d", hours, minutes, seconds)
+                  - if !abstract.item.active?
+                    - seconds = abstract.item.elapsed_time.to_i % 60
+                    - minutes = (abstract.item.elapsed_time.to_i / 60) % 60
+                    - hours = abstract.item.elapsed_time.to_i / (60 * 60)
+                    = format("%02d:%02d:%02d", hours, minutes, seconds)
+                  - else
+                    = timer(abstract.item.intervals.where(:stopped_at => nil).first.started_at - abstract.item.elapsed_time.seconds)
               - when 'TimeTracking::Interval'
-                / TODO
+                %h5.text-center
+                  - if abstract.item.stopped_at
+                    - seconds = abstract.item.duration.to_i % 60
+                    - minutes = (abstract.item.duration.to_i / 60) % 60
+                    - hours = abstract.item.duration.to_i / (60 * 60)
+                    = format("%02d:%02d:%02d", hours, minutes, seconds)
+                  - else
+                    = timer(abstract.item.started_at)
+                %h3.text-center
+                  - if !abstract.item.timer.active?
+                    - seconds = abstract.item.timer.elapsed_time.to_i % 60
+                    - minutes = (abstract.item.timer.elapsed_time.to_i / 60) % 60
+                    - hours = abstract.item.timer.elapsed_time.to_i / (60 * 60)
+                    = format("%02d:%02d:%02d", hours, minutes, seconds)
+                  - else
+                    = timer(abstract.item.timer.intervals.where(:stopped_at => nil).first.started_at - abstract.item.timer.elapsed_time.seconds)
               - when 'Finances::Wallet'
                 - if abstract.sub_item
                   %h4.text-center= abstract.item.name
