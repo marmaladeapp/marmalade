@@ -3,6 +3,8 @@
     .grid-content.medium-9{:style => 'margin:20px 0;'}
       = analog(current_user.time_zone, :size => '100%')
   .grid-block
-    .grid-content.medium-12
-      %h4 About the app
-      %p A little info about each module.
+    .grid-content.medium-12.text-center
+      %h4 Got a minute?
+      %p We'd love your feedback.
+      %p Request new features or report a bug to help us make Marmalade perfect for you and your business.
+      %a.button.bg-blueberry{:href => feedback_path} Feedback

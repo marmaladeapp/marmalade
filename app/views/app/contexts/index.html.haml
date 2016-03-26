@@ -31,8 +31,11 @@
                 = business.name
   .grid-block.shrink
     .grid-content.collapse
-      %ul.menu-bar.icon-top
+      %ul.menu-bar.vertical.icon-top
         %li{}
           %a{:href => new_organization_path}
             %i.fa.fa-fw.fa-briefcase
             New group/business
+        %li.hide-for-medium{}
+          %a{:href => feedback_path}
+            Feedback

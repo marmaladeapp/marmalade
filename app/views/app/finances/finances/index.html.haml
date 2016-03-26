@@ -47,7 +47,7 @@
       .grid-content.small-3.text-center Cash
       .grid-content.small-3.text-center
         %h4
-          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.net_worth}".to_money, :no_cents_if_whole => false
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.net_worth}".to_money
       .grid-content.small-3.text-center
         %h4
           %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_assets}".to_money
@@ -56,7 +56,7 @@
           %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.total_liabilities}".to_money
       .grid-content.small-3.text-center
         %h4
-          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.cash}".to_money, :no_cents_if_whole => false
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.cash}".to_money
 
   .grid-block.wrap.small-12
     - if @resource.present?

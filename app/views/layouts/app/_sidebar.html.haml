@@ -64,11 +64,14 @@
                   = business.name
     .grid-block.shrink
       .grid-content.collapse
-        %ul.menu-bar.icon-top.text-center{:style => 'background:#f9f9f9 !important;'}
+        %ul.menu-bar.vertical.icon-top.text-center{:style => 'background:#f9f9f9 !important;'}
           %li{}
             %a{:href => new_organization_path}
               %i.fa.fa-fw.fa-briefcase
               New group/business
+          %li.hide-for-large{}
+            %a{:href => feedback_path}
+              Feedback
   - else
     .grid-content.collapse.medium-12.text-center{:style => ''}
       Please choose a plan and complete your subscription.

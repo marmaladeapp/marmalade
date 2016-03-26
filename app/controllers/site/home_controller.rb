@@ -158,4 +158,6 @@ class Site::HomeController < Site::SiteController
   end
   def privacy_policy
   end
+  def feedback
+  end
 end
