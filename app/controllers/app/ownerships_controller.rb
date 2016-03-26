@@ -56,7 +56,7 @@ class App::OwnershipsController < App::AppController
       end
     end
     @ownership.user = @resource.user
-    if !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
+    if @ownership.owner && !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
       @context.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
       @ownership.owner.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
       if @ownership.owner.class.name == 'User'

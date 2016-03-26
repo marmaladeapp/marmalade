@@ -82,7 +82,7 @@ class App::MembershipsController < App::AppController
       end
     end
     @membership.user = @resource.user
-    if !@membership.member.is_member?(@membership.collective) && @membership.save
+    if @membership.member && !@membership.member.is_member?(@membership.collective) && @membership.save
       @context.abstracts.create(:item => @membership, :user => current_user, :action => 'create')
       @membership.member.abstracts.create(:item => @membership, :user => current_user, :action => 'create')
       if params[:resource_id]

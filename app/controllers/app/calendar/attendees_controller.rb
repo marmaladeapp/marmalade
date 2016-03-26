@@ -60,7 +60,7 @@ class App::Calendar::AttendeesController < App::AppController
       @membership = @event.memberships.new(membership_params)
     end
     @membership.user = @resource.class.name == 'User' ? @resource : @resource.user
-    if !@membership.member.is_member?(@membership.collective) && @membership.save
+    if @membership.member && !@membership.member.is_member?(@membership.collective) && @membership.save
       @context.abstracts.create(:item => @event, :sub_item => @membership, :user => current_user, :action => 'attend')
       if params[:resource_id]
         redirect_to resource_event_path(@resource,@event)
