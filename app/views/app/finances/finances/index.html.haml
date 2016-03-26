@@ -109,7 +109,7 @@
         .grid-content.small-12.medium-6
           - case resource.class.name
           - when "User", "Business"
-            - canonical_link = resource_finances_path(resource)
+            - canonical_link = user_home_finances_path(current_user)
           %a{:href => canonical_link}
             .card{:style => ''}
               .card-section.bg-burnt-toast

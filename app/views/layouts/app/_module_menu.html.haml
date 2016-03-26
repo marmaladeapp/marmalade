@@ -22,12 +22,20 @@
     - context_finances = user_home_finances_path(current_user)
     - context_projects = user_home_projects_path(current_user)
 - else
-  - context_dashboard = root_path
-  - context_contacts = contacts_path
-  - context_calendar = calendars_path
-  - context_time = time_sheets_path
-  - context_finances = finances_path
-  - context_projects = projects_path
+  - if current_user.households.any? || current_user.businesses.any? || current_user.groups.any?
+    - context_dashboard = root_path
+    - context_contacts = contacts_path
+    - context_calendar = calendars_path
+    - context_time = time_sheets_path
+    - context_finances = finances_path
+    - context_projects = projects_path
+  - else
+    - context_dashboard = vanity_path(current_user)
+    - context_contacts = resource_contacts_path(current_user)
+    - context_calendar = resource_calendars_path(current_user)
+    - context_time = resource_time_sheets_path(current_user)
+    - context_finances = resource_finances_path(current_user)
+    - context_projects = resource_projects_path(current_user)
 
 %ul.marmalade-menu-bar
   %li{'ui-sref-active' => "is-active", :class => request.path == context_dashboard ? 'active' : ''}

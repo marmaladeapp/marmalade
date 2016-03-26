@@ -2,6 +2,10 @@
   - case resource.class.name
   - when "User", "Business"
     - canonical_link = resource_finances_path(resource)
+  - when "Household"
+    - canonical_link = user_home_finances_path(current_user)
+  - when "Group"
+    - canonical_link = group_finances_path(resource)
   %a{:href => canonical_link}
     .card{:style => 'height:250px;'}
       .card-section.bg-burnt-toast
