@@ -2,6 +2,7 @@
   %h3 Sign up
   = form_for(:user, url: registration_path(:user)) do |f|
 
+    = f.hidden_field :plan_id, :value => ''
     = f.hidden_field :currency, :value => @user_currency
     = f.hidden_field :time_zone, :value => @user_time_zone
     = f.hidden_field :country, :value => @user_country

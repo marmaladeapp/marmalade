@@ -28,7 +28,7 @@
                   - plan[:features].each do |feature|
                     = feature[:description]
                     %hr{:style => 'margin:10px 0;'}
-                  %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up
+                  %a.large.button.bg-strawberry-jam.plan-select{'data-open' => 'signUpForm', 'data-slug' => plan[:monthly][:id]} Sign up
               .flippable-back
                 %article.plan.burnt-toast.bg-ice-cream
                   %header.plan-header.bg-marmalade.burnt-toast{:style => 'padding:5px 15px;'}
@@ -42,7 +42,7 @@
                   - plan[:features].each do |feature|
                     = feature[:description]
                     %hr{:style => 'margin:10px 0;'}
-                  %a.large.button.bg-strawberry-jam{'data-open' => 'signUpForm'} Sign up
+                  %a.large.button.bg-strawberry-jam.plan-select{'data-open' => 'signUpForm', 'data-slug' => plan[:yearly][:id]} Sign up
 
         - if !plan[:monthly].present? && !plan[:yearly].present?
           .flippable-container

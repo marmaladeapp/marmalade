@@ -101,10 +101,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Light',
         :monthly => {
+          :id => Plan.find_by(:slug => 'early_adopter_light_monthly_gbp').id,
           :gb_price => 500,
           :us_price => 900
         },
         :yearly => {
+          :id => Plan.find_by(:slug => 'early_adopter_light_yearly_gbp').id,
           :gb_price => 4500,
           :us_price => 8100
         },
@@ -119,10 +121,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Pro',
         :monthly => {
+          :id => Plan.find_by(:slug => 'early_adopter_pro_monthly_gbp').id,
           :gb_price => 1500,
           :us_price => 2000
         },
         :yearly => {
+          :id => Plan.find_by(:slug => 'early_adopter_pro_yearly_gbp').id,
           :gb_price => 13500,
           :us_price => 18000
         },
@@ -137,10 +141,12 @@ class Site::HomeController < Site::SiteController
       {
         :name => 'Plus',
         :monthly => {
+          :id => Plan.find_by(:slug => 'early_adopter_plus_monthly_gbp').id,
           :gb_price => 2500,
           :us_price => 3500
         },
         :yearly => {
+          :id => Plan.find_by(:slug => 'early_adopter_plus_yearly_gbp').id,
           :gb_price => 22500,
           :us_price => 31500
         },
