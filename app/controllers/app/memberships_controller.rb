@@ -76,7 +76,7 @@ class App::MembershipsController < App::AppController
       end
     end
     unless params[:resource_id] || params[:group_id]
-      if @membership.member.home.present?
+      if @membership.member && @membership.member.home.present?
         ## Should rescue us from assigning secondary households.
         redirect_to user_home_path(@user) and return
       end

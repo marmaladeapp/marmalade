@@ -34,6 +34,6 @@
           %li
             = f.text_field :zip, {:placeholder => 'Zip/Postcode'}
           %li.with-dropdown
-            = f.country_select :country, priority_countries: ["GB", "US"], format: :with_country_code, :include_blank => true
+            = f.country_select :country, priority_countries: ["GB", "US"], :include_blank => true, :prompt => 'Country'
 
       %button.button.expanded.bg-blueberry Save

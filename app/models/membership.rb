@@ -7,6 +7,9 @@ class Membership < ActiveRecord::Base
   belongs_to :collective, polymorphic: true
   belongs_to :member, polymorphic: true
 
+  validates_presence_of :member, unless: Proc.new { |membership| collective.present? }
+  validates_presence_of :collective, unless: Proc.new { |membership| member.present? }
+
   after_create :create_contact
   after_destroy :destroy_orphans
 
