@@ -33,7 +33,7 @@ class Ability
           membership.collective.user == user
         end
         can :manage, Ownership do |ownership|
-          ownership.owner == user || ownership.owner.user == user
+          ownership.owner == user || (ownership.owner && ownership.owner.user == user) || ownership.owner == nil
         end
 
         can :manage, Finances::Ledger do |ledger|
