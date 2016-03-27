@@ -69,7 +69,7 @@ class App::Finances::PaymentsController < App::AppController
     end
     @payment.ledger_balance = @ledger.value - @payment.value
 
-    if @payment.save
+    if ((@ledger.value >= 0 && @payment.ledger_balance >= 0) || (@ledger.value <= 0 && @payment.ledger_balance <= 0)) && @payment.save
       @context.abstracts.create(:item => @ledger, :sub_item => @payment, :user => current_user, :action => 'pay_ledger', :value => @payment.value, :currency => @payment.currency)
 
       if @ledger.counterledger_id
