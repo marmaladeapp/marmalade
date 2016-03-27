@@ -1,0 +1,22 @@
+%header.small-12.columns.bg-ice-cream{:style => 'padding-top:10px;'}
+  %a.burnt-toast{:href => root_path}
+    %h1.pacifico.text-center Marmalade
+
+.small-12.medium-8.medium-offset-2.large-4.large-offset-4.columns{:style => 'padding-top:10px;'}
+  .callout
+    %h3.text-center Feedback
+    = form_for @email, url: feedback_path do |f|
+      .form-group
+        = f.label :name
+        = f.text_field :name, :value => (current_user.full_name if current_user) 
+      .form-group
+        = f.label :email
+        = f.email_field :email, :value => (current_user.email if current_user)
+      .form-group
+        = f.label :subject
+        = f.text_field :subject
+      .form-group
+        = f.label :message
+        = f.text_area :message
+      .actions
+        = f.submit 'Send message'

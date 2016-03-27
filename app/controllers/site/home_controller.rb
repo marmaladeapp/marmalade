@@ -159,5 +159,6 @@ class Site::HomeController < Site::SiteController
   def privacy_policy
   end
   def feedback
+    @email = Email.new()
   end
 end

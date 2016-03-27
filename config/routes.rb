@@ -128,6 +128,7 @@ Rails.application.routes.draw do
     get '/terms-of-service', to: "home#terms_of_service"
     get '/privacy-policy', to: "home#privacy_policy"
     get '/feedback', to: "home#feedback"
+    post '/feedback', to: "feedback#create"
   end
   
   scope module: 'app' do
