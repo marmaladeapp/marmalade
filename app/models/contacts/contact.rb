@@ -3,6 +3,8 @@ class Contacts::Contact < ActiveRecord::Base
   default_scope { order('lower(name)') }
   include Contactable
   belongs_to :context, polymorphic: true
+  
+  validates :name, :presence => true
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_many :address_books, :through => :owners, :source => :owner, :source_type => 'Contacts::AddressBook'

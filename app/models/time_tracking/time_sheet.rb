@@ -4,6 +4,8 @@ class TimeTracking::TimeSheet < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   belongs_to :user
 
+  validates :name, :presence => true
+
   has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'
   has_many :timers, :through => :ownerships, :source => :item, :source_type => 'TimeTracking::Timer'
 

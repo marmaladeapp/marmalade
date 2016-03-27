@@ -5,6 +5,7 @@ class Group < ActiveRecord::Base
 
   belongs_to :user, :inverse_of => :subscriber_groups, counter_cache: true
 
+  validates :name, :presence => true
 
   has_many :ownerships, :as => :owner, :dependent => :destroy
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'

@@ -3,6 +3,7 @@ class Household < ActiveRecord::Base
 
   include HasModules
   include Abstractable
+  validates :name, :presence => true
 
   belongs_to :user, :inverse_of => :subscriber_households, counter_cache: true
   has_many :ownerships, :as => :owner, :dependent => :destroy

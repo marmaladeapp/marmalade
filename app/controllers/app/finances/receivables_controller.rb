@@ -172,6 +172,15 @@ class App::Finances::ReceivablesController < App::AppController
         redirect_to group_receivable_path(@context,@ledger)
       end
     else
+      if @resource.class.name == "Household"
+        @ownerships = []
+        @resource.members.each do |member|
+          @ownerships << Ownership.new(:owner => member, :item => @ledger, :equity => BigDecimal.new(100) / @resource.members.count, :user_id => @resource.user.id)
+        end
+      else
+        @ownerships = []
+        @ownerships << Ownership.new(:owner => @resource, :item => @ledger, :equity => BigDecimal.new(100), :user_id => @resource.class.name == "User" ? @resource.id : @resource.user.id)
+      end
       render 'new'
     end
   end

@@ -12,6 +12,7 @@ class Calendar::Calendar < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner
 
+  validates :name, :presence => true
   validates :slug, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
 
   def slug_candidates

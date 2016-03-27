@@ -3,6 +3,9 @@ class Finances::Ledger < ActiveRecord::Base
   has_many :ownerships, :dependent => :destroy, :as => :owner
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
 
+  validates :name, :presence => true
+  validates :starting_value, :numericality => {:other_than => 0}
+
   belongs_to :context, polymorphic: true
   belongs_to :counterparty, polymorphic: true
 

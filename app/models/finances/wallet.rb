@@ -3,6 +3,8 @@ class Finances::Wallet < ActiveRecord::Base
   include Abstractable
   belongs_to :user, :inverse_of => :subscriber_wallets, counter_cache: true
 
+  validates :name, :presence => true
+
   has_many :ownerships, :dependent => :destroy, :as => :owner
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
 

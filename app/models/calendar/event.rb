@@ -2,6 +2,7 @@ class Calendar::Event < ActiveRecord::Base
   include Abstractable
   default_scope { order(starting_at: :asc) }
 
+  validates :name, :presence => true
   belongs_to :context, polymorphic: true
   belongs_to :item, polymorphic: true
   belongs_to :project

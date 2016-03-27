@@ -4,4 +4,6 @@ class Finances::Payment < ActiveRecord::Base
   belongs_to :wallet
   belongs_to :ledger
   belongs_to :project
+
+  validates :value, :numericality => {:other_than => 0}
 end

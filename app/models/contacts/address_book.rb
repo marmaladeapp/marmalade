@@ -11,6 +11,7 @@ class Contacts::AddressBook < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner
 
+  validates :name, :presence => true
   validates :slug, format: { without: /\A(?:address-books)\Z/i, message: "restricted." }
   validates :slug, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
 

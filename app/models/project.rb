@@ -33,6 +33,7 @@ class Project < ActiveRecord::Base
 
   friendly_id :slug_candidates, use: [:slugged, :scoped, :finders], :scope => :owner
 
+  validates :name, :presence => true
   validates :slug, format: { without: /\A(?:new)\Z/i, message: "restricted." }
 
   def slug_candidates
