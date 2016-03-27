@@ -42,6 +42,7 @@ gem "braintree"
 
 gem "ancestry"
 gem "ice_cube"
+#gem "recurring_select"
 
 gem 'money-rails'
 gem 'countries'
