@@ -28,6 +28,27 @@ class App::Projects::Messages::MessagesController < App::AppController
   end
 
   def show
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      @context = @resource
+      authorize! :show, @context, :message => ""
+      @project =  @resource.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      authorize! :show, @context, :message => ""
+      @project = @household.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      authorize! :show, @context, :message => ""
+      @project = @group.projects.find(params[:project_id])
+      authorize! :update, @project, :message => ""
+    end
+    @message = @project.messages.find(params[:id])
   end
 
   def new
