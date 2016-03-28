@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325200429) do
+ActiveRecord::Schema.define(version: 20160328005400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -441,10 +441,17 @@ ActiveRecord::Schema.define(version: 20160325200429) do
     t.datetime "updated_at",                  null: false
     t.integer  "intervals_count", default: 0
     t.integer  "project_id"
+    t.string   "repeats"
+    t.text     "occuring_on",                              array: true
+    t.datetime "scheduled_at"
+    t.integer  "frequency"
   end
 
   add_index "time_timers", ["context_type", "context_id"], name: "index_time_timers_on_context_type_and_context_id", using: :btree
+  add_index "time_timers", ["frequency"], name: "index_time_timers_on_frequency", using: :btree
+  add_index "time_timers", ["occuring_on"], name: "index_time_timers_on_occuring_on", using: :btree
   add_index "time_timers", ["project_id"], name: "index_time_timers_on_project_id", using: :btree
+  add_index "time_timers", ["repeats"], name: "index_time_timers_on_repeats", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                     default: "",      null: false
