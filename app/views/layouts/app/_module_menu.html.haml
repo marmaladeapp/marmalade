@@ -56,6 +56,10 @@
       %span.show-for-large Time
   %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_finances) ? 'active' : ''}
     %a{'ui-sref' => "finances", :href => context_finances}
+      %i.fa.fa-archive.fa-fw
+      %span.show-for-large Inventory
+  %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_finances) ? 'active' : ''}
+    %a{'ui-sref' => "finances", :href => context_finances}
       %i.fa.fa-usd.fa-fw
       %span.show-for-large Finances
   %li{'ui-sref-active' => "is-active", :class => request.path.starts_with?(context_projects) ? 'active' : ''}

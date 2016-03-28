@@ -36,4 +36,19 @@
           %li
             = f.text_area :description, {:placeholder => 'Description'}
 
+      - if false
+        / Save this. We can do ALL of the things we want with scheduling and repetition, if we load by query then iterate to find substantiating events.
+        %section.block-list
+          %header Scheduled for
+          %ul
+            %li.with-dropdown.clearfix
+              = f.datetime_select :scheduled_at, {:datetime_separator => '<div class="float-left" style="width:16.666%;padding:1px;"></div>', :time_separator => '', :prompt => true }, {:class => 'small-2 float-left'}
+        %section.block-list
+          %header Repeat
+          %ul
+            %li
+              = f.text_field :repeats, {:placeholder => 'Frequency'}
+            %li
+              = f.text_area :occuring_on, {:placeholder => 'Probably need JS implementation here.'}
+
       %button.button.expanded.bg-blueberry Save
