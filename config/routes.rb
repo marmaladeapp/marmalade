@@ -59,6 +59,21 @@ Rails.application.routes.draw do
         resources :timers, path: ''
       end
     end
+    scope module: 'inventory' do
+      resources :items, path: '/inventory', only: [:index]
+      constraints(id: /\d+/) do
+        resources :items, only: [:create], as: 'items_create'
+        resources :items, path: '/inventory/items', except: [:index,:create] do
+          get 'containers', to: 'items#containers'
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :containers, path: '/inventory', except: [:index]
+      end
+      scope '/inventory/:inventory_id', as: 'inventory' do
+        resources :items, path: ''
+      end
+    end
     scope module: 'finances' do
       get '/finances', to: 'finances#index', as: 'finances'
       resources :wallets, path: '/finances/wallets' do
@@ -185,6 +200,21 @@ Rails.application.routes.draw do
       end
       scope '/time/:time_sheet_id', as: 'time_sheet' do
         resources :timers, path: ''
+      end
+    end
+    scope module: 'inventory' do
+      constraints(id: /\d+/) do
+        resources :items, only: [:create]
+        resources :items, path: '/inventory', only: [:index], as: 'items'
+        resources :items, path: '/inventory/items', except: [:index,:create] do
+          get 'containers', to: 'items#containers'
+        end
+      end
+      constraints(id: /[0-9a-z\-\_]+/i) do
+        resources :containers, path: '/inventory', except: [:index]
+      end
+      scope '/inventory/:container_id', as: 'container' do
+        resources :items, path: ''
       end
     end
     scope '/finances', module: 'finances' do

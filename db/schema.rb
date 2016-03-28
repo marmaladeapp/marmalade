@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328005400) do
+ActiveRecord::Schema.define(version: 20160328213751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,6 +279,37 @@ ActiveRecord::Schema.define(version: 20160328005400) do
 
   add_index "households", ["user_id"], name: "index_households_on_user_id", using: :btree
 
+  create_table "inventory_containers", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "slug"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "inventory_containers", ["owner_type", "owner_id"], name: "index_inventory_containers_on_owner_type_and_owner_id", using: :btree
+  add_index "inventory_containers", ["user_id"], name: "index_inventory_containers_on_user_id", using: :btree
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "context_id"
+    t.string   "context_type"
+    t.integer  "project_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.decimal  "starting_value"
+    t.decimal  "value"
+    t.decimal  "ending_value"
+    t.string   "currency"
+  end
+
+  add_index "inventory_items", ["context_type", "context_id"], name: "index_inventory_items_on_context_type_and_context_id", using: :btree
+  add_index "inventory_items", ["project_id"], name: "index_inventory_items_on_project_id", using: :btree
+
   create_table "item_wallets", force: :cascade do |t|
     t.integer  "item_id"
     t.string   "item_type"
@@ -534,6 +565,8 @@ ActiveRecord::Schema.define(version: 20160328005400) do
   add_foreign_key "finances_payments", "projects"
   add_foreign_key "finances_wallets", "users"
   add_foreign_key "households", "users"
+  add_foreign_key "inventory_containers", "users"
+  add_foreign_key "inventory_items", "projects"
   add_foreign_key "item_wallets", "finances_wallets"
   add_foreign_key "memberships", "users"
   add_foreign_key "messages_messages", "projects"
