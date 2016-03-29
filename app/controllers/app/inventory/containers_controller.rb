@@ -31,20 +31,20 @@ class App::Inventory::ContainersController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @container =  @resource.containers.find(params[:id])
-      @items = @container.items
+      @items = @container.inventory_items
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
       @container = @household.containers.find(params[:id])
-      @items = @container.items
+      @items = @container.inventory_items
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       authorize! :show, @group, :message => ""
       @container = @group.containers.find(params[:id])
-      @items = @container.items
+      @items = @container.inventory_items
     end
   end
 

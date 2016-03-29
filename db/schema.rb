@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328213751) do
+ActiveRecord::Schema.define(version: 20160329024035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,6 +305,7 @@ ActiveRecord::Schema.define(version: 20160328213751) do
     t.decimal  "value"
     t.decimal  "ending_value"
     t.string   "currency"
+    t.integer  "quantity"
   end
 
   add_index "inventory_items", ["context_type", "context_id"], name: "index_inventory_items_on_context_type_and_context_id", using: :btree

@@ -70,7 +70,7 @@ Rails.application.routes.draw do
       constraints(id: /[0-9a-z\-\_]+/i) do
         resources :containers, path: '/inventory', except: [:index]
       end
-      scope '/inventory/:inventory_id', as: 'inventory' do
+      scope '/inventory/:container_id', as: 'container' do
         resources :items, path: ''
       end
     end

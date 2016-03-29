@@ -96,7 +96,7 @@ class Ownership < ActiveRecord::Base
   private
 
   def create_ancestry
-    if (["Contacts::Contact","Calendar::Event","TimeTracking::Timer"] & item.class.name.lines.to_a).empty?
+    if (["Contacts::Contact","Calendar::Event","TimeTracking::Timer","Inventory::Item"] & item.class.name.lines.to_a).empty?
       if owner.owners.any?
         owner.owners.each do |ownership|
           ownership.ancestries.each do |ancestry|
@@ -133,7 +133,7 @@ class Ownership < ActiveRecord::Base
         end
       end
     end
-    unless self.item.class.name == "User" || self.item.class.name == "Business"
+    if self.item.class.name == "Finances::Wallet" || self.item.class.name == "Finances::Ledger"
       self.item.destroy if self.item.owners.empty?
     end
   end

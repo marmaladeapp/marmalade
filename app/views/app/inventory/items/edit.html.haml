@@ -1,0 +1,32 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @item]
+    - url = resource_item_path(@resource,@item)
+  - when 'Household'
+    - path_array = [@resource, @item]
+    - url = user_home_item_path(@user,@item)
+  - when 'Group'
+    - path_array = [@resource, @item]
+    - url = group_item_path(@resource,@item)
+- else
+  - path_array = @item
+  - url = item_path(@item)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @item.name + " - Edit"
+
+    = form_for path_array, :url => url do |f|
+
+      %section.block-list
+        %header Item
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+
+      %button.button.expanded.bg-blueberry Save
+      %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}
+        %i.fa.fa-trash
+        Delete

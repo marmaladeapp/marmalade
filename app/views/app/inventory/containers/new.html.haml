@@ -1,0 +1,29 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @container]
+    - url = resource_containers_path(@resource)
+  - when 'Household'
+    - path_array = [@resource, @container]
+    - url = user_home_containers_path(@user)
+  - when 'Group'
+    - path_array = [@resource, @container]
+    - url = group_containers_path(@resource)
+- else
+  - path_array = @container
+  - url = containers_path
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3 New container
+    = form_for path_array, :url => url do |f|
+      %section.block-list
+        %header Container
+        %ul
+          %li
+            = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.text_area :description, {:placeholder => 'Description'}
+
+      %button.button.expanded.bg-blueberry Save

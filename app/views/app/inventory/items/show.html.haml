@@ -1,0 +1,39 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_item = edit_group_item_path(@context,@item)
+    - add_container = group_item_containers_path(@context,@item)
+  - else
+    - edit_item = @context.class.name == "Household" ? edit_user_home_item_path(current_user,@item) : edit_resource_item_path(@resource,@item)
+    - add_container = @context.class.name == "Household" ? user_home_item_containers_path(current_user,@item) : resource_item_containers_path(@resource,@item)
+
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %section.block-list
+      %header Containers
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @item.containers.each do |container|
+            - if container.owner.class.name == "Group"
+              - canonical_container = group_container_path(container.owner,container)
+            - else
+              - canonical_container = container.owner.class.name == "Household" ? user_home_container_path(current_user,container) : resource_container_path(container.owner,container)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_container}
+                %strong= container.name
+              - unless container == @item.containers.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+          .float-left.v-align{:style => ''}
+            .align-center.text-center{:style => 'width:40px;'}
+              %a.burnt-toast{:href => add_container}
+                %i.fa.fa-plus-circle.fa-lg
+
+
+  .grid-content.small-12
+    %h3
+      = @item.name
+      %a.olive{:href => edit_item}
+        %i.fa.fa-fw.fa-pencil
+

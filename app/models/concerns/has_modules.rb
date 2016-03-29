@@ -9,6 +9,8 @@ module HasModules
     has_many :projects, :as => :owner, :dependent => :destroy, :class_name => 'Project'
     has_many :time_sheets, :as => :owner, :dependent => :destroy, :class_name => 'TimeTracking::TimeSheet'
 
+    has_many :containers, :as => :owner, :dependent => :destroy, :class_name => 'Inventory::Container'
+
     has_many :balance_sheets, :as => :owner, :dependent => :destroy, :class_name => 'Finances::BalanceSheet'
     has_many :wallets, :through => :ownerships, :source => :item, :source_type => 'Finances::Wallet'
     has_many :ledgers, :through => :ownerships, :source => :item, :source_type => 'Finances::Ledger'
@@ -19,6 +21,8 @@ module HasModules
     has_many :events, :as => :context, :dependent => :destroy, :class_name => 'Calendar::Event'
 
     has_many :timers, :as => :context, :dependent => :destroy, :class_name => 'TimeTracking::Timer'
+
+    has_many :inventory_items, :as => :context, :dependent => :destroy, :class_name => 'Inventory::Item'
 
     has_many :abstracts, :as => :context, :dependent => :destroy
 

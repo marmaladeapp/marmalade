@@ -1,0 +1,49 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @item]
+    - url = resource_item_path(@resource,@item)
+  - when 'Household'
+    - path_array = [@resource, @item]
+    - url = user_home_item_path(@user,@item)
+  - when 'Group'
+    - path_array = [@resource, @item]
+    - url = group_item_path(@resource,@item)
+- else
+  - path_array = @item
+  - url = item_path(@item)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @item.name
+
+  .grid-content.small-12
+    %section.block-list
+      %header Containers
+      %ul
+        %li.clearfix{:style => 'padding:10px;'}
+          - @containers.each do |container|
+            - if container.owner.class.name == "Group"
+              - canonical_container = group_container_path(container.owner,container)
+            - else
+              - canonical_container = container.owner.class.name == "Household" ? user_home_container_path(current_user,container) : resource_container_path(container.owner,container)
+            .float-left{:style => ''}
+              %a.burnt-toast{:href => canonical_container}
+                %strong= container.name
+              - unless container == @item.containers.last
+                %span{:style => 'padding:0 10px 0 7px;'}
+                  |
+
+    = form_for path_array, :url => url do |f|
+
+      = f.fields_for :owners, @item.owners.build do |ff|
+        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? @resource.id : @resource.user.id
+        %section.block-list
+          %header Add to
+          %ul
+            %li.with-dropdown
+              = ff.grouped_collection_select :global_owner, [@resource.containers.where.not(:id => @containers.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:container_id] ? @container.to_global_id : ''}
+
+      %button.button.expanded.bg-blueberry Save

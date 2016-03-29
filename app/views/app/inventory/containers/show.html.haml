@@ -1,0 +1,27 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - edit_container = edit_group_container_path(@context,@container)
+    - new_item = new_group_container_item_path(@context,@container)
+  - else
+    - edit_container = @context.class.name == "Household" ? edit_user_home_container_path(current_user,@container) : edit_resource_container_path(@resource,@container)
+    - new_item = @context.class.name == "Household" ? new_user_home_container_item_path(current_user,@container) : new_resource_container_item_path(@resource,@container)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3
+      = @container.name
+      %a.olive{:href => edit_container}
+        %i.fa.fa-fw.fa-pencil
+    %p= @container.description
+    %a.button.bg-blueberry{:href => new_item} New item
+
+  .grid-content.small-12
+    - @items.group_by(&:first_letter).each do |first_letter, items|
+      %h4.clearfix
+        %span.silver.pull-left= first_letter
+      - if items.any?
+        %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/inventory/items/item', collection: items
+      - else
+        %p 
+          %em.silver No records

@@ -5,7 +5,7 @@ class Inventory::Container < ActiveRecord::Base
   belongs_to :user
 
   has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'
-  has_many :items, :through => :ownerships, :source => :item, :source_type => 'Inventory::Item'
+  has_many :inventory_items, :through => :ownerships, :source => :item, :source_type => 'Inventory::Item'
 
   extend FriendlyId
 

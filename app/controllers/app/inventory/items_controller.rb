@@ -6,20 +6,20 @@ class App::Inventory::ItemsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @containers =  @resource.containers
-      @items =  @resource.items
+      @items =  @resource.inventory_items
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
       @containers = @household.containers
-      @items = @household.items
+      @items = @household.inventory_items
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
       @containers = @group.containers
-      @items = @group.items
+      @items = @group.inventory_items
     else
       @containers = ::Inventory::Container.where(
         '(owner_type = ? AND owner_id = ?) OR 
@@ -49,20 +49,20 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @item =  @context.items.find(params[:id])
+      @item =  @context.inventory_items.find(params[:id])
       @containers =  @item.containers
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
       @containers = @item.containers
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
       @containers = @item.containers
     end
   end
@@ -82,8 +82,8 @@ class App::Inventory::ItemsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
     end
-    if params[:address_book_id]
-      @address_book = @resource.containers.find(params[:address_book_id])
+    if params[:container_id]
+      @container = @resource.containers.find(params[:container_id])
     end
     @item = ::Inventory::Item.new
   end
@@ -93,20 +93,20 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @item =  @context.items.find(params[:id])
+      @item =  @context.inventory_items.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
     end
   end
 
@@ -127,7 +127,7 @@ class App::Inventory::ItemsController < App::AppController
     end
 
 
-    @item = @resource.items.new(item_params)
+    @item = @resource.inventory_items.new(item_params)
     if @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'create')
       if params[:resource_id]
@@ -147,20 +147,20 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @item =  @context.items.find(params[:id])
+      @item =  @context.inventory_items.find(params[:id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
     end
     if @item.update_attributes(item_params)
       if params[:resource_id]
@@ -180,7 +180,7 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @item =  @context.items.find(params[:id])
+      @item =  @context.inventory_items.find(params[:id])
       @item.destroy
       redirect_to resource_items_path(@resource)
     elsif params[:user_id]
@@ -189,7 +189,7 @@ class App::Inventory::ItemsController < App::AppController
       @context = @household
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
       @item.destroy
       redirect_to user_home_items_path(@user)
     elsif params[:group_id]
@@ -197,7 +197,7 @@ class App::Inventory::ItemsController < App::AppController
       @context = @group
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:id])
+      @item = @context.inventory_items.find(params[:id])
       @item.destroy
       redirect_to group_items_path(@group)
     end
@@ -208,20 +208,20 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @item =  @context.items.find(params[:item_id])
+      @item =  @context.inventory_items.find(params[:item_id])
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:item_id])
+      @item = @context.inventory_items.find(params[:item_id])
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       @resource = @context
       authorize! :show, @resource, :message => ""
-      @item = @context.items.find(params[:item_id])
+      @item = @context.inventory_items.find(params[:item_id])
     end
     @containers = @item.containers
   end
@@ -229,6 +229,6 @@ class App::Inventory::ItemsController < App::AppController
   private
 
   def item_params
-    params.require(:inventory_item).permit(:name,:global_item,:owners_attributes => [:user_id,:global_owner])
+    params.require(:inventory_item).permit(:name,:quantity,:global_item,:owners_attributes => [:user_id,:global_owner])
   end
 end
