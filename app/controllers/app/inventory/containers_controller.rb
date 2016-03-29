@@ -146,7 +146,7 @@ class App::Inventory::ContainersController < App::AppController
         redirect_to group_container_path(@context,@container)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

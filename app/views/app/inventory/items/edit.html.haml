@@ -25,6 +25,8 @@
         %ul
           %li
             = f.text_field :name, {:placeholder => 'Name'}
+          %li
+            = f.number_field :quantity, {:step => 1, :placeholder => 'Quantity', :min => 0}
 
       %button.button.expanded.bg-blueberry Save
       %a.button.small.hollow.strawberry-jam{:href => url, :rel => 'nofollow', 'data-confirm' => "Are you sure?", 'data-method' => 'delete'}

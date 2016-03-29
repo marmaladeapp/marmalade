@@ -3,8 +3,9 @@ class Inventory::Item < ActiveRecord::Base
   default_scope { order('lower(name)') }
   belongs_to :context, polymorphic: true
   belongs_to :project
-  
+
   validates :name, :presence => true
+  validates :quantity, :presence => true
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_many :containers, :through => :owners, :source => :owner, :source_type => 'Inventory::Container'

@@ -171,7 +171,7 @@ class App::Inventory::ItemsController < App::AppController
         redirect_to group_item_path(@context,@item)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 
