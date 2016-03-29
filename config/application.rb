@@ -17,7 +17,8 @@ Bundler.require(*Rails.groups)
 
 module Marmalade
   class Application < Rails::Application
-      
+    VERSION = "0.0.1"
+
     config.i18n.fallbacks = [:en]
 
     config.middleware.insert_before 0, "Rack::Cors" do
