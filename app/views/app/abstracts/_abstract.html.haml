@@ -47,6 +47,10 @@
       - canonical_link = resource_timer_path(abstract.context,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = resource_timer_path(abstract.context,abstract.item.timer)
+    - when 'Inventory::Container'
+      - canonical_link = resource_container_path(abstract.context,abstract.item)
+    - when 'Inventory::Item'
+      - canonical_link = resource_item_path(abstract.context,abstract.item)
     - when 'Finances::Wallet'
       - canonical_link = resource_wallet_path(abstract.context,abstract.item)
     - when 'Finances::Ledger'
@@ -108,6 +112,10 @@
       - canonical_link = group_timer_path(abstract.context,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = group_timer_path(abstract.context,abstract.item.timer)
+    - when 'Inventory::Container'
+      - canonical_link = group_container_path(abstract.context,abstract.item)
+    - when 'Inventory::Item'
+      - canonical_link = group_item_path(abstract.context,abstract.item)
     - when 'Finances::Wallet'
       - canonical_link = group_wallet_path(abstract.context,abstract.item)
     - when 'Finances::Ledger'
@@ -167,6 +175,10 @@
       - canonical_link = user_home_timer_path(current_user,abstract.item)
     - when 'TimeTracking::Interval'
       - canonical_link = user_home_timer_path(current_user,abstract.item.timer)
+    - when 'Inventory::Container'
+      - canonical_link = user_home_container_path(current_user,abstract.item)
+    - when 'Inventory::Item'
+      - canonical_link = user_home_item_path(current_user,abstract.item)
     - when 'Finances::Wallet'
       - canonical_link = user_home_wallet_path(current_user,abstract.item)
     - when 'Finances::Ledger'
@@ -302,6 +314,22 @@
                 started #{abstract.item.timer.name}
               - when 'update'
                 stopped #{abstract.item.timer.name}
+            - when 'Inventory::Container'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
+            - when 'Inventory::Item'
+              - case abstract.action
+              - when 'create'
+                = abstract.action + 'd a new'
+                = /[a-z]+\z/i.match(abstract.item_type)
+              - when 'update'
+                = abstract.action + 'd'
+                %em #{abstract.item.name}
             - when 'Finances::Wallet'
               - case abstract.action
               - when 'create'
@@ -425,6 +453,14 @@
                     = format("%02d:%02d:%02d", hours, minutes, seconds)
                   - else
                     = timer(abstract.item.timer.intervals.where(:stopped_at => nil).first.started_at - abstract.item.timer.elapsed_time.seconds)
+              - when 'Inventory::Container'
+                %h3.text-center
+                  %i.fa.fa-cubes
+                  = abstract.item.name
+              - when 'Inventory::Item'
+                %h5.text-center
+                  %i.fa.fa-cube
+                  %strong= abstract.item.name
               - when 'Finances::Wallet'
                 - if abstract.sub_item
                   %h4.text-center= abstract.item.name

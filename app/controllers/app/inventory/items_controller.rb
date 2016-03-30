@@ -229,6 +229,6 @@ class App::Inventory::ItemsController < App::AppController
   private
 
   def item_params
-    params.require(:inventory_item).permit(:name,:quantity,:global_item,:owners_attributes => [:user_id,:global_owner])
+    params.require(:inventory_item).permit(:name,:quantity,:consumable,:saleable,:global_item,:owners_attributes => [:user_id,:global_owner])
   end
 end

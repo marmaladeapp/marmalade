@@ -146,7 +146,7 @@ class App::Time::TimeSheetsController < App::AppController
         redirect_to group_time_sheet_path(@context,@time_sheet)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

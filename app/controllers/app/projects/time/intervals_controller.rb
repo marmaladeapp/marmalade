@@ -116,7 +116,7 @@ class App::Projects::Time::IntervalsController < App::AppController
         redirect_to group_project_timer_path(@resource,@project,@timer)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

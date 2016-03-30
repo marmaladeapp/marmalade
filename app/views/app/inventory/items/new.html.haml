@@ -36,4 +36,16 @@
           %li
             = f.number_field :quantity, {:step => 1, :placeholder => 'Quantity', :min => 0}
 
+      %section.block-list
+        %header Attributes
+        %ul
+          %li
+            = f.check_box :consumable
+            %label{:for => 'inventory_item_consumable'} Consumable
+          %li
+            = f.check_box :saleable
+            %label{:for => 'inventory_item_saleable'} For sale
+
+
       %button.button.expanded.bg-blueberry Save
+

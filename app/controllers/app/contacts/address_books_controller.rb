@@ -146,7 +146,7 @@ class App::Contacts::AddressBooksController < App::AppController
         redirect_to group_address_book_path(@context,@address_book)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

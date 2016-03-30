@@ -103,7 +103,7 @@ class App::Contacts::AddressesController < App::AppController
         redirect_to group_contact_path(@context,@contact)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

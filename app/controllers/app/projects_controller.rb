@@ -141,7 +141,7 @@ class App::ProjectsController < App::AppController
         redirect_to group_project_path(@resource,@project)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

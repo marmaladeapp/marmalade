@@ -166,7 +166,7 @@ class App::Calendar::CalendarsController < App::AppController
         redirect_to group_calendar_path(@context,@calendar)
       end
     else
-      render 'new'
+      render 'edit'
     end
   end
 

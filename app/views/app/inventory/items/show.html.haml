@@ -37,3 +37,33 @@
       %a.olive{:href => edit_item}
         %i.fa.fa-fw.fa-pencil
 
+  .grid-content.small-12
+
+  .grid-content.small-10.small-offset-1.medium-8.medium-offset-2.large-6.large-offset-3
+    .card{:style => 'margin-top:16px;'}
+      .card-section{:style => 'padding:6px 16px;'}
+        %h3.text-center
+          Quantity:
+          %strong= @item.quantity
+        - if @item.consumable || @item.saleable
+          %span.inline-label
+            %input{:type => 'number', :min => 0}
+            - if @item.consumable
+              - if false
+                %a.button.bg-green{:href => '#'}
+                  %i.fa.fa-fw.fa-plus
+              %a.button.bg-burnt-toast{:href => '#'}
+                %i.fa.fa-fw.fa-minus
+            - elsif @item.saleable
+              %a.button.bg-green{:href => '#'}
+                Buy
+              %a.button.bg-strawberry-jam{:href => '#'}
+                Sell
+          - if @item.consumable && @item.saleable
+            %ul.button-group.expand
+              %li
+                %a.button.bg-green{:href => '#', :style => ''} Purchase
+              %li
+                %a.button.bg-strawberry-jam{:href => '#', :style => ''} Sell
+        - if !@item.saleable
+          %a.button.expand.bg-green{:href => '#', :style => ''} New purchase

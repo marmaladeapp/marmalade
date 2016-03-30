@@ -29,11 +29,11 @@
           - canonical_link = group_container_path(container.owner,container)
         %a{:href => canonical_link}
           .card{:style => 'height:250px;'}
-            .card-section.bg-burnt-toast
+            .card-section.bg-purple
               %h4.ice-cream.clearfix{:style => 'margin-top:0;margin-bottom:0;'}
                 %span.float-left{:style => 'width:80%;overflow:hidden;'}= truncate(container.name, length: 12)
                 %span.float-right
-                  %i.fa.fa-book
+                  %i.fa.fa-cubes
             .card-divider.bg-ice-cream.burnt-toast
               = truncate(container.owner.name, length: 15)
             .card-section
