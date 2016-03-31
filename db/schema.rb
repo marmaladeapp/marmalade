@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329050114) do
+ActiveRecord::Schema.define(version: 20160331035324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -299,19 +299,39 @@ ActiveRecord::Schema.define(version: 20160329050114) do
     t.integer  "context_id"
     t.string   "context_type"
     t.integer  "project_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.decimal  "starting_value"
-    t.decimal  "value"
-    t.decimal  "ending_value"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.decimal  "starting_value",      default: 0.0
+    t.decimal  "value",               default: 0.0
+    t.decimal  "ending_value",        default: 0.0
     t.string   "currency"
-    t.integer  "quantity"
+    t.integer  "quantity",            default: 0
     t.boolean  "consumable"
     t.boolean  "saleable"
+    t.decimal  "unit_starting_value", default: 0.0
+    t.decimal  "unit_value",          default: 0.0
+    t.decimal  "unit_ending_value",   default: 0.0
+    t.integer  "total_quantity",      default: 0
+    t.integer  "total_sold",          default: 0
   end
 
   add_index "inventory_items", ["context_type", "context_id"], name: "index_inventory_items_on_context_type_and_context_id", using: :btree
   add_index "inventory_items", ["project_id"], name: "index_inventory_items_on_project_id", using: :btree
+
+  create_table "inventory_stock_sheets", force: :cascade do |t|
+    t.integer  "inventory_item_id"
+    t.integer  "quantity"
+    t.integer  "quantity_change"
+    t.decimal  "unit_value"
+    t.decimal  "unit_value_change"
+    t.decimal  "total_value"
+    t.decimal  "total_value_change"
+    t.string   "currency"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "inventory_stock_sheets", ["inventory_item_id"], name: "index_inventory_stock_sheets_on_inventory_item_id", using: :btree
 
   create_table "item_wallets", force: :cascade do |t|
     t.integer  "item_id"
@@ -570,6 +590,7 @@ ActiveRecord::Schema.define(version: 20160329050114) do
   add_foreign_key "households", "users"
   add_foreign_key "inventory_containers", "users"
   add_foreign_key "inventory_items", "projects"
+  add_foreign_key "inventory_stock_sheets", "inventory_items"
   add_foreign_key "item_wallets", "finances_wallets"
   add_foreign_key "memberships", "users"
   add_foreign_key "messages_messages", "projects"

@@ -126,10 +126,19 @@ class App::Inventory::ItemsController < App::AppController
       @context = @resource
     end
 
-
+    params[:inventory_item][:starting_value] = BigDecimal.new(params[:inventory_item][:starting_value])
     @item = @resource.inventory_items.new(item_params)
-    if @item.save
+    unless (@item.quantity == 0 || @item.quantity == nil)
+      @item.unit_value = @item.starting_value / @item.quantity
+      @item.unit_starting_value = @item.unit_value
+      @item.value = @item.starting_value
+    end
+    @item.total_quantity = @item.quantity
+    @item.currency = @context.currency
+
+    if @item.quantity != 0 && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'create')
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity, :unit_value => @item.unit_value, :unit_value_change => @item.unit_value, :total_value => @item.value, :total_value_change => @item.value, :currency => @item.currency)
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -203,6 +212,163 @@ class App::Inventory::ItemsController < App::AppController
     end
   end
 
+  def consume
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @item =  @context.inventory_items.find(params[:item_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    end
+    if params[:commit] == 'consume'
+      @item.quantity = @item.quantity - params[:inventory_item][:consumption].to_i
+      @item.value = @item.value - (@item.unit_value * params[:inventory_item][:consumption].to_i)
+      if !(@item.quantity < 0) && @item.save
+        @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
+        @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_change => 0, :total_value => @item.value, :total_value_change => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+        if params[:resource_id]
+          redirect_to resource_item_path(@resource,@item)
+        elsif params[:user_id]
+          redirect_to user_home_item_path(@user,@item)
+        elsif params[:group_id]
+          redirect_to group_item_path(@context,@item)
+        end
+      else
+        if params[:resource_id]
+          redirect_to resource_item_path(@resource,@item)
+        elsif params[:user_id]
+          redirect_to user_home_item_path(@user,@item)
+        elsif params[:group_id]
+          redirect_to group_item_path(@context,@item)
+        end
+      end
+    else
+      case params[:commit]
+      when 'purchase'
+        render 'purchase'
+      when 'sell'
+        render 'sell'
+      end
+    end
+  end
+
+  def purchase
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @item =  @context.inventory_items.find(params[:item_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    end
+
+    params[:inventory_item][:purchase_value] = BigDecimal.new(params[:inventory_item][:purchase_value])
+    @item.starting_value = @item.starting_value + params[:inventory_item][:purchase_value].to_d
+    @item.quantity = @item.quantity + params[:inventory_item][:consumption].to_i
+    @item.total_quantity = @item.total_quantity + params[:inventory_item][:consumption].to_i
+    @item.unit_value = @item.starting_value / @item.total_quantity
+    @item.value = @item.value + params[:inventory_item][:purchase_value].to_d
+    @item.unit_starting_value = @item.starting_value / @item.total_quantity
+
+    if @item.save
+      @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.stock_sheets.last.quantity + @item.quantity, :unit_value => @item.unit_value, :unit_value_change =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_change =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      if params[:resource_id]
+        redirect_to resource_item_path(@resource,@item)
+      elsif params[:user_id]
+        redirect_to user_home_item_path(@user,@item)
+      elsif params[:group_id]
+        redirect_to group_item_path(@context,@item)
+      end
+    else
+      if params[:resource_id]
+        redirect_to resource_item_path(@resource,@item)
+      elsif params[:user_id]
+        redirect_to user_home_item_path(@user,@item)
+      elsif params[:group_id]
+        redirect_to group_item_path(@context,@item)
+      end
+    end
+  end
+
+  def sell
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @item =  @context.inventory_items.find(params[:item_id])
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      @context = @household
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      @context = @group
+      @resource = @context
+      authorize! :show, @resource, :message => ""
+      @item = @context.inventory_items.find(params[:item_id])
+    end
+
+    params[:inventory_item][:sale_value] = BigDecimal.new(params[:inventory_item][:sale_value])
+    @item.ending_value = @item.ending_value + params[:inventory_item][:sale_value].to_d
+    @item.quantity = @item.quantity - params[:inventory_item][:consumption].to_i
+
+    @item.total_sold = @item.total_sold + params[:inventory_item][:consumption].to_i
+    @item.value = @item.value - (@item.unit_value * params[:inventory_item][:consumption].to_i)
+
+    if @item.total_sold
+      @item.unit_ending_value = @item.ending_value / @item.total_sold
+    else
+      @item.unit_ending_value = @item.ending_value / params[:inventory_item][:consumption].to_i
+    end
+
+    if !(@item.quantity < 0) && @item.save
+      @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_change => 0, :total_value => @item.value, :total_value_change => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      if params[:resource_id]
+        redirect_to resource_item_path(@resource,@item)
+      elsif params[:user_id]
+        redirect_to user_home_item_path(@user,@item)
+      elsif params[:group_id]
+        redirect_to group_item_path(@context,@item)
+      end
+    else
+      if params[:resource_id]
+        redirect_to resource_item_path(@resource,@item)
+      elsif params[:user_id]
+        redirect_to user_home_item_path(@user,@item)
+      elsif params[:group_id]
+        redirect_to group_item_path(@context,@item)
+      end
+    end
+  end
+
   def containers
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
@@ -229,6 +395,6 @@ class App::Inventory::ItemsController < App::AppController
   private
 
   def item_params
-    params.require(:inventory_item).permit(:name,:quantity,:consumable,:saleable,:global_item,:owners_attributes => [:user_id,:global_owner])
+    params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:owners_attributes => [:user_id,:global_owner])
   end
 end

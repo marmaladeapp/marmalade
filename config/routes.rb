@@ -65,6 +65,9 @@ Rails.application.routes.draw do
         resources :items, only: [:create], as: 'items_create'
         resources :items, path: '/inventory/items', except: [:index,:create] do
           get 'containers', to: 'items#containers'
+          patch 'amend', to: 'items#consume'
+          patch 'purchase', to: 'items#purchase'
+          patch 'sell', to: 'items#sell'
         end
       end
       constraints(id: /[0-9a-z\-\_]+/i) do

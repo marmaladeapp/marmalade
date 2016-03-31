@@ -1,0 +1,50 @@
+- if @resource
+  - case @resource.class.name
+  - when 'User', 'Business'
+    - path_array = [@resource, @item]
+    - url = resource_item_path(@resource,@item)
+  - when 'Household'
+    - path_array = [@resource, @item]
+    - url = user_home_item_path(@user,@item)
+  - when 'Group'
+    - path_array = [@resource, @item]
+    - url = group_item_path(@resource,@item)
+- else
+  - path_array = @item
+  - url = item_path(@item)
+
+- supported_currencies = $redis.smembers("supported_currencies")
+- @currencies_for_select = []
+- Money::Currency.each do |currency|
+  - if supported_currencies.include? currency.iso_code
+    - @currencies_for_select << currency
+
+
+- if @context
+  - if @context.class.name == 'Group'
+    - sell_item = group_item_sell_path(@context,@item)
+  - else
+    - sell_item = @context.class.name == "Household" ? user_home_item_sell_path(current_user,@item) : resource_item_sell_path(@resource,@item)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+    %h3= @item.name + " - Sell"
+
+    = form_for path_array, :url => sell_item do |f|
+
+      %section.block-list
+        %header Quantity
+        %ul
+          %li
+            = f.number_field :consumption, {:step => 1, :placeholder => 'Sell', :min => 0, :value => params[:inventory_item] ? params[:inventory_item][:consumption] : ''}
+
+      %section.block-list
+        %header Total value
+        %ul
+          %li
+            = f.number_field :sale_value, {:step => 'any', :placeholder => 'Sale value', :min => 0}
+          %li.with-dropdown
+            = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @resource.currency}, {:disabled => true}
+
+      %button.button.expanded.bg-blueberry Sell

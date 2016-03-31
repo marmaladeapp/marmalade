@@ -9,10 +9,31 @@ class Inventory::Item < ActiveRecord::Base
 
   has_many :owners, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
   has_many :containers, :through => :owners, :source => :owner, :source_type => 'Inventory::Container'
+  
+  has_many :stock_sheets, :dependent => :destroy, :class_name => 'Inventory::StockSheet', :foreign_key => 'inventory_item_id'
 
   belongs_to :item, polymorphic: true
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
+
+  def consumption
+    nil
+  end
+  def consumption=(consumption)
+    consumption
+  end
+  def purchase_value
+    nil
+  end
+  def purchase_value=(purchase_value)
+    purchase_value
+  end
+  def sale_value
+    nil
+  end
+  def sale_value=(sale_value)
+    sale_value
+  end
 
   def first_letter
     name[0].capitalize

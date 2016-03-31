@@ -2,9 +2,11 @@
   - if @context.class.name == 'Group'
     - edit_item = edit_group_item_path(@context,@item)
     - add_container = group_item_containers_path(@context,@item)
+    - consume_item = group_item_amend_path(@context,@item)
   - else
     - edit_item = @context.class.name == "Household" ? edit_user_home_item_path(current_user,@item) : edit_resource_item_path(@resource,@item)
     - add_container = @context.class.name == "Household" ? user_home_item_containers_path(current_user,@item) : resource_item_containers_path(@resource,@item)
+    - consume_item = @context.class.name == "Household" ? user_home_item_amend_path(current_user,@item) : resource_item_amend_path(@resource,@item)
 
 
 .grid-container.small-12.medium-10
@@ -46,24 +48,26 @@
           Quantity:
           %strong= @item.quantity
         - if @item.consumable || @item.saleable
-          %span.inline-label
-            %input{:type => 'number', :min => 0}
-            - if @item.consumable
-              - if false
-                %a.button.bg-green{:href => '#'}
-                  %i.fa.fa-fw.fa-plus
-              %a.button.bg-burnt-toast{:href => '#'}
-                %i.fa.fa-fw.fa-minus
-            - elsif @item.saleable
-              %a.button.bg-green{:href => '#'}
-                Buy
-              %a.button.bg-strawberry-jam{:href => '#'}
-                Sell
-          - if @item.consumable && @item.saleable
-            %ul.button-group.expand
-              %li
-                %a.button.bg-green{:href => '#', :style => ''} Purchase
-              %li
-                %a.button.bg-strawberry-jam{:href => '#', :style => ''} Sell
+          = form_for [@context,@item], :url => consume_item do |f|
+            %span.inline-label
+              = f.number_field :consumption, {:step => 1, :placeholder => @item.saleable ? (@item.consumable ? 'Remove / Sell / Purchase' : 'Buy / Sell') : 'Remove', :min => 0}
+              - if @item.consumable
+                - if false
+                  %a.button.bg-green{:href => '#'}
+                    %i.fa.fa-fw.fa-plus
+                %button.button.bg-burnt-toast{:type => 'submit', :name => 'commit', :value => 'consume'}
+                  %i.fa.fa-fw.fa-minus
+              - elsif @item.saleable
+                %button.button.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'}
+                  Buy
+                %button.button.bg-strawberry-jam{:type => 'submit', :name => 'commit', :value => 'sell'}
+                  Sell
+            - if @item.consumable && @item.saleable
+              %ul.button-group.expand
+                %li
+                  %button.button.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'} Purchase
+                %li
+                  %button.button.bg-strawberry-jam{:type => 'submit', :name => 'commit', :value => 'sell'} Sell
         - if !@item.saleable
-          %a.button.expand.bg-green{:href => '#', :style => ''} New purchase
+          = form_for [@context,@item], :url => consume_item do |f|
+            %button.button.expand.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'} New purchase
