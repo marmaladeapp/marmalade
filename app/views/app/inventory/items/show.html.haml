@@ -47,8 +47,8 @@
         %h3.text-center
           Quantity:
           %strong= @item.quantity
-        - if @item.consumable || @item.saleable
-          = form_for [@context,@item], :url => consume_item do |f|
+        = form_for [@context,@item], :url => consume_item do |f|
+          - if @item.consumable || @item.saleable
             %span.inline-label
               = f.number_field :consumption, {:step => 1, :placeholder => @item.saleable ? (@item.consumable ? 'Remove / Sell / Purchase' : 'Buy / Sell') : 'Remove', :min => 0}
               - if @item.consumable
@@ -68,6 +68,5 @@
                   %button.button.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'} Purchase
                 %li
                   %button.button.bg-strawberry-jam{:type => 'submit', :name => 'commit', :value => 'sell'} Sell
-        - if !@item.saleable
-          = form_for [@context,@item], :url => consume_item do |f|
+          - if !@item.saleable
             %button.button.expand.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'} New purchase
