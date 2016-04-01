@@ -317,7 +317,7 @@ class App::Inventory::ItemsController < App::AppController
 
     if @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.stock_sheets.last.quantity + @item.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_difference =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference =>  @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_difference =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
