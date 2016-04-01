@@ -87,6 +87,15 @@ class App::Inventory::ItemsController < App::AppController
       @container = @resource.containers.find(params[:container_id])
     end
     @item = ::Inventory::Item.new
+    if @resource.class.name == "Household"
+      @ownerships = []
+      @resource.members.each do |member|
+        @ownerships << Ownership.new(:owner => member, :item => @item, :equity => BigDecimal.new(100) / @resource.members.count, :user_id => @resource.user.id)
+      end
+    else
+      @ownerships = []
+      @ownerships << Ownership.new(:owner => @resource, :item => @item, :equity => BigDecimal.new(100), :user_id => @resource.class.name == "User" ? @resource.id : @resource.user.id)
+    end
   end
 
   def edit
@@ -139,7 +148,19 @@ class App::Inventory::ItemsController < App::AppController
 
     if @item.quantity != 0 && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'create')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity, :unit_value => @item.unit_value, :unit_value_change => @item.unit_value, :total_value => @item.value, :total_value_change => @item.value, :currency => @item.currency)
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity, :unit_value => @item.unit_value, :unit_value_difference => @item.unit_value, :total_value => @item.value, :total_value_difference => @item.value, :currency => @item.currency)
+
+      if false # wallety_wallet, yknow paymenty payment
+      end
+
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => @item.value,:current_assets => @item.value,:inventory => @item.value,:item => @item,:action => 'create')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => @item.value,:fixed_assets => @item.value,:capital_assets => @item.value,:item => @item,:action => 'create')
+        end
+      end
+
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -238,7 +259,7 @@ class App::Inventory::ItemsController < App::AppController
       @item.value = @item.value - (@item.unit_value * params[:inventory_item][:consumption].to_i)
       if !(@item.quantity < 0) && @item.save
         @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-        @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_change => 0, :total_value => @item.value, :total_value_change => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+        @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference => 0, :total_value => @item.value, :total_value_difference => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
         if params[:resource_id]
           redirect_to resource_item_path(@resource,@item)
         elsif params[:user_id]
@@ -296,7 +317,7 @@ class App::Inventory::ItemsController < App::AppController
 
     if @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.stock_sheets.last.quantity + @item.quantity, :unit_value => @item.unit_value, :unit_value_change =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_change =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.stock_sheets.last.quantity + @item.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_difference =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -351,7 +372,7 @@ class App::Inventory::ItemsController < App::AppController
 
     if !(@item.quantity < 0) && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_change => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_change => 0, :total_value => @item.value, :total_value_change => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference => 0, :total_value => @item.value, :total_value_difference => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -396,6 +417,6 @@ class App::Inventory::ItemsController < App::AppController
   private
 
   def item_params
-    params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:owners_attributes => [:user_id,:global_owner])
+    params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:categories_attributes => [:global_category],:owners_attributes => [:user_id,:global_owner,:equity])
   end
 end

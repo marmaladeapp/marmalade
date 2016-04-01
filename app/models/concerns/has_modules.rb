@@ -65,6 +65,12 @@ module HasModules
   def total_wallets
     balance_sheets.any? ? balance_sheets.last.total_wallets : BigDecimal.new(0)
   end
+  def capital_assets
+    balance_sheets.any? ? balance_sheets.last.capital_assets : BigDecimal.new(0)
+  end
+  def inventory
+    balance_sheets.any? ? balance_sheets.last.inventory : BigDecimal.new(0)
+  end
 
   private
 

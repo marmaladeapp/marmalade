@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401014528) do
+ActiveRecord::Schema.define(version: 20160401073141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,18 @@ ActiveRecord::Schema.define(version: 20160401014528) do
   add_index "calendar_events", ["ending_at"], name: "index_calendar_events_on_ending_at", using: :btree
   add_index "calendar_events", ["project_id"], name: "index_calendar_events_on_project_id", using: :btree
   add_index "calendar_events", ["starting_at"], name: "index_calendar_events_on_starting_at", using: :btree
+
+  create_table "categorizations", force: :cascade do |t|
+    t.integer  "category_id"
+    t.string   "category_type"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "categorizations", ["category_type", "category_id"], name: "index_categorizations_on_category_type_and_category_id", using: :btree
+  add_index "categorizations", ["item_type", "item_id"], name: "index_categorizations_on_item_type_and_item_id", using: :btree
 
   create_table "collaborators", force: :cascade do |t|
     t.integer  "collaborator_id"
@@ -178,8 +190,10 @@ ActiveRecord::Schema.define(version: 20160401014528) do
     t.integer  "item_id"
     t.string   "item_type"
     t.string   "action"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.decimal  "capital_assets",           default: 0.0, null: false
+    t.decimal  "inventory",                default: 0.0, null: false
   end
 
   add_index "finances_balance_sheets", ["item_type", "item_id"], name: "index_finances_balance_sheets_on_item_type_and_item_id", using: :btree

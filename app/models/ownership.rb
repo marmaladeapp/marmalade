@@ -22,7 +22,7 @@ class Ownership < ActiveRecord::Base
     self.owner = GlobalID::Locator.locate owner
   end
 
-  def update_balance_sheets(value:0, current_assets:0, fixed_assets:0, current_liabilities:0, long_term_liabilities:0, cash:0, ledgers_receivable:0, ledgers_debt:0, wallets:0, item:nil, action:nil)
+  def update_balance_sheets(value:0, current_assets:0, fixed_assets:0, current_liabilities:0, long_term_liabilities:0, cash:0, ledgers_receivable:0, ledgers_debt:0, wallets:0, capital_assets:0, inventory:0, item:nil, action:nil)
     @unique_owners = []
     instantiating_item = item
     @value = value
@@ -34,6 +34,8 @@ class Ownership < ActiveRecord::Base
     @ledgers_receivable = ledgers_receivable
     @ledgers_debt = ledgers_debt
     @wallets = wallets
+    @capital_assets = capital_assets
+    @inventory = inventory
 
     self.ancestries.each do |ancestry| # ownership.object_ancestry
       @business_types = []
@@ -56,6 +58,8 @@ class Ownership < ActiveRecord::Base
           @ledgers_receivable = equity.percent_of(@ledgers_receivable.convert_currency(item_currency,owner_currency))
           @ledgers_debt = equity.percent_of(@ledgers_debt.convert_currency(item_currency,owner_currency))
           @wallets = equity.percent_of(@wallets.convert_currency(item_currency,owner_currency))
+          @capital_assets = equity.percent_of(@capital_assets.convert_currency(item_currency,owner_currency))
+          @inventory = equity.percent_of(@inventory.convert_currency(item_currency,owner_currency))
 
           if item.class.name == "Business"
             @business_types << item.business_type
@@ -63,17 +67,17 @@ class Ownership < ActiveRecord::Base
 
           if (["LimitedPartnership","LimitedLiabilityPartnership","LimitedCompany"] & @business_types).empty?
             if item == instantiating_item || (owner.class.name == "Household" && self.owner.class.name == "User")
-              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable + @ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt + @ledgers_debt, :total_wallets => owner.total_wallets + @wallets, :item => instantiating_item, :action => action)
+              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable + @ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt + @ledgers_debt, :total_wallets => owner.total_wallets + @wallets, :capital_assets => owner.capital_assets + @capital_assets, :inventory => owner.inventory + @inventory, :item => instantiating_item, :action => action)
             else
-              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets, :item => instantiating_item, :action => action)
+              owner.balance_sheets.create(:current_assets => owner.current_assets + @current_assets, :fixed_assets => owner.fixed_assets + @fixed_assets, :current_liabilities => owner.current_liabilities + @current_liabilities, :long_term_liabilities => owner.long_term_liabilities + @long_term_liabilities, :cash => owner.cash + @cash, :currency => owner_currency, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets, :capital_assets => owner.capital_assets + @capital_assets, :inventory => owner.inventory + @inventory, :item => instantiating_item, :action => action)
             end
           elsif (["LimitedLiabilityPartnership","LimitedCompany"] & @business_types).empty?
             assets = @current_assets + @fixed_assets
             liabilities = @current_liabilities + @long_term_liabilities
-            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities + liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets)
+            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities + liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets, :capital_assets => owner.capital_assets + assets, :inventory => owner.inventory)
           elsif (["LimitedLiabilityPartnership","LimitedCompany"] & @business_types).any?
             assets = @value
-            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets)
+            owner.balance_sheets.create(:current_assets => owner.current_assets, :fixed_assets => owner.fixed_assets + assets, :current_liabilities => owner.current_liabilities, :long_term_liabilities => owner.long_term_liabilities, :cash => owner.cash, :currency => owner_currency, :item => instantiating_item, :action => action, :total_ledgers_receivable => owner.total_ledgers_receivable, :total_ledgers_debt => owner.total_ledgers_debt, :total_wallets => owner.total_wallets, :capital_assets => owner.capital_assets + assets, :inventory => owner.inventory)
           end
 
           if owner.class.name == "Business" && ["LimitedCompany","LimitedLiabilityPartnership"].include?(owner.business_type)
@@ -96,7 +100,7 @@ class Ownership < ActiveRecord::Base
   private
 
   def create_ancestry
-    if (["Contacts::Contact","Calendar::Event","TimeTracking::Timer","Inventory::Item"] & item.class.name.lines.to_a).empty?
+    if (["Contacts::Contact","Calendar::Event","TimeTracking::Timer"] & item.class.name.lines.to_a).empty?
       if owner.owners.any?
         owner.owners.each do |ownership|
           ownership.ancestries.each do |ancestry|
