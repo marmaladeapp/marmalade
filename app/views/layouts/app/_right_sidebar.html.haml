@@ -8,3 +8,13 @@
       %p We'd love your feedback.
       %p Request new features or report a bug to help us make Marmalade perfect for you and your business.
       %a.button.bg-blueberry{:href => feedback_path} Feedback
+  .grid-block.shrink
+    .grid-content.medium-12.text-center{:style => 'padding-bottom:20px;'}
+      %p{:style => 'margin-bottom:5px;'}
+        Spread the
+        %br
+        %span.pacifico Marmalade
+        love
+      <div class="fb-share-button" data-href="#{root_url}" data-layout="button"></div>
+      %div{:style => 'margin-top:2px;'}
+        <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello%20world&url=#{root_url}">Tweet</a>
