@@ -212,6 +212,13 @@ class App::Inventory::ItemsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @item =  @context.inventory_items.find(params[:id])
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => - @item.value,:current_assets => - @item.value,:inventory => - @item.value,:item => @item,:action => 'destroy')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => - @item.value,:fixed_assets => - @item.value,:capital_assets => - @item.value,:item => @item,:action => 'destroy')
+        end
+      end
       @item.destroy
       redirect_to resource_items_path(@resource)
     elsif params[:user_id]
@@ -221,6 +228,13 @@ class App::Inventory::ItemsController < App::AppController
       @resource = @context
       authorize! :show, @resource, :message => ""
       @item = @context.inventory_items.find(params[:id])
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => - @item.value,:current_assets => - @item.value,:inventory => - @item.value,:item => @item,:action => 'destroy')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => - @item.value,:fixed_assets => - @item.value,:capital_assets => - @item.value,:item => @item,:action => 'destroy')
+        end
+      end
       @item.destroy
       redirect_to user_home_items_path(@user)
     elsif params[:group_id]
@@ -229,6 +243,13 @@ class App::Inventory::ItemsController < App::AppController
       @resource = @context
       authorize! :show, @resource, :message => ""
       @item = @context.inventory_items.find(params[:id])
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => - @item.value,:current_assets => - @item.value,:inventory => - @item.value,:item => @item,:action => 'destroy')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => - @item.value,:fixed_assets => - @item.value,:capital_assets => - @item.value,:item => @item,:action => 'destroy')
+        end
+      end
       @item.destroy
       redirect_to group_items_path(@group)
     end
