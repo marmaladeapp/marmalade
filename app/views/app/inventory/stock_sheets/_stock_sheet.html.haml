@@ -1,0 +1,29 @@
+- case stock_sheet.item.context.class.name
+- when "User", "Business"
+  /- canonical_link = resource_stock_sheet_path(stock_sheet.context,stock_sheet)
+- when "Household"
+  /- canonical_link = user_home_stock_sheet_path(current_user,stock_sheet)
+- when "Group"
+  /- canonical_link = group_stock_sheet_path(stock_sheet.context,stock_sheet)
+
+%li
+  %a.burnt-toast{:href => '#'}
+    .card
+      .card-section.clearfix
+        %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
+        %div.float-left.text-overflow{:style => 'width:30%;padding:1px 1px 1px 10px;'}
+          Total stock value:
+          %strong= humanized_money_with_symbol "#{stock_sheet.currency} #{stock_sheet.total_value}".to_money, :no_cents_if_whole => false
+        %div.float-left.text-overflow{:style => 'width:30%;padding:1px;'}
+          - if stock_sheet.total_value_difference && stock_sheet.total_value_difference > 0
+            %span.olive= "(+" + (humanized_money_with_symbol "#{stock_sheet.currency} #{stock_sheet.total_value_difference}".to_money).to_s + ")"
+          - elsif stock_sheet.total_value_difference && stock_sheet.total_value_difference < 0
+            %span.strawberry-jam= "(-" + (humanized_money_with_symbol "#{stock_sheet.currency} #{stock_sheet.total_value_difference.abs}".to_money).to_s + ")"
+        %div.float-left.text-overflow{:style => 'width:20%;padding:1px;'}
+          Quantity:
+          %strong= stock_sheet.quantity
+        %div.float-left.text-overflow{:style => 'width:15%;padding:1px;'}
+          - if stock_sheet.quantity_difference && stock_sheet.quantity_difference > 0
+            %span.olive= "(+" + stock_sheet.quantity_difference.to_s + ")"
+          - elsif stock_sheet.quantity_difference && stock_sheet.quantity_difference < 0
+            %span.strawberry-jam= "(" + stock_sheet.quantity_difference.to_s + ")"

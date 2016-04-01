@@ -39,7 +39,24 @@
       %a.olive{:href => edit_item}
         %i.fa.fa-fw.fa-pencil
 
-  .grid-content.small-12
+  .grid-content.small-12.medium-10.medium-offset-1
+    - if @item.present?
+      - currency_symbol = Money::Currency.new(@item.currency).symbol
+      - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
+      - if @item.stock_sheets.any?
+        - if @item.stock_sheets.first.created_at > 1.hour.ago
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "minutely", :id => "item" + @item.id.to_s}
+        - elsif @item.stock_sheets.first.created_at > 1.week.ago
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "hourly", :id => "item" + @item.id.to_s}
+        - elsif @item.stock_sheets.first.created_at > 1.month.ago
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "daily", :id => "item" + @item.id.to_s}
+        - elsif @item.stock_sheets.first.created_at > 1.year.ago
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "weekly", :id => "item" + @item.id.to_s}
+        - else
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "monthly", :id => "item" + @item.id.to_s}
+      - else
+        .text-center{:style => "padding-top:2.2em;height:5.6em;"}
+          %em.silver No records.
 
   .grid-content.small-10.small-offset-1.medium-8.medium-offset-2.large-6.large-offset-3
     .card{:style => 'margin-top:16px;'}
@@ -47,6 +64,10 @@
         %h3.text-center
           Quantity:
           %strong= @item.quantity
+        %p.text-center
+          = humanized_money_with_symbol "#{@item.currency} #{@item.value}".to_money, :no_cents_if_whole => false
+          %br
+          %small= (humanized_money_with_symbol "#{@item.currency} #{@item.unit_value}".to_money) + " per unit"
         = form_for [@context,@item], :url => consume_item do |f|
           - if @item.consumable || @item.saleable
             %span.inline-label
@@ -70,3 +91,12 @@
                   %button.button.bg-strawberry-jam{:type => 'submit', :name => 'commit', :value => 'sell'} Sell
           - if !@item.saleable
             %button.button.expand.bg-green{:type => 'submit', :name => 'commit', :value => 'purchase'} New purchase
+
+  .grid-content.small-12
+    %h4.clearfix
+      History
+    - if @stock_sheets.any?
+      %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/inventory/stock_sheets/stock_sheet', collection: @stock_sheets
+    - else
+      %p 
+        %em.silver No records

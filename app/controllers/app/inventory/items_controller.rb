@@ -65,6 +65,7 @@ class App::Inventory::ItemsController < App::AppController
       @item = @context.inventory_items.find(params[:id])
       @containers = @item.containers
     end
+    @stock_sheets = ::Inventory::StockSheet.unscoped.order(created_at: :desc).where(:item => @item).page(params[:page]) #.per(2)
   end
 
   def new

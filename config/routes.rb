@@ -206,6 +206,9 @@ Rails.application.routes.draw do
       end
     end
     scope module: 'inventory' do
+      scope '/inventory' do
+        get 'charts/stock_history'
+      end
       constraints(id: /\d+/) do
         resources :items, only: [:create]
         resources :items, path: '/inventory', only: [:index], as: 'items'

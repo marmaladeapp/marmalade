@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160331035324) do
+ActiveRecord::Schema.define(version: 20160401014528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -321,14 +321,14 @@ ActiveRecord::Schema.define(version: 20160331035324) do
   create_table "inventory_stock_sheets", force: :cascade do |t|
     t.integer  "inventory_item_id"
     t.integer  "quantity"
-    t.integer  "quantity_change"
+    t.integer  "quantity_difference"
     t.decimal  "unit_value"
-    t.decimal  "unit_value_change"
+    t.decimal  "unit_value_difference"
     t.decimal  "total_value"
-    t.decimal  "total_value_change"
+    t.decimal  "total_value_difference"
     t.string   "currency"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "inventory_stock_sheets", ["inventory_item_id"], name: "index_inventory_stock_sheets_on_inventory_item_id", using: :btree
