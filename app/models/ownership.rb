@@ -137,7 +137,7 @@ class Ownership < ActiveRecord::Base
         end
       end
     end
-    if self.item.class.name == "Finances::Wallet" || self.item.class.name == "Finances::Ledger"
+    if self.item.class.name == "Finances::Wallet" || self.item.class.name == "Finances::Ledger" || self.item.class.name == "Inventory::Item"
       self.item.destroy if self.item.owners.empty?
     end
   end

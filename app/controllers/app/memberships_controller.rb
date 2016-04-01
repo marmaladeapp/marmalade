@@ -91,7 +91,7 @@ class App::MembershipsController < App::AppController
         redirect_to group_path(@group)
       else
         @ownership = @household.ownerships.create(:owner => @household, :item => @membership.member, :equity => BigDecimal.new(100))
-        @ownership.update_balance_sheets(:value => @membership.member.net_worth,:current_assets => @membership.member.current_assets,:fixed_assets => @membership.member.fixed_assets,:current_liabilities => @membership.member.current_liabilities,:long_term_liabilities => @membership.member.long_term_liabilities,:cash => @membership.member.cash,:ledgers_receivable => @membership.member.total_ledgers_receivable,:ledgers_debt => @membership.member.total_ledgers_debt,:wallets => @membership.member.total_wallets,:item => @membership.member,:action => 'update')
+        @ownership.update_balance_sheets(:value => @membership.member.net_worth,:current_assets => @membership.member.current_assets,:fixed_assets => @membership.member.fixed_assets,:current_liabilities => @membership.member.current_liabilities,:long_term_liabilities => @membership.member.long_term_liabilities,:cash => @membership.member.cash,:ledgers_receivable => @membership.member.total_ledgers_receivable,:ledgers_debt => @membership.member.total_ledgers_debt,:wallets => @membership.member.total_wallets,:capital_assets => @membership.member.capital_assets,:inventory => @membership.member.inventory,:item => @membership.member,:action => 'update')
         redirect_to user_home_path(@user)
       end
     else
@@ -183,7 +183,7 @@ class App::MembershipsController < App::AppController
       authorize! :destroy, @membership, :message => ""
       unless @membership.member == @household.user
         @ownership = @household.ownerships.find_by(:owner => @household, :item => @membership.member)
-        @ownership.update_balance_sheets(:value => - @membership.member.net_worth,:current_assets => - @membership.member.current_assets,:fixed_assets => - @membership.member.fixed_assets,:current_liabilities => - @membership.member.current_liabilities,:long_term_liabilities => - @membership.member.long_term_liabilities,:cash => - @membership.member.cash,:ledgers_receivable => - @membership.member.total_ledgers_receivable,:ledgers_debt => - @membership.member.total_ledgers_debt,:wallets => - @membership.member.total_wallets,:item => @membership.member,:action => 'update')
+        @ownership.update_balance_sheets(:value => - @membership.member.net_worth,:current_assets => - @membership.member.current_assets,:fixed_assets => - @membership.member.fixed_assets,:current_liabilities => - @membership.member.current_liabilities,:long_term_liabilities => - @membership.member.long_term_liabilities,:cash => - @membership.member.cash,:ledgers_receivable => - @membership.member.total_ledgers_receivable,:ledgers_debt => - @membership.member.total_ledgers_debt,:wallets => - @membership.member.total_wallets,:capital_assets => - @membership.member.capital_assets,:inventory => - @membership.member.inventory,:item => @membership.member,:action => 'update')
         @ownership.destroy
         @membership.destroy
       end

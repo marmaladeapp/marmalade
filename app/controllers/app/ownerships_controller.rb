@@ -64,7 +64,7 @@ class App::OwnershipsController < App::AppController
           @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
         end
       end
-      @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:item => @resource,:action => 'update')
+      @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:capital_assets => @resource.capital_assets,:inventory => @resource.inventory,:item => @resource,:action => 'update')
       redirect_to vanity_path(@business)
     else
       user_ids = []
@@ -108,9 +108,9 @@ class App::OwnershipsController < App::AppController
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
     authorize! :update, @ownership, :message => ""
     if @ownership.equity != BigDecimal.new(params[:ownership][:equity])
-      @ownership.update_balance_sheets(:value => - @resource.net_worth,:current_assets => - @resource.current_assets,:fixed_assets => - @resource.fixed_assets,:current_liabilities => - @resource.current_liabilities,:long_term_liabilities => - @resource.long_term_liabilities,:cash => - @resource.cash,:ledgers_receivable => - @resource.total_ledgers_receivable,:ledgers_debt => - @resource.total_ledgers_debt,:wallets => - @resource.total_wallets,:item => @resource,:action => 'update')
+      @ownership.update_balance_sheets(:value => - @resource.net_worth,:current_assets => - @resource.current_assets,:fixed_assets => - @resource.fixed_assets,:current_liabilities => - @resource.current_liabilities,:long_term_liabilities => - @resource.long_term_liabilities,:cash => - @resource.cash,:ledgers_receivable => - @resource.total_ledgers_receivable,:ledgers_debt => - @resource.total_ledgers_debt,:wallets => - @resource.total_wallets,:capital_assets => - @resource.capital_assets,:inventory => - @resource.inventory,:item => @resource,:action => 'update')
       if @ownership.update_attributes(ownership_params)
-        @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:item => @resource,:action => 'update')
+        @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:capital_assets => @resource.capital_assets,:inventory => @resource.inventory,:item => @resource,:action => 'update')
         redirect_to vanity_path(@business)
       else
         render 'edit'
@@ -125,7 +125,7 @@ class App::OwnershipsController < App::AppController
     authorize! :show, @business, :message => ""
     @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
     authorize! :destroy, @ownership, :message => ""
-    @ownership.update_balance_sheets(:value => - @resource.net_worth,:current_assets => - @resource.current_assets,:fixed_assets => - @resource.fixed_assets,:current_liabilities => - @resource.current_liabilities,:long_term_liabilities => - @resource.long_term_liabilities,:cash => - @resource.cash,:ledgers_receivable => - @resource.total_ledgers_receivable,:ledgers_debt => - @resource.total_ledgers_debt,:wallets => - @resource.total_wallets,:item => @resource,:action => 'update')
+    @ownership.update_balance_sheets(:value => - @resource.net_worth,:current_assets => - @resource.current_assets,:fixed_assets => - @resource.fixed_assets,:current_liabilities => - @resource.current_liabilities,:long_term_liabilities => - @resource.long_term_liabilities,:cash => - @resource.cash,:ledgers_receivable => - @resource.total_ledgers_receivable,:ledgers_debt => - @resource.total_ledgers_debt,:wallets => - @resource.total_wallets,:capital_assets => - @resource.capital_assets,:inventory => - @resource.inventory,:item => @resource,:action => 'update')
     @ownership.destroy
     redirect_to vanity_path(@business)
   end
