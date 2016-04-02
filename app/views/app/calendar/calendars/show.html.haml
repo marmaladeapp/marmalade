@@ -44,7 +44,14 @@
         %span.pull-left Ongoing
         %span.silver.pull-right Since #{@ongoing_events.first.starting_at.strftime("%-d %b")}
       %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: @ongoing_events
-    - range = (@start_date..@end_date).to_a
+    - range = []
+
+    - first_not_nil = @events.find { |x| !x["updated_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.updated_at.to_date : Date.current
+    - end_date = @events.last && @events.last.updated_at ? @events.last.updated_at.to_date : Date.current
+
+    - (start_date..end_date).each do |date|
+      - range << date
 
     - range.each do |date|
       %h4.clearfix
@@ -56,3 +63,18 @@
       - else
         %p 
           %em.silver No records
+
+
+
+    - if false
+      - range = (@start_date.to_date..@end_date.to_date).to_a
+      - range.each do |date|
+        %h4.clearfix
+          %span.pull-left= date.strftime("%A")
+          %span.silver.pull-right= date.strftime("%-d %b")
+        - if !([date] & @events.group_by(&:day).keys).empty?
+          - @events.group_by(&:day).slice(date).each do |day, events|
+            %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/calendar/events/event', collection: events
+        - else
+          %p 
+            %em.silver No records
