@@ -24,6 +24,8 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_container}
                 %strong= container.name
+              %a.rubylang{:href => '#'}
+                = "-"
               - unless container == @item.containers.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

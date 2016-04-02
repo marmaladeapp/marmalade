@@ -26,22 +26,22 @@
 
     = form_for path_array, :url => url do |f|
 
-      = f.fields_for :categories, @item.categories.build do |ff|
-        %section.block-list
-          %header Item owners
-          %ul
-            %li.clearfix{:style => 'padding:10px;'}
-              - @ownerships.each do |ownership|
-                - if ownership.owner.class.name == "User"
-                  %img.float-left{:src => avatar_url(ownership.owner,60), :title => ownership.owner.name + " - " + number_with_precision(ownership.equity, strip_insignificant_zeros: true) + "%", :style => 'margin-right:5px;border-radius:50%;'}
-                - else
-                  .float-left.bg-burnt-toast.ice-cream{:style => 'padding:30px 10px;line-height:0;border-radius:30px;'}
-                    %strong= ownership.owner.name
-        = f.fields_for :owners, @ownerships do |ff|
-          = ff.hidden_field :global_owner
-          = ff.hidden_field :equity
-          = ff.hidden_field :user_id
+      %section.block-list
+        %header Item owners
+        %ul
+          %li.clearfix{:style => 'padding:10px;'}
+            - @ownerships.each do |ownership|
+              - if ownership.owner.class.name == "User"
+                %img.float-left{:src => avatar_url(ownership.owner,60), :title => ownership.owner.name + " - " + number_with_precision(ownership.equity, strip_insignificant_zeros: true) + "%", :style => 'margin-right:5px;border-radius:50%;'}
+              - else
+                .float-left.bg-burnt-toast.ice-cream{:style => 'padding:30px 10px;line-height:0;border-radius:30px;'}
+                  %strong= ownership.owner.name
+      = f.fields_for :owners, @ownerships do |ff|
+        = ff.hidden_field :global_owner
+        = ff.hidden_field :equity
+        = ff.hidden_field :user_id
 
+      = f.fields_for :categories, @item.categories.build do |ff|
         %section.block-list
           %header Container
           %ul

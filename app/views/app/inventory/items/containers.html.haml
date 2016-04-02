@@ -38,12 +38,11 @@
 
     = form_for path_array, :url => url do |f|
 
-      = f.fields_for :owners, @item.owners.build do |ff|
-        = ff.hidden_field :user_id, :value => @resource.class.name == "User" ? @resource.id : @resource.user.id
+      = f.fields_for :categories, @item.categories.build do |ff|
         %section.block-list
           %header Add to
           %ul
             %li.with-dropdown
-              = ff.grouped_collection_select :global_owner, [@resource.containers.where.not(:id => @containers.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:container_id] ? @container.to_global_id : ''}
+              = ff.grouped_collection_select :global_category, [@resource.containers.where.not(:id => @containers.ids)], :all, :human_name, :to_global_id, :name, {:include_blank => true, :selected => params[:container_id] ? @container.to_global_id : ''}
 
       %button.button.expanded.bg-blueberry Save
