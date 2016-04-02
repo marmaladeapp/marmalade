@@ -193,7 +193,25 @@ class App::Inventory::ItemsController < App::AppController
       authorize! :show, @resource, :message => ""
       @item = @context.inventory_items.find(params[:id])
     end
+
+    # TODO: Horribly ineffecient. There will be an easier way. Tighten this up. We should only need to iterate through ownerships once. This goes for ALL updates like this.
+    @item.owners.each do |ownership|
+      if @item.saleable
+        ownership.update_balance_sheets(:value => - @item.value,:current_assets => - @item.value,:inventory => - @item.value,:item => @item,:action => 'update')
+      elsif !@item.consumable
+        ownership.update_balance_sheets(:value => - @item.value,:fixed_assets => - @item.value,:capital_assets => - @item.value,:item => @item,:action => 'update')
+      end
+    end
+
     if @item.update_attributes(item_params)
+      # TODO: Horribly ineffecient. There will be an easier way. Tighten this up. We should only need to iterate through ownerships once. This goes for ALL updates like this.
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => @item.value,:current_assets => @item.value,:inventory => @item.value,:item => @item,:action => 'update')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => @item.value,:fixed_assets => @item.value,:capital_assets => @item.value,:item => @item,:action => 'update')
+        end
+      end
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -202,6 +220,14 @@ class App::Inventory::ItemsController < App::AppController
         redirect_to group_item_path(@context,@item)
       end
     else
+      # TODO: Horribly ineffecient. There will be an easier way. Tighten this up. We should only need to iterate through ownerships once. This goes for ALL updates like this.
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => @item.value,:current_assets => @item.value,:inventory => @item.value,:item => @item,:action => 'update')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => @item.value,:fixed_assets => @item.value,:capital_assets => @item.value,:item => @item,:action => 'update')
+        end
+      end
       render 'edit'
     end
   end
