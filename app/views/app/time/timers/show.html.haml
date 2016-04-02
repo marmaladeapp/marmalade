@@ -24,6 +24,22 @@
   - interval_path_array = [@timer, @interval]
   - interval_url = timer_intervals_path(@timer)
 
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - modify_path_array = [@context, @timer]
+    - modify_url = resource_timer_path(@context,@timer)
+  - when 'Household'
+    - modify_path_array = [@context, @timer]
+    - url = user_home_timer_path(@user,@timer)
+  - when 'Group'
+    - modify_path_array = [@context, @timer]
+    - url = group_timer_path(@context,@timer)
+- else
+  - modify_path_array = @timer
+  - url = timer_path(@timer)
+
+
 .grid-container.small-12.medium-10
 
   .grid-content.small-12
@@ -39,6 +55,13 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_time_sheet}
                 %strong= time_sheet.name
+
+            = form_for modify_path_array, :url => modify_url, :html => {:style => 'float:left;'} do |f|
+              = f.fields_for :owners, @timer.owners.find_by(:owner => time_sheet) do |ff|
+                = ff.hidden_field :_destroy, :value => 'true'
+              %button.button.tiny.strawberry-jam{:type => 'submit', :name => 'commit', :style => 'background:none;border:none;margin:0;'}
+                %i.fa.fa-trash
+
               - unless time_sheet == @timer.time_sheets.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

@@ -8,6 +8,21 @@
     - add_container = @context.class.name == "Household" ? user_home_item_containers_path(current_user,@item) : resource_item_containers_path(@resource,@item)
     - consume_item = @context.class.name == "Household" ? user_home_item_amend_path(current_user,@item) : resource_item_amend_path(@resource,@item)
 
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - modify_path_array = [@context, @item]
+    - modify_url = resource_item_path(@context,@item)
+  - when 'Household'
+    - modify_path_array = [@context, @item]
+    - modify_url = user_home_item_path(@user,@item)
+  - when 'Group'
+    - modify_path_array = [@context, @item]
+    - modify_url = group_item_path(@context,@item)
+- else
+  - modify_path_array = @item
+  - modify_url = item_path(@item)
+
 
 .grid-container.small-12.medium-10
 
@@ -24,8 +39,13 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_container}
                 %strong= container.name
-              %a.rubylang{:href => '#'}
-                = "-"
+
+            = form_for modify_path_array, :url => modify_url, :html => {:style => 'float:left;'} do |f|
+              = f.fields_for :categories, @item.categories.find_by(:category => container) do |ff|
+                = ff.hidden_field :_destroy, :value => 'true'
+              %button.button.tiny.strawberry-jam{:type => 'submit', :name => 'commit', :style => 'background:none;border:none;margin:0;'}
+                %i.fa.fa-trash
+
               - unless container == @item.containers.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

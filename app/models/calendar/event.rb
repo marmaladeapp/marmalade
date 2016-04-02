@@ -15,7 +15,7 @@ class Calendar::Event < ActiveRecord::Base
 
   validate :range_order
 
-  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
+  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }, allow_destroy: true
 
   def day
     self.starting_at.to_date

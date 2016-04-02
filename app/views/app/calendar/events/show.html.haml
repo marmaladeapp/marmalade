@@ -6,7 +6,20 @@
   - else
     - edit_event = @context.class.name == "Household" ? edit_user_home_event_path(current_user,@event) : edit_resource_event_path(@resource,@event)
     - add_calendar = @context.class.name == "Household" ? user_home_event_calendars_path(current_user,@event) : resource_event_calendars_path(@resource,@event)
-
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - modify_path_array = [@context, @event]
+    - modify_url = resource_event_path(@context,@event)
+  - when 'Household'
+    - modify_path_array = [@context, @event]
+    - modify_url = user_home_event_path(@user,@event)
+  - when 'Group'
+    - modify_path_array = [@context, @event]
+    - modify_url = group_event_path(@context,@event)
+- else
+  - modify_path_array = @event
+  - modify_url = event_path(@event)
 
 
 .grid-container.small-12.medium-10
@@ -24,6 +37,13 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_calendar}
                 %strong= calendar.name
+
+            = form_for modify_path_array, :url => modify_url, :html => {:style => 'float:left;'} do |f|
+              = f.fields_for :owners, @event.owners.find_by(:owner => calendar) do |ff|
+                = ff.hidden_field :_destroy, :value => 'true'
+              %button.button.tiny.strawberry-jam{:type => 'submit', :name => 'commit', :style => 'background:none;border:none;margin:0;'}
+                %i.fa.fa-trash
+
               - unless calendar == @event.calendars.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

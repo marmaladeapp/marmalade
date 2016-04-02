@@ -20,7 +20,7 @@ class Inventory::Item < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
-  accepts_nested_attributes_for :categories, reject_if: proc { |attributes| attributes['global_category'].blank? }
+  accepts_nested_attributes_for :categories, reject_if: proc { |attributes| attributes['global_category'].blank? }, allow_destroy: true
 
   def consumption
     nil

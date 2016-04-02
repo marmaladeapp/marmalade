@@ -20,6 +20,17 @@
   - when 'Group'
     - interval_path_array = [@context, @timer, @interval]
     - interval_url = group_project_timer_intervals_path(@context, @project, @timer)
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - modify_path_array = [@context, @timer]
+    - modify_url = resource_project_timer_path(@context,@project,@timer)
+  - when 'Household'
+    - modify_path_array = [@context, @timer]
+    - modify_url = user_home_project_timer_path(@user,@project,@timer)
+  - when 'Group'
+    - modify_path_array = [@context, @timer]
+    - modify_url = group_project_timer_path(@context,@project,@timer)
 
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
@@ -37,6 +48,13 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_time_sheet}
                 %strong= time_sheet.name
+
+            = form_for modify_path_array, :url => modify_url, :html => {:style => 'float:left;'} do |f|
+              = f.fields_for :owners, @timer.owners.find_by(:owner => time_sheet) do |ff|
+                = ff.hidden_field :_destroy, :value => 'true'
+              %button.button.tiny.strawberry-jam{:type => 'submit', :name => 'commit', :style => 'background:none;border:none;margin:0;'}
+                %i.fa.fa-trash
+
               - unless time_sheet == @timer.time_sheets.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

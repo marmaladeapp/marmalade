@@ -11,7 +11,7 @@ class Contacts::Contact < ActiveRecord::Base
 
   belongs_to :item, polymorphic: true
 
-  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
+  accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }, allow_destroy: true
 
   def first_letter
     name[0].capitalize

@@ -256,6 +256,6 @@ class App::Projects::Time::TimersController < App::AppController
   private
 
   def timer_params
-    params.require(:time_tracking_timer).permit(:name,:description,:estimated_time,:owners_attributes => [:user_id,:global_owner])
+    params.require(:time_tracking_timer).permit(:name,:description,:estimated_time,:owners_attributes => [:user_id,:global_owner,:id,:_destroy])
   end
 end

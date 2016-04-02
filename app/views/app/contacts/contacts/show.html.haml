@@ -11,7 +11,20 @@
     - new_email = @context.class.name == "Household" ? new_user_home_contact_email_path(current_user,@contact) : new_resource_contact_email_path(@resource,@contact)
     - new_telephone = @context.class.name == "Household" ? new_user_home_contact_telephone_path(current_user,@contact) : new_resource_contact_telephone_path(@resource,@contact)
     - new_address = @context.class.name == "Household" ? new_user_home_contact_address_path(current_user,@contact) : new_resource_contact_address_path(@resource,@contact)
-
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - modify_path_array = [@context, @contact]
+    - modify_url = resource_contact_path(@context,@contact)
+  - when 'Household'
+    - modify_path_array = [@context, @contact]
+    - modify_url = user_home_contact_path(@user,@contact)
+  - when 'Group'
+    - modify_path_array = [@context, @contact]
+    - modify_url = group_contact_path(@context,@contact)
+- else
+  - modify_path_array = @contact
+  - modify_url = contact_path(@contact)
 
 .grid-container.small-12.medium-10
 
@@ -28,6 +41,13 @@
             .float-left{:style => ''}
               %a.burnt-toast{:href => canonical_address_book}
                 %strong= address_book.name
+
+            = form_for modify_path_array, :url => modify_url, :html => {:style => 'float:left;'} do |f|
+              = f.fields_for :owners, @contact.owners.find_by(:owner => address_book) do |ff|
+                = ff.hidden_field :_destroy, :value => 'true'
+              %button.button.tiny.strawberry-jam{:type => 'submit', :name => 'commit', :style => 'background:none;border:none;margin:0;'}
+                %i.fa.fa-trash
+
               - unless address_book == @contact.address_books.last
                 %span{:style => 'padding:0 10px 0 7px;'}
                   |

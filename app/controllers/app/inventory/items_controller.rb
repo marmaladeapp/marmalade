@@ -528,7 +528,7 @@ class App::Inventory::ItemsController < App::AppController
   private
 
   def item_params
-    params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:categories_attributes => [:global_category],:owners_attributes => [:user_id,:global_owner,:equity])
+    params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:categories_attributes => [:global_category,:id,:_destroy],:owners_attributes => [:user_id,:global_owner,:equity])
   end
 
   def set_adjustments(value,balance)
