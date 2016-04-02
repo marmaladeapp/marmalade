@@ -22,6 +22,10 @@ class Finances::Wallet < ActiveRecord::Base
     wallet.payments.where.not(:ledger_id => nil).update_all(wallet_id: nil)
   end
 
+  def name_with_balance
+    name + " (Balance: " + balance.to_s + " " + currency + ")"
+  end
+
   def global_context
     self.context.to_global_id if self.context.present?
   end

@@ -47,4 +47,10 @@
           %li.with-dropdown
             = f.collection_select :currency, @currencies_for_select, :iso_code, :description, {selected: @resource.currency}, {:disabled => true}
 
+      %section.block-list
+        %header Pay into
+        %ul
+          %li.with-dropdown
+            = select_tag :wallet_id, options_from_collection_for_select(@context.wallets, :id, :name_with_balance), {:prompt => "Select wallet"}
+
       %button.button.expanded.bg-blueberry Sell

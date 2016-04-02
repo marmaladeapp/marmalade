@@ -15,6 +15,8 @@ class Inventory::Item < ActiveRecord::Base
   
   has_many :stock_sheets, :dependent => :destroy, :class_name => 'Inventory::StockSheet', :foreign_key => 'inventory_item_id'
 
+  has_many :payments, :class_name => 'Finances::Payment', :foreign_key => 'inventory_item_id'
+
   belongs_to :item, polymorphic: true
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }

@@ -5,5 +5,8 @@ class Finances::Payment < ActiveRecord::Base
   belongs_to :ledger
   belongs_to :project
 
+  belongs_to :item
+  belongs_to :stock_sheet
+
   validates :value, :numericality => {:other_than => 0}
 end

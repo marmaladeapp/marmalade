@@ -146,11 +146,22 @@ class App::Inventory::ItemsController < App::AppController
     @item.total_quantity = @item.quantity
     @item.currency = @context.currency
 
+    unless params[:wallet_id].blank?
+      @wallet = ::Finances::Wallet.find(params[:wallet_id])
+      authorize! :show, @wallet, :message => ""
+    end
+
     if @item.quantity != 0 && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'create')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity, :unit_value => @item.unit_value, :unit_value_difference => @item.unit_value, :total_value => @item.value, :total_value_difference => @item.value, :currency => @item.currency)
+      @stock_sheet = @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity, :unit_value => @item.unit_value, :unit_value_difference => @item.unit_value, :total_value => @item.value, :total_value_difference => @item.value, :currency => @item.currency)
 
-      if false # wallety_wallet, yknow paymenty payment
+      if @wallet
+        @payment = @wallet.payments.create(:description => @item.name + " *" + @item.quantity.to_s,:value => - @item.value,:currency => @wallet.currency,:wallet_balance => @wallet.balance - @item.value,:inventory_item_id => @item.id,:inventory_stock_sheet_id => @stock_sheet.id)
+        set_adjustments(@payment.value,@wallet.balance)
+        @wallet.update_attribute(:balance,@payment.wallet_balance)
+        @wallet.owners.each do |ownership|
+          ownership.update_balance_sheets(:value => @payment.value,:current_assets => @current_assets,:current_liabilities => @current_liabilities,:cash => @cash, :wallets => @payment.value,:item => @payment,:action => "create")
+        end
       end
 
       @item.owners.each do |ownership|
@@ -307,13 +318,13 @@ class App::Inventory::ItemsController < App::AppController
       if !(@item.quantity < 0) && @item.save
         @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
         @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference => 0, :total_value => @item.value, :total_value_difference => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
-      @item.owners.each do |ownership|
-        if @item.saleable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:current_assets => stock.total_value_difference,:inventory => stock.total_value_difference,:item => @item,:action => 'update')
-        elsif !@item.consumable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:fixed_assets => stock.total_value_difference,:capital_assets => stock.total_value_difference,:item => @item,:action => 'update')
+        @item.owners.each do |ownership|
+          if @item.saleable
+            ownership.update_balance_sheets(:value => stock.total_value_difference,:current_assets => stock.total_value_difference,:inventory => stock.total_value_difference,:item => @item,:action => 'update')
+          elsif !@item.consumable
+            ownership.update_balance_sheets(:value => stock.total_value_difference,:fixed_assets => stock.total_value_difference,:capital_assets => stock.total_value_difference,:item => @item,:action => 'update')
+          end
         end
-      end
         if params[:resource_id]
           redirect_to resource_item_path(@resource,@item)
         elsif params[:user_id]
@@ -369,14 +380,30 @@ class App::Inventory::ItemsController < App::AppController
     @item.value = @item.value + params[:inventory_item][:purchase_value].to_d
     @item.unit_starting_value = @item.starting_value / @item.total_quantity
 
-    if @item.save
+
+    unless params[:wallet_id].blank?
+      @wallet = ::Finances::Wallet.find(params[:wallet_id])
+      authorize! :show, @wallet, :message => ""
+    end
+
+    if @item.quantity != 0 && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-      stock = @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference =>  @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_difference =>  @item.unit_value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+      @stock_sheet = @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference =>  @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  @item.unit_value - @item.stock_sheets.last.unit_value, :total_value => @item.value, :total_value_difference =>  @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+
+      if @wallet
+        @payment = @wallet.payments.create(:description => @item.name + " *" + @stock_sheet.quantity_difference.to_s,:value => - @stock_sheet.total_value_difference,:currency => @wallet.currency,:wallet_balance => @wallet.balance - @stock_sheet.total_value_difference,:inventory_item_id => @item.id,:inventory_stock_sheet_id => @stock_sheet.id)
+        set_adjustments(@payment.value,@wallet.balance)
+        @wallet.update_attribute(:balance,@payment.wallet_balance)
+        @wallet.owners.each do |ownership|
+          ownership.update_balance_sheets(:value => @payment.value,:current_assets => @current_assets,:current_liabilities => @current_liabilities,:cash => @cash, :wallets => @payment.value,:item => @payment,:action => "create")
+        end
+      end
+
       @item.owners.each do |ownership|
         if @item.saleable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:current_assets => stock.total_value_difference,:inventory => stock.total_value_difference,:item => @item,:action => 'update')
+          ownership.update_balance_sheets(:value => @stock_sheet.total_value_difference,:current_assets => @stock_sheet.total_value_difference,:inventory => @stock_sheet.total_value_difference,:item => @item,:action => 'update')
         elsif !@item.consumable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:fixed_assets => stock.total_value_difference,:capital_assets => stock.total_value_difference,:item => @item,:action => 'update')
+          ownership.update_balance_sheets(:value => @stock_sheet.total_value_difference,:fixed_assets => @stock_sheet.total_value_difference,:capital_assets => @stock_sheet.total_value_difference,:item => @item,:action => 'update')
         end
       end
       if params[:resource_id]
@@ -431,16 +458,32 @@ class App::Inventory::ItemsController < App::AppController
       @item.unit_ending_value = @item.ending_value / params[:inventory_item][:consumption].to_i
     end
 
+    unless params[:wallet_id].blank?
+      @wallet = ::Finances::Wallet.find(params[:wallet_id])
+      authorize! :show, @wallet, :message => ""
+    end
+
     if !(@item.quantity < 0) && @item.save
       @context.abstracts.create(:item => @item, :user => current_user, :action => 'update')
-      @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference => @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference => 0, :total_value => @item.value, :total_value_difference => @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
-      @item.owners.each do |ownership|
-        if @item.saleable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:current_assets => stock.total_value_difference,:inventory => stock.total_value_difference,:item => @item,:action => 'update')
-        elsif !@item.consumable
-          ownership.update_balance_sheets(:value => stock.total_value_difference,:fixed_assets => stock.total_value_difference,:capital_assets => stock.total_value_difference,:item => @item,:action => 'update')
+      @stock_sheet = @item.stock_sheets.create(:quantity => @item.quantity, :quantity_difference =>  @item.quantity - @item.stock_sheets.last.quantity, :unit_value => @item.unit_value, :unit_value_difference =>  0, :total_value => @item.value, :total_value_difference =>  @item.value - @item.stock_sheets.last.total_value, :currency => @item.currency)
+
+      if @wallet
+        @payment = @wallet.payments.create(:description => @item.name + " *" + @stock_sheet.quantity_difference.abs.to_s,:value => params[:inventory_item][:sale_value],:currency => @wallet.currency,:wallet_balance => @wallet.balance + params[:inventory_item][:sale_value],:inventory_item_id => @item.id,:inventory_stock_sheet_id => @stock_sheet.id)
+        set_adjustments(@payment.value,@wallet.balance)
+        @wallet.update_attribute(:balance,@payment.wallet_balance)
+        @wallet.owners.each do |ownership|
+          ownership.update_balance_sheets(:value => @payment.value,:current_assets => @current_assets,:current_liabilities => @current_liabilities,:cash => @cash, :wallets => @payment.value,:item => @payment,:action => "create")
         end
       end
+
+      @item.owners.each do |ownership|
+        if @item.saleable
+          ownership.update_balance_sheets(:value => @stock_sheet.total_value_difference,:current_assets => @stock_sheet.total_value_difference,:inventory => @stock_sheet.total_value_difference,:item => @item,:action => 'update')
+        elsif !@item.consumable
+          ownership.update_balance_sheets(:value => @stock_sheet.total_value_difference,:fixed_assets => @stock_sheet.total_value_difference,:capital_assets => @stock_sheet.total_value_difference,:item => @item,:action => 'update')
+        end
+      end
+
       if params[:resource_id]
         redirect_to resource_item_path(@resource,@item)
       elsif params[:user_id]
@@ -487,4 +530,45 @@ class App::Inventory::ItemsController < App::AppController
   def item_params
     params.require(:inventory_item).permit(:name,:quantity,:starting_value,:currency,:consumable,:saleable,:global_item,:categories_attributes => [:global_category],:owners_attributes => [:user_id,:global_owner,:equity])
   end
+
+  def set_adjustments(value,balance)
+    if balance < 0 && value >= 0
+      if balance.abs >= value
+        @current_assets = 0
+        @current_liabilities = - value
+        @cash = 0
+
+      elsif balance.abs < value
+        @current_assets = balance + value
+        @current_liabilities = balance
+        @cash = balance + value
+
+      end
+    elsif balance > 0 && value <= 0
+      if balance >= value.abs
+        @current_assets = value
+        @current_liabilities = 0
+        @cash = value
+
+      elsif balance < value.abs
+        @current_assets = - balance
+        @current_liabilities = - (balance + value)
+        @cash = - balance
+
+      end
+    else
+      if value > 0
+        @current_assets = value
+        @current_liabilities = 0
+        @cash = value
+
+      elsif value < 0
+        @current_assets = 0
+        @current_liabilities = - value
+        @cash = 0
+
+      end
+    end
+  end
+
 end

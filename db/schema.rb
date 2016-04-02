@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401073141) do
+ActiveRecord::Schema.define(version: 20160402034921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,17 +224,21 @@ ActiveRecord::Schema.define(version: 20160401073141) do
 
   create_table "finances_payments", force: :cascade do |t|
     t.text     "description"
-    t.decimal  "value",                          null: false
-    t.string   "currency",       default: "USD", null: false
+    t.decimal  "value",                                    null: false
+    t.string   "currency",                 default: "USD", null: false
     t.integer  "wallet_id"
     t.integer  "ledger_id"
     t.decimal  "wallet_balance"
     t.decimal  "ledger_balance"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.integer  "project_id"
+    t.integer  "inventory_item_id"
+    t.integer  "inventory_stock_sheet_id"
   end
 
+  add_index "finances_payments", ["inventory_item_id"], name: "index_finances_payments_on_inventory_item_id", using: :btree
+  add_index "finances_payments", ["inventory_stock_sheet_id"], name: "index_finances_payments_on_inventory_stock_sheet_id", using: :btree
   add_index "finances_payments", ["ledger_id"], name: "index_finances_payments_on_ledger_id", using: :btree
   add_index "finances_payments", ["project_id"], name: "index_finances_payments_on_project_id", using: :btree
   add_index "finances_payments", ["wallet_id"], name: "index_finances_payments_on_wallet_id", using: :btree
@@ -599,6 +603,8 @@ ActiveRecord::Schema.define(version: 20160401073141) do
   add_foreign_key "collaborators", "users"
   add_foreign_key "contacts_address_books", "users"
   add_foreign_key "finances_ledgers", "projects"
+  add_foreign_key "finances_payments", "inventory_items"
+  add_foreign_key "finances_payments", "inventory_stock_sheets"
   add_foreign_key "finances_payments", "projects"
   add_foreign_key "finances_wallets", "users"
   add_foreign_key "households", "users"
