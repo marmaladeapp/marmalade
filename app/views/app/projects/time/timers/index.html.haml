@@ -18,9 +18,9 @@
   .grid-content.small-12
     - range = ['Active']
 
-    - first_not_nil = @timers.find { |x| !x["updated_at"].blank? }
-    - start_date = first_not_nil ? first_not_nil.updated_at.to_date : Date.current
-    - end_date = @timers.last && @timers.last.updated_at ? @timers.last.updated_at.to_date : Date.current
+    - first_not_nil = @timers.find { |x| !x["last_active_at"].blank? }
+    - start_date = first_not_nil ? first_not_nil.last_active_at.to_date : Date.current
+    - end_date = @timers.last && @timers.last.last_active_at ? @timers.last.last_active_at.to_date : Date.current
 
     - (start_date.downto(end_date)).each do |date|
       - range << date

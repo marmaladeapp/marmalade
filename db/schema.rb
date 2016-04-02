@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160402034921) do
+ActiveRecord::Schema.define(version: 20160402233015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -517,6 +517,7 @@ ActiveRecord::Schema.define(version: 20160402034921) do
     t.text     "occuring_on",                              array: true
     t.datetime "scheduled_at"
     t.integer  "frequency"
+    t.datetime "last_active_at"
   end
 
   add_index "time_timers", ["context_type", "context_id"], name: "index_time_timers_on_context_type_and_context_id", using: :btree

@@ -1,6 +1,6 @@
 class TimeTracking::Timer < ActiveRecord::Base
   include Abstractable
-  default_scope { order(updated_at: :desc) }
+  default_scope { order(last_active_at: :desc) }
 
   validates :name, :presence => true
 
@@ -17,6 +17,8 @@ class TimeTracking::Timer < ActiveRecord::Base
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }, allow_destroy: true
 
+  before_create :set_last_active_at_to_now
+
   def assigned?(user)
     memberships.find_by(:member => user)
   end
@@ -26,7 +28,13 @@ class TimeTracking::Timer < ActiveRecord::Base
   end
 
   def active_or_day
-    active? ? 'Active' : self.updated_at.to_date
+    active? ? 'Active' : self.last_active_at.to_date
+  end
+
+  private
+
+  def set_last_active_at_to_now
+    self.last_active_at = Time.now
   end
 
 end
