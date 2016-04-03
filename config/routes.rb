@@ -35,8 +35,9 @@ Rails.application.routes.draw do
           resources :attendees
         end
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :calendars, except: [:index]
+      constraints(id: /(?!calendars$)[0-9a-z\-\_]+/i) do
+        resources :calendars, only: [:show,:edit,:update]
+        resources :calendars, path: 'calendars/calendars', except: [:show,:edit,:update]
       end
       scope '/calendars/:calendar_id', as: 'calendar' do
         resources :events, path: ''
@@ -52,8 +53,9 @@ Rails.application.routes.draw do
           resources :intervals
         end
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :time_sheets, path: '/time', except: [:index]
+      constraints(id: /(?!time-sheets$)[0-9a-z\-\_]+/i) do
+        resources :time_sheets, path: '/time', only: [:show,:edit,:update]
+        resources :time_sheets, path: 'time/time-sheets', except: [:show,:edit,:update]
       end
       scope '/time/:time_sheet_id', as: 'time_sheet' do
         resources :timers, path: ''
@@ -70,8 +72,9 @@ Rails.application.routes.draw do
           patch 'sell', to: 'items#sell'
         end
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :containers, path: '/inventory', except: [:index]
+      constraints(id: /(?!containers$)[0-9a-z\-\_]+/i) do
+        resources :containers, path: '/inventory', only: [:show,:edit,:update]
+        resources :containers, path: 'inventory/containers', except: [:show,:edit,:update]
       end
       scope '/inventory/:container_id', as: 'container' do
         resources :items, path: ''

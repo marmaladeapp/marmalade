@@ -14,6 +14,7 @@ class Calendar::Calendar < ActiveRecord::Base
 
   validates :name, :presence => true
   validates :slug, format: { without: /\A\d+\Z/, message: "cannot contain only numbers." }
+  validates :slug, format: { without: /\A(?:calendars)\Z/i, message: "restricted." }
 
   def slug_candidates
     [

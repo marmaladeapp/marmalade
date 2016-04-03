@@ -6,6 +6,7 @@ class TimeTracking::TimeSheet < ActiveRecord::Base
 
   validates :name, :presence => true
   validates :slug, format: { without: /\A(?:schedule)\Z/i, message: "restricted." }
+  validates :slug, format: { without: /\A(?:time-sheets)\Z/i, message: "restricted." }
 
   has_many :ownerships, :as => :owner, :dependent => :destroy, :class_name => 'Ownership'
   has_many :timers, :through => :ownerships, :source => :item, :source_type => 'TimeTracking::Timer'

@@ -3,42 +3,42 @@
   - when 'User', 'Business'
     - context_dashboard = vanity_path(@context)
     - context_contacts = resource_contacts_path(@context)
-    - context_calendar = resource_calendars_path(@context)
-    - context_time = resource_time_sheets_path(@context)
-    - context_inventory = resource_containers_path(@context)
+    - context_calendar = resource_events_path(@context)
+    - context_time = resource_timers_path(@context)
+    - context_inventory = resource_items_path(@context)
     - context_finances = resource_finances_path(@context)
     - context_projects = resource_projects_path(@context)
   - when 'Group'
     - context_dashboard = group_path(@context)
     - context_contacts = group_contacts_path(@context)
-    - context_calendar = group_calendars_path(@context)
-    - context_time = group_time_sheets_path(@context)
-    - context_inventory = group_containers_path(@context)
+    - context_calendar = group_events_path(@context)
+    - context_time = group_timers_path(@context)
+    - context_inventory = group_items_path(@context)
     - context_finances = group_finances_path(@context)
     - context_projects = group_projects_path(@context)
   - when 'Household'
     - context_dashboard = user_home_path(current_user)
     - context_contacts = user_home_contacts_path(current_user)
-    - context_calendar = user_home_calendars_path(current_user)
-    - context_time = user_home_time_sheets_path(current_user)
-    - context_inventory = user_home_containers_path(current_user)
+    - context_calendar = user_home_events_path(current_user)
+    - context_time = user_home_timers_path(current_user)
+    - context_inventory = user_home_items_path(current_user)
     - context_finances = user_home_finances_path(current_user)
     - context_projects = user_home_projects_path(current_user)
 - else
   - if current_user.households.any? || current_user.businesses.any? || current_user.groups.any?
     - context_dashboard = root_path
     - context_contacts = contacts_path
-    - context_calendar = calendars_path
-    - context_time = time_sheets_path
-    - context_inventory = containers_path
+    - context_calendar = events_path
+    - context_time = timers_path
+    - context_inventory = items_path
     - context_finances = finances_path
     - context_projects = projects_path
   - else
     - context_dashboard = vanity_path(current_user)
     - context_contacts = resource_contacts_path(current_user)
-    - context_calendar = resource_calendars_path(current_user)
-    - context_time = resource_time_sheets_path(current_user)
-    - context_inventory = resource_containers_path(current_user)
+    - context_calendar = resource_events_path(current_user)
+    - context_time = resource_timers_path(current_user)
+    - context_inventory = resource_items_path(current_user)
     - context_finances = resource_finances_path(current_user)
     - context_projects = resource_projects_path(current_user)
 
