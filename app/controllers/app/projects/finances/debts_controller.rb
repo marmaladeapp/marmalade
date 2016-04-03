@@ -7,7 +7,7 @@ class App::Projects::Finances::DebtsController < App::AppController
       authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
-      @ledgers = @project.ledgers.where("starting_value < ?", 0)
+      @ledgers = @project.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
@@ -15,14 +15,14 @@ class App::Projects::Finances::DebtsController < App::AppController
       authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
-      @ledgers = @project.ledgers.where("starting_value < ?", 0)
+      @ledgers = @project.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
       authorize! :show, @context, :message => ""
       @project =  @resource.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
-      @ledgers = @project.ledgers.where("starting_value < ?", 0)
+      @ledgers = @project.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
     end
   end
 

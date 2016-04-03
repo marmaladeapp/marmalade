@@ -24,7 +24,7 @@ class App::Projects::Messages::MessagesController < App::AppController
       @project = current_user.projects.find(params[:project_id])
     end
     @message = ::Messages::Message.new
-    @messages = @project.messages
+    @messages = @project.messages.page(params[:page]) #.per(2)
   end
 
   def show

@@ -48,7 +48,7 @@ class App::ProjectsController < App::AppController
     end
     @project = @context.projects.find(params[:id])
     authorize! :show, @project, :message => ""
-    @abstracts = @context.abstracts.where(:project => @project)
+    @abstracts = @context.abstracts.where(:project => @project).page(params[:page]) #.per(2)
   end
 
   def new

@@ -24,7 +24,7 @@ class App::Projects::Time::TimersController < App::AppController
       @project = current_user.projects.find(params[:project_id])
       authorize! :update, @project, :message => ""
     end
-    @timers = @project.timers
+    @timers = @project.timers.page(params[:page]) #.per(2)
   end
 
   def show
