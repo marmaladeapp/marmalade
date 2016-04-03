@@ -5,20 +5,20 @@ class App::Contacts::ContactsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @address_books =  @resource.address_books
+      @address_books =  @resource.address_books.limit(3)
       @contacts =  @resource.contacts
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
-      @address_books = @household.address_books
+      @address_books = @household.address_books.limit(3)
       @contacts = @household.contacts
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
-      @address_books = @group.address_books
+      @address_books = @group.address_books.limit(3)
       @contacts = @group.contacts
     else
       @address_books = ::Contacts::AddressBook.where(
@@ -30,7 +30,7 @@ class App::Contacts::ContactsController < App::AppController
         'Business', current_user.businesses.ids, 
         'Household', current_user.households.ids, 
         'Group', current_user.groups.ids
-      ).page(params[:page]) #.per(2)
+      ).limit(3)
       @contacts = ::Contacts::Contact.where(
         '(context_type = ? AND context_id = ?) OR 
         (context_type = ? AND context_id IN (?)) OR 

@@ -1,6 +1,28 @@
 class App::Finances::WalletsController < App::AppController
 
   def index
+    if params[:resource_id]
+      @resource = VanityUrl.find(params[:resource_id]).owner
+      authorize! :show, @resource, :message => ""
+      @context = @resource
+      @wallets =  @resource.wallets
+    elsif params[:user_id]
+      @user = User.find(params[:user_id])
+      @household = @user.home
+      authorize! :show, @household, :message => ""
+      @context = @household
+      @wallets = @household.wallets
+    elsif params[:group_id]
+      @group = Group.find(params[:group_id])
+      authorize! :show, @group, :message => ""
+      @context = @group
+      @wallets = @group.wallets
+    else
+      @wallets = current_user.wallets
+      @wallets += ::Contacts::AddressBook.where(:owner => current_user.businesses.to_a)
+      @wallets += ::Contacts::AddressBook.where(:owner => current_user.households.to_a)
+      @wallets += ::Contacts::AddressBook.where(:owner => current_user.groups.to_a)
+    end
   end
 
   def show

@@ -6,7 +6,7 @@ class App::Finances::FinancesController < App::AppController
       @context = @resource
       authorize! :show, @context, :message => ""
       @balance_sheets = @resource.balance_sheets
-      @wallets = @resource.wallets
+      @wallets = @resource.wallets.limit(6)
       @ledgers = @resource.ledgers
     elsif params[:user_id]
       @user = User.find(params[:user_id])
@@ -15,7 +15,7 @@ class App::Finances::FinancesController < App::AppController
       @context = @household
       authorize! :show, @context, :message => ""
       @balance_sheets = @household.balance_sheets
-      @wallets = Finances::Wallet.where(:context => @household)
+      @wallets = Finances::Wallet.where(:context => @household).limit(6)
       @ledgers = Finances::Ledger.where(:context => @household)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
@@ -23,7 +23,7 @@ class App::Finances::FinancesController < App::AppController
       @context = @group
       authorize! :show, @context, :message => ""
       @balance_sheets = @group.balance_sheets
-      @wallets = @group.wallets
+      @wallets = @group.wallets.limit(6)
       @ledgers = @group.ledgers
     else
       @user_home = current_user.households.first

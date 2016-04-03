@@ -5,20 +5,20 @@ class App::Inventory::ItemsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @containers =  @resource.containers
+      @containers =  @resource.containers.limit(3)
       @items =  @resource.inventory_items
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
-      @containers = @household.containers
+      @containers = @household.containers.limit(3)
       @items = @household.inventory_items
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
-      @containers = @group.containers
+      @containers = @group.containers.limit(3)
       @items = @group.inventory_items
     else
       @containers = ::Inventory::Container.where(
@@ -30,7 +30,7 @@ class App::Inventory::ItemsController < App::AppController
         'Business', current_user.businesses.ids, 
         'Household', current_user.households.ids, 
         'Group', current_user.groups.ids
-      ).page(params[:page]) #.per(2)
+      ).limit(3)
       @items = ::Inventory::Item.where(
         '(context_type = ? AND context_id = ?) OR 
         (context_type = ? AND context_id IN (?)) OR 

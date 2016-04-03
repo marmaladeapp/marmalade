@@ -1,0 +1,20 @@
+- if @context
+  - if @context.class.name == 'Group'
+    - new_wallet = new_group_wallet_path(@context)
+  - else
+    - new_wallet = @context.class.name == "Household" ? new_user_home_wallet_path(current_user) : new_resource_wallet_path(@resource)
+
+.grid-container.small-12.medium-10
+
+  .grid-content.small-12
+
+    - if @context
+      %h3 #{@context.name.possessive} wallets
+      %a.button.bg-blueberry{:href => new_wallet} New wallet
+    - else
+      %h3 Your wallets
+
+  - if @context
+    .grid-content.small-12
+      .grid-block.wrap.small-12
+        = render partial: 'app/finances/wallets/wallet', collection: @wallets

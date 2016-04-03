@@ -12,7 +12,7 @@ class App::Calendar::EventsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       authorize! :show, @resource, :message => ""
       @context = @resource
-      @calendars =  @resource.calendars
+      @calendars =  @resource.calendars.limit(3)
       @ongoing_events = @resource.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events =  @resource.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:user_id]
@@ -20,14 +20,14 @@ class App::Calendar::EventsController < App::AppController
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
-      @calendars = @household.calendars
+      @calendars = @household.calendars.limit(3)
       @ongoing_events = @household.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @household.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
-      @calendars = @group.calendars
+      @calendars = @group.calendars.limit(3)
       @ongoing_events = @group.events.where('starting_at <= ? AND ending_at >= ?', @start_date, @start_date).page(params[:page]) #.per(2)
       @events = @group.events.where(:starting_at => @start_date..@end_date).page(params[:page]) #.per(2)
     else
@@ -40,7 +40,7 @@ class App::Calendar::EventsController < App::AppController
         'Business', current_user.businesses.ids, 
         'Household', current_user.households.ids, 
         'Group', current_user.groups.ids
-      ).page(params[:page]) #.per(2)
+      ).limit(3)
       @ongoing_events = ::Calendar::Event.where(
         '(context_type = ? AND context_id = ?) OR 
         (context_type = ? AND context_id IN (?)) OR 

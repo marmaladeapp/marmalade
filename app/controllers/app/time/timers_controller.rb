@@ -5,20 +5,20 @@ class App::Time::TimersController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       authorize! :show, @context, :message => ""
-      @time_sheets =  @resource.time_sheets
+      @time_sheets =  @resource.time_sheets.limit(3)
       @timers =  @resource.timers.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       authorize! :show, @context, :message => ""
-      @time_sheets = @household.time_sheets
+      @time_sheets = @household.time_sheets.limit(3)
       @timers = @household.timers.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       authorize! :show, @context, :message => ""
-      @time_sheets = @group.time_sheets
+      @time_sheets = @group.time_sheets.limit(3)
       @timers = @group.timers.page(params[:page]) #.per(2)
     else
       @time_sheets = ::TimeTracking::TimeSheet.where(
@@ -30,7 +30,7 @@ class App::Time::TimersController < App::AppController
         'Business', current_user.businesses.ids, 
         'Household', current_user.households.ids, 
         'Group', current_user.groups.ids
-      ).page(params[:page]) #.per(2)
+      ).limit(3)
       @timers = ::TimeTracking::Timer.where(
         '(context_type = ? AND context_id = ?) OR 
         (context_type = ? AND context_id IN (?)) OR 
