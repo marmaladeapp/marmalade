@@ -169,9 +169,9 @@ Rails.application.routes.draw do
       constraints(id: /\d+/) do
         resources :contacts
       end
-      constraints(id: /(?!books$)[0-9a-z\-\_]+/i) do
+      constraints(id: /(?!address-books$)[0-9a-z\-\_]+/i) do
         resources :address_books, path: 'contacts', only: [:show,:edit]
-        resources :address_books, path: 'contacts/books', except: [:show,:edit]
+        resources :address_books, path: 'contacts/address-books', except: [:show,:edit]
       end
       scope '/contacts/:address_book_id', as: 'address_book' do
         resources :contacts, path: ''
@@ -179,14 +179,11 @@ Rails.application.routes.draw do
     end
     scope module: 'calendar' do
       constraints(id: /\d+/) do
-        resources :events, only: [:create]
-        resources :events, path: '/calendars', only: [:index], as: 'events'
-        resources :events, path: '/calendars/events', except: [:index,:create] do
-          get 'calendars', to: 'events#calendars'
-        end
+        resources :events, path: 'calendars'
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :calendars, except: [:index]
+      constraints(id: /(?!calendars$)[0-9a-z\-\_]+/i) do
+        resources :calendars, path: 'calendars', only: [:show,:edit]
+        resources :calendars, path: 'calendars/calendars', except: [:show,:edit]
       end
       scope '/calendars/:calendar_id', as: 'calendar' do
         resources :events, path: ''
@@ -194,15 +191,11 @@ Rails.application.routes.draw do
     end
     scope module: 'time' do
       constraints(id: /\d+/) do
-        resources :timers, only: [:create]
-        resources :timers, path: '/time', only: [:index], as: 'timers'
-        resources :timers, path: '/time/timers', except: [:index,:create] do
-          get 'time-sheets', to: 'timers#time_sheets'
-          #resources :attendees
-        end
+        resources :timers, path: 'time'
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :time_sheets, path: '/time', except: [:index]
+      constraints(id: /(?!time-sheets$)[0-9a-z\-\_]+/i) do
+        resources :time_sheets, path: 'time', only: [:show,:edit]
+        resources :time_sheets, path: 'time/time-sheets', except: [:show,:edit]
       end
       scope '/time/:time_sheet_id', as: 'time_sheet' do
         resources :timers, path: ''
@@ -213,14 +206,11 @@ Rails.application.routes.draw do
         get 'charts/stock_history'
       end
       constraints(id: /\d+/) do
-        resources :items, only: [:create]
-        resources :items, path: '/inventory', only: [:index], as: 'items'
-        resources :items, path: '/inventory/items', except: [:index,:create] do
-          get 'containers', to: 'items#containers'
-        end
+        resources :items, path: 'inventory'
       end
-      constraints(id: /[0-9a-z\-\_]+/i) do
-        resources :containers, path: '/inventory', except: [:index]
+      constraints(id: /(?!containers$)[0-9a-z\-\_]+/i) do
+        resources :containers, path: 'inventory', only: [:show,:edit]
+        resources :containers, path: 'inventory/containers', except: [:show,:edit]
       end
       scope '/inventory/:container_id', as: 'container' do
         resources :items, path: ''

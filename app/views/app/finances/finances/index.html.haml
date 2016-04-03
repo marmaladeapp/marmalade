@@ -81,8 +81,11 @@
     .grid-content.small-12
       %h4 Wallets
       %a.button.bg-blueberry{:href => new_wallet} New wallet
-      .grid-block.wrap.small-12
-        = render partial: 'app/finances/wallets/wallet', collection: @wallets
+    .grid-block.wrap.small-12
+      = render partial: 'app/finances/wallets/wallet', collection: @wallets
+    .grid-content.small-12
+      %h5.text-right
+        %a.panther{:href => request.path + "/wallets"} View all
 
   - if false #!@context
     .grid-content.small-12
