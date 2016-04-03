@@ -5,32 +5,21 @@ class App::Finances::DebtsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       authorize! :show, @context, :message => ""
-      @ledgers = @resource.ledgers.where("starting_value < ?", 0)
+      @ledgers = @resource.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @resource = @user.home
       @context = @resource
       authorize! :show, @context, :message => ""
-      @ledgers = @resource.ledgers.where("starting_value < ?", 0)
-      @resource.ownerships.each do |ownership|
-        @ledgers += ownership.item.ledgers.where("starting_value < ?", 0)
-      end
+      @ledgers = @resource.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
+      #@resource.ownerships.each do |ownership|
+      #  @ledgers += ownership.item.ledgers.where("starting_value < ?", 0)
+      #end
     elsif params[:group_id]
       @resource = Group.find(params[:group_id])
       @context = @resource
       authorize! :show, @context, :message => ""
-      @ledgers = @resource.ledgers.where("starting_value < ?", 0)
-    else
-      @ledgers = current_user.ledgers.where("starting_value < ?", 0)
-      current_user.businesses.each do |business|
-        @ledgers += business.ledgers.where("starting_value < ?", 0)
-      end
-      current_user.households.each do |household|
-        @ledgers += household.ledgers.where("starting_value < ?", 0)
-      end
-      current_user.groups.each do |group|
-        @ledgers += group.ledgers.where("starting_value < ?", 0)
-      end
+      @ledgers = @resource.ledgers.where("starting_value < ?", 0).page(params[:page]) #.per(2)
     end
   end
 

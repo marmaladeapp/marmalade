@@ -11,3 +11,6 @@
     %a.button.bg-blueberry{:href => new_receivable} New receivable
   .grid-block.wrap.small-12
     = render partial: 'app/finances/ledgers/ledger', collection: @ledgers
+
+  .grid-content.small-12{:style => 'padding:10px 0 20px 0;'}
+    .text-center= paginate @ledgers
