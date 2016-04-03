@@ -18,10 +18,16 @@ class App::ProjectsController < App::AppController
       authorize! :show, @group, :message => ""
       @projects = @group.projects
     else
-      @projects = current_user.projects
-      @projects += Project.where(:owner => current_user.businesses.to_a)
-      @projects += Project.where(:owner => current_user.households.to_a)
-      @projects += Project.where(:owner => current_user.groups.to_a)
+      @projects = Project.where(
+        '(owner_type = ? AND owner_id = ?) OR 
+        (owner_type = ? AND owner_id IN (?)) OR 
+        (owner_type = ? AND owner_id IN (?)) OR 
+        (owner_type = ? AND owner_id IN (?))', 
+        'User', current_user.id, 
+        'Business', current_user.businesses.ids, 
+        'Household', current_user.households.ids, 
+        'Group', current_user.groups.ids
+      ).page(params[:page]) #.per(2)
     end
   end
 
