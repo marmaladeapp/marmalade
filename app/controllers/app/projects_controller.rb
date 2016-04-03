@@ -5,18 +5,18 @@ class App::ProjectsController < App::AppController
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
       authorize! :show, @resource, :message => ""
-      @projects =  @resource.projects
+      @projects =  @resource.projects.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       @context = @household
       authorize! :show, @household, :message => ""
-      @projects = @household.projects
+      @projects = @household.projects.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       authorize! :show, @group, :message => ""
-      @projects = @group.projects
+      @projects = @group.projects.page(params[:page]) #.per(2)
     else
       @projects = Project.where(
         '(owner_type = ? AND owner_id = ?) OR 
