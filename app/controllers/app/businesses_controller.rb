@@ -5,7 +5,7 @@ class App::BusinessesController < App::AppController
     @business = Business.find(params[:id])
     @context = @business
     authorize! :show, @business, :message => ""
-    @abstracts = @business.abstracts
+    @abstracts = @business.abstracts.page(params[:page]) #.per(2)
   end
   def new
     @user = current_user

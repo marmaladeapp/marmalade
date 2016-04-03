@@ -6,7 +6,7 @@ class App::HouseholdsController < App::AppController
     @household = @user.home
     @context = @household
     authorize! :show, @household, :message => ""
-    @abstracts = @household.abstracts
+    @abstracts = @household.abstracts.page(params[:page]) #.per(2)
   end
   def new
     @user = User.find(params[:user_id])

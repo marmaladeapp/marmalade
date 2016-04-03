@@ -5,7 +5,7 @@ class App::GroupsController < App::AppController
     @group = Group.find(params[:id])
     @context = @group
     authorize! :show, @group, :message => ""
-    @abstracts = @group.abstracts
+    @abstracts = @group.abstracts.page(params[:page]) #.per(2)
   end
   def new
     @user = current_user
