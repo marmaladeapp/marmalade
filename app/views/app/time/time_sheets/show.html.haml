@@ -18,3 +18,6 @@
 
   .grid-content.small-12
     %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/time/timers/timer', collection: @timers
+
+  .grid-content.small-12{:style => 'padding:10px 0 20px 0;'}
+    .text-center= paginate @timers

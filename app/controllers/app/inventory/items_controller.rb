@@ -6,20 +6,20 @@ class App::Inventory::ItemsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @containers =  @resource.containers.limit(3)
-      @items =  @resource.inventory_items
+      @items =  @resource.inventory_items.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
       @containers = @household.containers.limit(3)
-      @items = @household.inventory_items
+      @items = @household.inventory_items.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
       @containers = @group.containers.limit(3)
-      @items = @group.inventory_items
+      @items = @group.inventory_items.page(params[:page]) #.per(2)
     else
       @containers = ::Inventory::Container.where(
         '(owner_type = ? AND owner_id = ?) OR 

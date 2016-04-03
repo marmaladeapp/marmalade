@@ -6,20 +6,20 @@ class App::Contacts::ContactsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @address_books =  @resource.address_books.limit(3)
-      @contacts =  @resource.contacts
+      @contacts =  @resource.contacts.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
       @address_books = @household.address_books.limit(3)
-      @contacts = @household.contacts
+      @contacts = @household.contacts.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @context = @group
       @address_books = @group.address_books.limit(3)
-      @contacts = @group.contacts
+      @contacts = @group.contacts.page(params[:page]) #.per(2)
     else
       @address_books = ::Contacts::AddressBook.where(
         '(owner_type = ? AND owner_id = ?) OR 

@@ -22,6 +22,7 @@ class App::Contacts::AddressBooksController < App::AppController
       @address_books += ::Contacts::AddressBook.where(:owner => current_user.businesses.to_a)
       @address_books += ::Contacts::AddressBook.where(:owner => current_user.households.to_a)
       @address_books += ::Contacts::AddressBook.where(:owner => current_user.groups.to_a)
+      # TODO: Swap out for appropriate SQL and paginate all of these too.
     end
   end
 
@@ -31,20 +32,20 @@ class App::Contacts::AddressBooksController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @resource
       @address_book =  @resource.address_books.find(params[:id])
-      @contacts = @address_book.contacts
+      @contacts = @address_book.contacts.page(params[:page]) #.per(2)
     elsif params[:user_id]
       @user = User.find(params[:user_id])
       @household = @user.home
       authorize! :show, @household, :message => ""
       @context = @household
       @address_book = @household.address_books.find(params[:id])
-      @contacts = @address_book.contacts
+      @contacts = @address_book.contacts.page(params[:page]) #.per(2)
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @context = @group
       authorize! :show, @group, :message => ""
       @address_book = @group.address_books.find(params[:id])
-      @contacts = @address_book.contacts
+      @contacts = @address_book.contacts.page(params[:page]) #.per(2)
     end
   end
 
