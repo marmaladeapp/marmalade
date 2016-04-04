@@ -15,7 +15,7 @@ class Household < ActiveRecord::Base
   has_many :members, :through => :memberships, :source => :member, :source_type => 'User'
 
   after_create do |household|
-    household.memberships.create(:member => household.user, :user => household.user)
+    household.memberships.create(:member => household.user, :user => household.user, :confirmed => true)
   end
 
   def has_member?(resource)

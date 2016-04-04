@@ -18,7 +18,7 @@ class Business < ActiveRecord::Base
   has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
 
   after_create do |business|
-    business.memberships.create(:member => business.user, :user => business.user)
+    business.memberships.create(:member => business.user, :user => business.user, :confirmed => true)
   end
 
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
