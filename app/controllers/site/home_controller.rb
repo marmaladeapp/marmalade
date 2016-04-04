@@ -1,18 +1,21 @@
 class Site::HomeController < Site::SiteController
   def index
-    location = request.location # I believe this uses Google. Limits, maybe?
-    if location
+    if false # TODO: Work out a better geoip system. This one is busted on Heroku.
+      location = request.location # I believe this uses Google. Limits, maybe?
       @user_country = location.country_code
+      if @user_country == 'RD'
+        @user_country = 'GB'
+        @user_currency = 'GBP'
+        @user_time_zone = 'Europe/London'
+      else
+        @user_currency = ISO3166::Country.new(@user_country).currency_code
+        @user_time_zone = Timezone::Zone.new(:latlon => [location.latitude, location.longitude]).zone
+        # using geonames.org - LOOKINTO; there may be limits imposed.
+      end
     end
-    if !location || @user_country == 'RD'
-      @user_country = 'GB'
-      @user_currency = 'GBP'
-      @user_time_zone = 'Europe/London'
-    else
-      @user_currency = ISO3166::Country.new(@user_country).currency_code
-      @user_time_zone = Timezone::Zone.new(:latlon => [location.latitude, location.longitude]).zone
-      # using geonames.org - LOOKINTO; there may be limits imposed.
-    end
+    @user_country = 'GB'
+    @user_currency = ISO3166::Country.new(@user_country).currency_code
+    @user_time_zone = 'London'
     @user_language = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}(?:-[a-zA-Z]{2})?/).first
 
     @features = [
