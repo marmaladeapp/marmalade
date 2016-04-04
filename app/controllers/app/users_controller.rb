@@ -88,7 +88,7 @@ class App::UsersController < App::AppController
       @plan = @user.plan
     end
     #gon.client_token = Braintree::ClientToken.generate
-    @plans = Plan.order('id ASC').all
+    @plans = Plan.order('id ASC').where.not(:slug => 'privileged')
     # @plans = Plan.where(:billing_frequency => 1).all
     # the idea being... we sorta just want to show a selection of the plans... and select duration separately. And have like.. an interactive price update-a-majig!
   end
@@ -102,7 +102,7 @@ class App::UsersController < App::AppController
     gon.client_token = Braintree::ClientToken.generate(
       :customer_id => @user.braintree_customer_id
     )
-    @plans = Plan.all
+    @plans = Plan.where.not(:slug => 'privileged')
     # @plans = Plan.where(:billing_frequency => 1).all
     # the idea being... we sorta just want to show a selection of the plans... and select duration separately. And have like.. an interactive price update-a-majig!
   end

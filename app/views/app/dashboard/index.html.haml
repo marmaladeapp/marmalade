@@ -11,8 +11,6 @@
           .card-section.text-center
             %a.button.bg-blueberry{:href => user_confirmation_path(user: {:email => current_user.email}), 'data-method' => 'post'} Resend confirmation instructions
 
-
-
   - @unconfirmed_memberships = current_user.memberships.where(:confirmed => false)
   - if @unconfirmed_memberships.any?
     .grid-content.small-12
