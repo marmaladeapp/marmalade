@@ -1,4 +1,5 @@
 class Site::HomeController < Site::SiteController
+  Haml::Template.options[:format] = :html5
   def index
     if false # TODO: Work out a better geoip system. This one is busted on Heroku.
       location = request.location # I believe this uses Google. Limits, maybe?
