@@ -57,6 +57,25 @@
       .grid-content.small-3.text-center
         %h4
           %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.cash}".to_money
+  %hr{:style => 'margin-top:5px;'}
+  .grid-block.wrap.small-12.medium-10.medium-offset-1{:style => 'margin-top:0;'}
+    - if @resource.present?
+      .grid-content.small-3.text-center{:style => 'font-size:0.8em;'} Current Assets
+      .grid-content.small-3.text-center{:style => 'font-size:0.8em;'} Fixed Assets
+      .grid-content.small-3.text-center{:style => 'font-size:0.8em;'} Current Liabilities
+      .grid-content.small-3.text-center{:style => 'font-size:0.8em;'} Long Term Liabilities
+      .grid-content.small-3.text-center
+        %h5
+          %span.burnt-toast= humanized_money_with_symbol "#{@resource.currency} #{@resource.current_assets}".to_money
+      .grid-content.small-3.text-center
+        %h5
+          %span.burnt-toast= humanized_money_with_symbol "#{@resource.currency} #{@resource.fixed_assets}".to_money
+      .grid-content.small-3.text-center
+        %h5
+          %span.burnt-toast= humanized_money_with_symbol "#{@resource.currency} #{@resource.current_liabilities}".to_money
+      .grid-content.small-3.text-center
+        %h5
+          %span.burnt-toast= humanized_money_with_symbol "#{@resource.currency} #{@resource.long_term_liabilities}".to_money
 
   .grid-block.wrap.small-12
     - if @resource.present?
