@@ -4,9 +4,9 @@
     - add_container = group_item_containers_path(@context,@item)
     - consume_item = group_item_amend_path(@context,@item)
   - else
-    - edit_item = @context.class.name == "Household" ? edit_user_home_item_path(current_user,@item) : edit_resource_item_path(@resource,@item)
-    - add_container = @context.class.name == "Household" ? user_home_item_containers_path(current_user,@item) : resource_item_containers_path(@resource,@item)
-    - consume_item = @context.class.name == "Household" ? user_home_item_amend_path(current_user,@item) : resource_item_amend_path(@resource,@item)
+    - edit_item = @context.class.name == "Household" ? edit_user_home_item_path(current_user,@item) : edit_resource_item_path(@context,@item)
+    - add_container = @context.class.name == "Household" ? user_home_item_containers_path(current_user,@item) : resource_item_containers_path(@context,@item)
+    - consume_item = @context.class.name == "Household" ? user_home_item_amend_path(current_user,@item) : resource_item_amend_path(@context,@item)
 
 - if @context
   - case @context.class.name
@@ -67,15 +67,15 @@
       - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
       - if @item.stock_sheets.any?
         - if @item.stock_sheets.first.created_at > 1.hour.ago
-          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "minutely", :id => "item" + @item.id.to_s}
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @context.id.to_s, 'data-resourceClass' => @context.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "minutely", :id => "item" + @item.id.to_s}
         - elsif @item.stock_sheets.first.created_at > 1.week.ago
-          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "hourly", :id => "item" + @item.id.to_s}
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @context.id.to_s, 'data-resourceClass' => @context.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "hourly", :id => "item" + @item.id.to_s}
         - elsif @item.stock_sheets.first.created_at > 1.month.ago
-          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "daily", :id => "item" + @item.id.to_s}
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @context.id.to_s, 'data-resourceClass' => @context.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "daily", :id => "item" + @item.id.to_s}
         - elsif @item.stock_sheets.first.created_at > 1.year.ago
-          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "weekly", :id => "item" + @item.id.to_s}
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @context.id.to_s, 'data-resourceClass' => @context.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "weekly", :id => "item" + @item.id.to_s}
         - else
-          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @resource.id.to_s, 'data-resourceClass' => @resource.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "monthly", :id => "item" + @item.id.to_s}
+          .ct-chart.stock-chart.ct-major-eleventh{'data-resourceId' => @context.id.to_s, 'data-resourceClass' => @context.class.name, 'data-itemId' => @item.id.to_s, 'data-interval' => "monthly", :id => "item" + @item.id.to_s}
       - else
         .text-center{:style => "padding-top:2.2em;height:5.6em;"}
           %em.silver No records.
