@@ -1,13 +1,8 @@
 class AddPrivilegedPlanViaMigration < ActiveRecord::Migration
   def up
-    Plan.create(
-      :slug => 'privileged',
-      :name => 'Privileged',
-      :business_limit => nil,
-      :household_limit => 1
-      )
+    # TODO: AFTER next migration, delete this file.
   end
   def down
-    Plan.find_by(:slug => 'privileged').destroy
+    # TODO
   end
 end
