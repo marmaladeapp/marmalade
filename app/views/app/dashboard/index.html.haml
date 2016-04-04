@@ -2,6 +2,17 @@
   .grid-content.small-12
     %h3 Welcome back, #{current_user.first_name}
 
+  - if !current_user.confirmed?
+    .grid-content.small-12
+      .grid-content.small-12{}
+        .card{:style => ''}
+          .card-divider.bg-ice-cream.burnt-toast.text-center
+            Your email address is unconfirmed. Please confirm it via the link in the email we've sent you.
+          .card-section.text-center
+            %a.button.bg-blueberry{:href => user_confirmation_path(user: {:email => current_user.email}), 'data-method' => 'post'} Resend confirmation instructions
+
+
+
   - @unconfirmed_memberships = current_user.memberships.where(:confirmed => false)
   - if @unconfirmed_memberships.any?
     .grid-content.small-12
