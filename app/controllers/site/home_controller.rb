@@ -16,7 +16,7 @@ class Site::HomeController < Site::SiteController
     @user_country = 'GB'
     @user_currency = ISO3166::Country.new(@user_country).currency_code
     @user_time_zone = 'London'
-    @user_language = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}(?:-[a-zA-Z]{2})?/).first
+    @user_language = request.env['HTTP_ACCEPT_LANGUAGE'] ? request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}(?:-[a-zA-Z]{2})?/).first : 'en-US'
 
     @features = [
       {
