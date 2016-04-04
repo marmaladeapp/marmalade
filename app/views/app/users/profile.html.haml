@@ -14,6 +14,8 @@
       = render 'edit_menu'
       %h3 Edit profile
       = form_for @user do |f|
+        %p
+          We're currently using #{link_to "Gravatar", 'https://en.gravatar.com/'} to set your profile picture. Click #{link_to "the link", 'https://en.gravatar.com/'} to edit yours or create a new one.
         %section.block-list
           %header Username
           %ul
