@@ -129,6 +129,13 @@ class App::OwnershipsController < App::AppController
     @ownership.destroy
     redirect_to vanity_path(@business)
   end
+
+  def accept
+  end
+
+  def reject
+  end
+
   private
   def ownership_params
     params.require(:ownership).permit(:global_owner,:global_item,:equity)

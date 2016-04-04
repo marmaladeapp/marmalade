@@ -98,7 +98,12 @@ Rails.application.routes.draw do
   end
 
   concern :has_modules do
-    resources :memberships, path: 'members'
+    resources :memberships, path: 'members' do
+      member do
+        patch 'accept'
+        patch 'reject'
+      end
+    end
     concerns :modules
     resources :projects do
       scope module: 'projects' do

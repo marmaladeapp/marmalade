@@ -24,8 +24,6 @@ class User < ActiveRecord::Base
   validates :username, format: { without: /\A(?:admin|about|login|signin|signup|register|terms-of-service|privacy-policy|feedback|users|businesses|households|groups|contacts|schedule|calendars|time|inventory|finances|projects)\Z/i, message: "restricted." }
 
   has_many :ownerships, :as => :owner, :dependent => :destroy
-  has_one :owner, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
-  has_one :home, :through => :owner, :source => :owner, :source_type => 'Household'
 
   def owners
     [owner]
@@ -36,6 +34,9 @@ class User < ActiveRecord::Base
   has_many :businesses, :through => :memberships, :source => :collective, :source_type => 'Business'
   has_many :households, :through => :memberships, :source => :collective, :source_type => 'Household'
   has_many :attended_events, :through => :memberships, :source => :collective, :source_type => 'Calendar::Event'
+
+  has_one :home_membership, -> { where collective_type: 'Household' }, :as => :member, :dependent => :destroy, :class_name => 'Membership'
+  has_one :home, :through => :home_membership, :source => :collective, :source_type => 'Household'
 
   has_many :subsidiaries, :through => :ownerships, :source => :item, :source_type => 'Business'
 

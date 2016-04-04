@@ -2,6 +2,33 @@
   .grid-content.small-12
     %h3 Welcome back, #{current_user.first_name}
 
+  - @unconfirmed_memberships = current_user.memberships.where(:confirmed => false)
+  - if @unconfirmed_memberships.any?
+    .grid-content.small-12
+      - @unconfirmed_memberships.each do |confirmation|
+        .grid-content.small-12{}
+          - case confirmation.collective.class.name
+          - when "Business"
+            - canonical_link = vanity_path(confirmation.collective)
+            - accept_link = accept_resource_membership_path(confirmation.collective,confirmation.member)
+            - reject_link = reject_resource_membership_path(confirmation.collective,confirmation.member)
+          - when "Household"
+            - canonical_link = user_home_path(current_user)
+            - accept_link = accept_user_home_membership_path(current_user,confirmation.member)
+            - reject_link = reject_user_home_membership_path(current_user,confirmation.member)
+          .card{:style => ''}
+            .card-divider.bg-ice-cream.burnt-toast.text-center
+              You have been invited to join the
+              %a{:href => canonical_link}
+                %strong= confirmation.collective.name
+              = confirmation.collective.class.name
+            .card-section.text-center
+              = form_for [confirmation.collective,confirmation], url: accept_link, :html => {:style => 'display:inline;'} do
+                %button.button.bg-green Accept
+              = form_for [confirmation.collective,confirmation], url: reject_link, :html => {:style => 'display:inline;'} do
+                %button.button.bg-red Decline
+
+
   .grid-content.small-12
     - range = []
 

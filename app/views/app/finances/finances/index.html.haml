@@ -98,7 +98,8 @@
     .grid-content.small-12
       %h4= @context.class.name + " members"
     .grid-block.wrap.small-12
-      = render partial: 'app/finances/finances/resource', collection: @context.members
+      = render partial: 'app/finances/finances/resource', collection: @context.members.where(:memberships => {:collective => @context, :confirmed => true}) #.where(:confirmed => true)
+      / User.where(:memberships => {:collective => @context})
   - when "User", "Business"
     .grid-content.small-12
       %h4= @context.name.possessive + (@context.class.name == "Business" ? " subsidiaries" : " businesses")

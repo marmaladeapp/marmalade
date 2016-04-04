@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160402233015) do
+ActiveRecord::Schema.define(version: 20160403204318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -370,6 +370,7 @@ ActiveRecord::Schema.define(version: 20160402233015) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.integer  "user_id"
+    t.boolean  "confirmed"
   end
 
   add_index "memberships", ["collective_type", "collective_id"], name: "index_memberships_on_collective_type_and_collective_id", using: :btree
