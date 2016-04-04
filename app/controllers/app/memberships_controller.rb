@@ -25,7 +25,7 @@ class App::MembershipsController < App::AppController
       @membership = Membership.new
     end
 
-    if current_user.plan.collaborator_limit.present? && @resource.members.count >= user.plan.collaborator_limit
+    if current_user.plan.collaborator_limit.present? && @resource.members.count >= current_user.plan.collaborator_limit
       authorize! :new, Collaborator, :message => ""
     end
 
