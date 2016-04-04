@@ -5,7 +5,6 @@ class App::UsersController < App::AppController
       @context = @user
       @abstracts = @user.abstracts.page(params[:page]) #.per(2)
     else
-      @context = current_user
       @abstracts = []
     end
   end
