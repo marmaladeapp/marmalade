@@ -151,7 +151,7 @@ class Site::HomeController < Site::SiteController
           :us_price => 31500
         },
         :features => [
-          {:icon => 'fa-group',:description => 'Unlimited collaborators'},
+          {:icon => 'fa-group',:description => 'Up to 25 collaborators'},
           {:icon => 'fa-user',:description => 'Unlimited organizations'},
           {:icon => 'fa-user',:description => 'Unlimited subdivisions'},
           {:icon => 'fa-user',:description => '...'},

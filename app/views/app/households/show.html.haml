@@ -18,26 +18,26 @@
               %a.burnt-toast{:href => new_user_home_membership_path(@user)}
                 %i.fa.fa-plus-circle.fa-lg
 
+  - if @abstracts.any?
+    .grid-content.small-12
+      - range = []
 
-  .grid-content.small-12
-    - range = []
+      - start_date = @abstracts.first.created_at.to_date
+      - end_date = @abstracts.last.created_at.to_date
 
-    - start_date = @abstracts.first.created_at.to_date
-    - end_date = @abstracts.last.created_at.to_date
+      - (start_date.downto(end_date)).each do |date|
+        - range << date
 
-    - (start_date.downto(end_date)).each do |date|
-      - range << date
-
-    - range.each do |day|
-      %h4.clearfix
-        %span.pull-left= day.strftime("%A")
-        %span.silver.pull-right= day.strftime("%-d %b")
-      - if !([day] & @abstracts.group_by(&:day).keys).empty?
-        - @abstracts.group_by(&:day).slice(day).each do |day, abstracts|
-          %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: abstracts
-      - else
-        %p 
-          %em.silver No records
+      - range.each do |day|
+        %h4.clearfix
+          %span.pull-left= day.strftime("%A")
+          %span.silver.pull-right= day.strftime("%-d %b")
+        - if !([day] & @abstracts.group_by(&:day).keys).empty?
+          - @abstracts.group_by(&:day).slice(day).each do |day, abstracts|
+            %ol{:style => 'list-style:none;margin:0;'}= render partial: 'app/abstracts/abstract', collection: abstracts
+        - else
+          %p 
+            %em.silver No records
 
   .grid-content.small-12{:style => 'padding:10px 0 20px 0;'}
     .text-center= paginate @abstracts
