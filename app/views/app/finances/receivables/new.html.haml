@@ -36,11 +36,12 @@
         = ff.hidden_field :equity
         = ff.hidden_field :user_id
 
-      %section.block-list
-        %header Owed by
-        %ul
-          %li.with-dropdown
-            = f.grouped_collection_select :global_counterparty, [current_user.collaborator_users, current_user.businesses, current_user.households], :all, :human_name, :to_global_id, :name, {:include_blank => true}
+      - if false # TODO: fix options and reactivate this counter_ledger stuff!
+        %section.block-list
+          %header Owed by
+          %ul
+            %li.with-dropdown
+              = f.grouped_collection_select :global_counterparty, [current_user.collaborator_users, current_user.businesses, current_user.households], :all, :human_name, :to_global_id, :name, {:include_blank => true}
 
       = f.hidden_field :starting_date, :value => Time.current
       %section.block-list
