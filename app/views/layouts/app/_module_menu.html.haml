@@ -25,7 +25,8 @@
     - context_finances = user_home_finances_path(current_user)
     - context_projects = user_home_projects_path(current_user)
 - else
-  - if current_user.households.any? || current_user.businesses.any? || current_user.groups.any?
+  - # Below altered to account for those damn counts on the user model. Caching broke them!
+  - if current_user.memberships.where(:collective_type => 'Household').any? || current_user.memberships.where(:collective_type => 'Business').any? || current_user.memberships.where(:collective_type => 'Group').any?
     - context_dashboard = root_path
     - context_contacts = contacts_path
     - context_calendar = events_path
