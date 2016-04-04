@@ -207,9 +207,10 @@
             - when 'Group'
               %i.fa.fa-2x.fa-users.silver
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-            %img{:src => avatar_url(abstract.user,50), :style => 'border-radius:50%;'}
+            - if abstract.user
+              %img{:src => avatar_url(abstract.user,50), :style => 'border-radius:50%;'}
           %div.float-left.text-overflow{:style => 'width:65%;padding:1px 1px 1px 10px;'}
-            %strong= abstract.user.name
+            %strong= abstract.user ? abstract.user.name : 'Deleted user'
             - case abstract.item.class.name
             - when 'Household'
               - case abstract.action
