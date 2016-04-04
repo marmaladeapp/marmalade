@@ -205,14 +205,14 @@ class App::MembershipsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @business
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :update, @membership, :message => ""
+      authorize! :accept, @membership, :message => ""
     elsif params[:group_id]
       @group = Group.find(params[:group_id])
       @resource = @group
       authorize! :show, @resource, :message => ""
       @context = @group
       @membership = @group.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :update, @membership, :message => ""
+      authorize! :accept, @membership, :message => ""
     else
       @user = User.find(params[:user_id])
       @household = @user.home
@@ -220,7 +220,7 @@ class App::MembershipsController < App::AppController
       authorize! :show, @resource, :message => ""
       @context = @household
       @membership = @household.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :update, @membership, :message => ""
+      authorize! :accept, @membership, :message => ""
     end
     if @membership.update_attributes(:confirmed => true)
       if params[:resource_id]
@@ -242,7 +242,7 @@ class App::MembershipsController < App::AppController
       @business = Business.find(params[:resource_id])
       authorize! :show, @business, :message => ""
       @membership = @business.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :destroy, @membership, :message => ""
+      authorize! :reject, @membership, :message => ""
       unless @membership.member == @business.user
         @membership.destroy
       end
@@ -251,7 +251,7 @@ class App::MembershipsController < App::AppController
       @group = Group.find(params[:group_id])
       authorize! :show, @group, :message => ""
       @membership = @group.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :destroy, @membership, :message => ""
+      authorize! :reject, @membership, :message => ""
       unless @membership.member == @group.user
         @membership.destroy
       end
@@ -261,7 +261,7 @@ class App::MembershipsController < App::AppController
       @household = @user.home
       authorize! :show, @household, :message => ""
       @membership = @household.memberships.find_by(:member => User.find(params[:id]))
-      authorize! :destroy, @membership, :message => ""
+      authorize! :reject, @membership, :message => ""
       unless @membership.member == @household.user
         @membership.destroy
       end

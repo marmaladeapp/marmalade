@@ -28,6 +28,27 @@
               = form_for [confirmation.collective,confirmation], url: reject_link, :html => {:style => 'display:inline;'} do
                 %button.button.bg-red Decline
 
+  - @unconfirmed_ownerships = current_user.ownerships.where(:confirmed => false)
+  - if @unconfirmed_ownerships.any?
+    .grid-content.small-12
+      - @unconfirmed_ownerships.each do |confirmation|
+        .grid-content.small-12{}
+          - case confirmation.item.class.name
+          - when "Business"
+            - canonical_link = vanity_path(confirmation.item)
+            - accept_link = accept_business_ownership_path(confirmation.item,confirmation.owner)
+            - reject_link = reject_business_ownership_path(confirmation.item,confirmation.owner)
+          .card{:style => ''}
+            .card-divider.bg-ice-cream.burnt-toast.text-center
+              #{confirmation.user.name} assigned you #{number_with_precision(confirmation.equity, strip_insignificant_zeros: true)}% of
+              %a{:href => canonical_link}
+                %strong= confirmation.item.name
+            .card-section.text-center
+              = form_for [confirmation.item,confirmation], url: accept_link, :html => {:style => 'display:inline;'} do
+                %button.button.bg-green Accept
+              = form_for [confirmation.item,confirmation], url: reject_link, :html => {:style => 'display:inline;'} do
+                %button.button.bg-red Decline
+
 
   .grid-content.small-12
     - range = []

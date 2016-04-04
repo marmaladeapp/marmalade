@@ -264,7 +264,12 @@ Rails.application.routes.draw do
       get '/edit', to: 'businesses#edit', as: 'edit'
       patch '/edit', to: 'businesses#update', as: 'update'
       delete '/edit', to: 'businesses#destroy', as: 'destroy'
-      resources :ownerships, path: 'owners'
+      resources :ownerships, path: 'owners' do
+        member do
+          patch 'accept'
+          patch 'reject'
+        end
+      end
     end
 
     scope '/:resource_id', as: 'resource' do

@@ -1,6 +1,6 @@
 .grid-container.small-12.medium-10
   .grid-block.small-12.wrap.bg-ice-cream-small
-    - if current_user == @business.user
+    - if current_user == @business.user || current_user.is_owner?(@business)
       .grid-content.small-12
         %div.clearfix{:style => 'margin-top:20px;margin-bottom:20px;'}
           Owners:

@@ -55,16 +55,23 @@ class App::OwnershipsController < App::AppController
         current_user.collaborators.create(:collaborator => @ownership.owner)
       end
     end
+    if @ownership.owner.class.name == "User" && @ownership.owner != current_user
+      @ownership.confirmed = false
+    else
+      @ownership.confirmed = true
+    end
     @ownership.user = @resource.user
     if @ownership.owner && !@ownership.owner.is_owner?(@ownership.item) && @ownership.save
       @context.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
       @ownership.owner.abstracts.create(:item => @ownership, :user => current_user, :action => 'create')
-      if @ownership.owner.class.name == 'User'
-        unless @resource.memberships.where(:member => @ownership.owner).any?
-          @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
+      if @ownership.confirmed
+        if @ownership.owner.class.name == 'User'
+          unless @resource.memberships.where(:member => @ownership.owner).any?
+            @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
+          end
         end
+        @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:capital_assets => @resource.capital_assets,:inventory => @resource.inventory,:item => @resource,:action => 'update')
       end
-      @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:capital_assets => @resource.capital_assets,:inventory => @resource.inventory,:item => @resource,:action => 'update')
       redirect_to vanity_path(@business)
     else
       user_ids = []
@@ -131,9 +138,33 @@ class App::OwnershipsController < App::AppController
   end
 
   def accept
+    @business = Business.find(params[:business_id])
+    @resource = @business
+    # resource because we want to be able to add owners to wallets and other resources too. Boy, that'll be tricky.
+    @context = @business
+    @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    authorize! :accept, @ownership, :message => ""
+    if @ownership.update_attributes(:confirmed => true)
+      if @ownership.owner.class.name == 'User'
+        unless @resource.memberships.where(:member => @ownership.owner).any?
+          @resource.memberships.create(:member => @ownership.owner, :user => @resource.user)
+        end
+      end
+      @ownership.update_balance_sheets(:value => @resource.net_worth,:current_assets => @resource.current_assets,:fixed_assets => @resource.fixed_assets,:current_liabilities => @resource.current_liabilities,:long_term_liabilities => @resource.long_term_liabilities,:cash => @resource.cash,:ledgers_receivable => @resource.total_ledgers_receivable,:ledgers_debt => @resource.total_ledgers_debt,:wallets => @resource.total_wallets,:capital_assets => @resource.capital_assets,:inventory => @resource.inventory,:item => @resource,:action => 'update')
+      redirect_to vanity_path(@business)
+    else
+      redirect_to root_path
+    end
   end
 
   def reject
+    @business = Business.find(params[:business_id])
+    @resource = @business
+    authorize! :show, @business, :message => ""
+    @ownership = @business.owners.find_by(:owner => VanityUrl.find_by_slug(params[:id]).owner)
+    authorize! :reject, @ownership, :message => ""
+    @ownership.destroy
+    redirect_to root_path
   end
 
   private

@@ -32,8 +32,21 @@ class Ability
         can :manage, Membership do |membership|
           membership.collective.user == user || membership.member == user
         end
+        cannot :accept, Membership do |membership|
+          membership.member != user
+        end
+        cannot :reject, Membership do |membership|
+          membership.member != user
+        end
+
         can :manage, Ownership do |ownership|
-          ownership.owner == user || (ownership.owner && ownership.owner.user == user) || ownership.owner == nil
+          ownership.owner == user || (ownership.owner.class.name != "User" && ownership.owner.user == user) || ownership.user == user || (ownership.item.class.name == "Business" && ownership.item.user == user) || ownership.owner == nil
+        end
+        cannot :accept, Ownership do |ownership|
+          ownership.owner != user
+        end
+        cannot :reject, Ownership do |ownership|
+          ownership.owner != user
         end
 
         can :manage, Finances::Ledger do |ledger|

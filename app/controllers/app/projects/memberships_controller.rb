@@ -63,6 +63,7 @@ class App::Projects::MembershipsController < App::AppController
       authorize! :manage, @project, :message => ""
       @membership = @project.memberships.new(membership_params)
     end
+    @membership.confirmed = true
     @membership.user = @resource.user
     if @membership.member && !@membership.member.is_member?(@membership.collective) && @membership.save
       @context.abstracts.create(:item => @membership, :user => current_user, :project => @project, :action => 'create')

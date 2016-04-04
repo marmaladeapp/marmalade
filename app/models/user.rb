@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   validates :username, format: { without: /\A(?:admin|about|login|signin|signup|register|terms-of-service|privacy-policy|feedback|users|businesses|households|groups|contacts|schedule|calendars|time|inventory|finances|projects)\Z/i, message: "restricted." }
 
   has_many :ownerships, :as => :owner, :dependent => :destroy
+  has_one :owner, :as => :item, :dependent => :destroy, :class_name => 'Ownership'
 
   def owners
     [owner]
