@@ -14,8 +14,9 @@
               = ownership.owner.name
               = "(" + number_with_precision(ownership.equity, strip_insignificant_zeros: true) + "%)"
             |
-          %a.burnt-toast{:href => new_business_ownership_path(@business)}
-            %i.fa.fa-plus-circle
+          - if current_user == @business.user
+            %a.burnt-toast{:href => new_business_ownership_path(@business)}
+              %i.fa.fa-plus-circle
 
     .grid-content.small-7
       %div{:style => 'margin-top:20px;margin-bottom:20px;'}
