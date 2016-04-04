@@ -45,8 +45,8 @@ class User < ActiveRecord::Base
 
   has_many :intervals
 
-  before_destroy do |project|
-    Abstract.where(:user_id => id).update_all(user_id: nil)
+  before_destroy do |user|
+    Abstract.where(:user => user).update_all(user_id: nil)
   end
 
   def full_name
