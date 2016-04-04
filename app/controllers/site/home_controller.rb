@@ -1,8 +1,10 @@
 class Site::HomeController < Site::SiteController
   def index
     location = request.location # I believe this uses Google. Limits, maybe?
-    @user_country = location.country_code
-    if @user_country == 'RD'
+    if location
+      @user_country = location.country_code
+    end
+    if !location || @user_country == 'RD'
       @user_country = 'GB'
       @user_currency = 'GBP'
       @user_time_zone = 'Europe/London'
