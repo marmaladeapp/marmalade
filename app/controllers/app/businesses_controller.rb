@@ -61,6 +61,6 @@ class App::BusinessesController < App::AppController
   private
 
   def business_params
-    params.require(:business).permit(:name,:description,:currency,:country,:time_zone) # ,:owners_attributes => [:user_id,:global_owner,:equity]
+    params.require(:business).permit(:name,:description,:currency,:country,:time_zone,:business_type) # ,:owners_attributes => [:user_id,:global_owner,:equity]
   end
 end
