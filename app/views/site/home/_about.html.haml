@@ -2,15 +2,62 @@
 %p Manage your time, your household and your business from one global dashboard. Collaborate with family, friends and colleagues to tame the chaos of your day to day workflow and lifestyle.
 
 .row
-  - @features.each do |feature|
-    .small.reveal{'data-reveal' => true, :id => feature[:id]}
-      %i.fa.fa-4x{:class => feature[:icon]}
-      %h3= feature[:name]
-      %p.lead= feature[:lead]
-      - if feature[:description].present?
-        %p= feature[:description]
-      %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
-        %span{'aria-hidden' => "true"} &times;
-    .small-6.medium-4.columns{:style => 'z-index:100;',:class => feature[:hide_for_small] ? 'hide-for-small-only' : ''}
-      %a.large.button.bg-blueberry.expanded{'data-open' => feature[:id], :style => 'padding:30px 0;'}
-        %i.fa.fa-3x{:class => feature[:icon]}
+  - if false
+    - @features.each do |feature|
+      .small.reveal{'data-reveal' => true, :id => feature[:id]}
+        %i.fa.fa-4x{:class => feature[:icon]}
+        %h3= feature[:name]
+        %p.lead= feature[:lead]
+        - if feature[:description].present?
+          %p= feature[:description]
+        %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
+          %span{'aria-hidden' => "true"} &times;
+      .small-6.medium-4.columns{:style => 'z-index:100;',:class => feature[:hide_for_small] ? 'hide-for-small-only' : ''}
+        %a.large.button.bg-blueberry.expanded{'data-open' => feature[:id], :style => 'padding:30px 0;'}
+          %i.fa.fa-3x{:class => feature[:icon]}
+  .small-12.columns
+    .orbit{:role => 'region', 'aria-label' => 'Features', 'data-orbit' => true, 'data-options' => "animInFromLeft:fade-in; animInFromRight:fade-in; animOutToLeft:fade-out; animOutToRight:fade-out;"}
+      %ul.orbit-container
+        %button.orbit-previous
+          %span.show-for-sr Previous Slide
+          &#9664;&#xFE0E;
+        %button.orbit-next
+          %span.show-for-sr Next Slide
+          &#9654;&#xFE0E;
+        %li.is-active.orbit-slide
+          %img.orbit-image{:src => image_url('multi-context.png'), :alt => 'space'}
+          %figcaption.orbit-caption Multi context overviews for you, your household and businesses.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('finances-snapshot.png'), :alt => 'space'}
+          %figcaption.orbit-caption Detailed financial snapshots.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('address-books.png'), :alt => 'space'}
+          %figcaption.orbit-caption Shared address books and contacts.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('calendar.png'), :alt => 'space'}
+          %figcaption.orbit-caption Shared calendars and events.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('time-tracking.png'), :alt => 'space'}
+          %figcaption.orbit-caption Track your time.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('inventory.png'), :alt => 'space'}
+          %figcaption.orbit-caption Track your inventory, spending and sales.
+        %li.orbit-slide
+          %img.orbit-image{:src => image_url('project-overview.png'), :alt => 'space'}
+          %figcaption.orbit-caption Create multiple projects for finer detail.
+      %nav.orbit-bullets
+        %button.is-active{'data-slide' => '0'}
+          %span.show-for-sr First slide details.
+          %span.show-for-sr Current Slide
+        %button{'data-slide' => '1'}
+          %span.show-for-sr Second slide details
+        %button{'data-slide' => '2'}
+          %span.show-for-sr Second slide details
+        %button{'data-slide' => '3'}
+          %span.show-for-sr Second slide details
+        %button{'data-slide' => '4'}
+          %span.show-for-sr Second slide details
+        %button{'data-slide' => '5'}
+          %span.show-for-sr Second slide details
+        %button{'data-slide' => '6'}
+          %span.show-for-sr Second slide details
