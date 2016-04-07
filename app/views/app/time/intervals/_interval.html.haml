@@ -12,9 +12,9 @@
       .card-section.clearfix
         %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
           %img{:src => avatar_url(interval.user,50), :style => 'border-radius:50%;'}
-        %div.float-left.text-overflow.text-center{:style => 'width:35%;padding:1px 1px 1px 10px;'}
+        %div.float-left.text-overflow.text-center{:style => 'width:30%;padding:1px 1px 1px 10px;'}
           = interval.started_at ? interval.started_at.strftime("%I:%M:%S %p") : ''
-        %div.float-left.text-overflow{:style => 'width:35%;padding:1px;'}
+        %div.float-left.text-overflow{:style => 'width:30%;padding:1px;'}
           = interval.stopped_at ? interval.stopped_at.strftime("%I:%M:%S %p") : ''
         %div.float-left.text-overflow{:style => 'width:20%;padding:1px;'}
           - if interval.stopped_at
@@ -24,6 +24,8 @@
             %strong= format("%02d:%02d:%02d", hours, minutes, seconds)
           - else
             %strong= timer(interval.started_at)
-        %div.float-left.text-overflow{:style => 'width:5%;padding:1px;'}
+        %div.float-left.text-overflow{:style => 'width:10%;padding:1px;'}
           - if !interval.stopped_at
             %i.fa.fa-circle.red
+          - else
+            = "%.2f" % (BigDecimal.new(interval.duration.to_i) / (60 * 60))

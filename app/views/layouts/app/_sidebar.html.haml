@@ -74,6 +74,10 @@
             %a{:href => new_business_path}
               %i.fa.fa-fw.fa-briefcase
               New business
+          %li{}
+            %a{:href => destroy_user_session_path, 'data-method' => 'delete'}
+              %i.fa.fa-fw.fa-power-off
+              Logout
           %li.hide-for-large{}
             %a{:href => feedback_path}
               Feedback

@@ -5,7 +5,7 @@ class Business < ActiveRecord::Base
   include Abstractable
 
   validates :name, :presence => true
-  validates :slug, format: { without: /\A(?:admin|about|login|signin|signup|register|terms-of-service|privacy-policy|feedback|users|businesses|households|groups|contacts|schedule|calendars|time|inventory|finances|projects)\Z/i, message: "restricted." }
+  validates :slug, format: { without: /\A(?:admin|about|login|signin|signup|sign_out|register|terms-of-service|privacy-policy|feedback|users|businesses|households|groups|contacts|schedule|calendars|time|inventory|finances|projects)\Z/i, message: "restricted." }
 
   belongs_to :user, :inverse_of => :subscriber_businesses, counter_cache: true
   has_many :ownerships, :as => :owner, :dependent => :destroy

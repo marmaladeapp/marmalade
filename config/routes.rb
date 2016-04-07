@@ -159,8 +159,10 @@ Rails.application.routes.draw do
   
   scope module: 'app' do
     get '/contexts', to: 'contexts#index'
-
-    resources :users, only: [:show,:edit,:update]
+    
+    constraints(id: /(?!sign_out$)[0-9a-z\-\_]+/i) do
+      resources :users, only: [:show,:edit,:update]
+    end
 
     resources :organizations, only: [:new]
 
