@@ -285,7 +285,7 @@
                 - if abstract.sub_item && abstract.sub_item.member == abstract.user
                   is attending
                 - else
-                  marked #{abstract.sub_item ? abstract.sub_item.member.name : '[Attendance deleted]'} as attending
+                  marked #{abstract.sub_item ? abstract.sub_item.member.name : '<em class="silver">[Attendance deleted]</em>'.html_safe} as attending
                 %em #{abstract.item.name}
             - when 'TimeTracking::TimeSheet'
               - case abstract.action
@@ -307,7 +307,7 @@
                 - if abstract.sub_item && abstract.sub_item.member == abstract.user
                   was assigned to
                 - else
-                  assigned #{abstract.sub_item ? abstract.sub_item.member.name : '[Member unassigned]'} to
+                  assigned #{abstract.sub_item ? abstract.sub_item.member.name : '<em class="silver">[Member unassigned]</em>'.html_safe} to
                 %em #{abstract.item.name}
             - when 'TimeTracking::Interval'
               - case abstract.action
