@@ -45,7 +45,21 @@
     %h5.text-right
       %a.panther{:href => request.path + "/containers"} View all
 
-
+  .grid-block.wrap.small-12
+    - if @resource.present?
+      .grid-content.small-6.text-center Inventory
+      .grid-content.small-6.text-center
+        Capital Assets
+        - if @resource.ownerships.where(:item_type => 'Business').where.not(:equity => BigDecimal.new(0)).any?
+          %br
+          %small Includes business equities
+      .grid-content.small-6.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.inventory}".to_money
+      .grid-content.small-6.text-center
+        %h4
+          %strong= humanized_money_with_symbol "#{@resource.currency} #{@resource.capital_assets}".to_money
+  %hr{:style => 'margin-top:5px;'}
 
   .grid-content.small-12
 
