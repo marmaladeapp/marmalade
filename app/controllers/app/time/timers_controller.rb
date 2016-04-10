@@ -164,6 +164,9 @@ class App::Time::TimersController < App::AppController
       @resource = @context
       @timer = @context.timers.find(params[:id])
     end
+    if params[:time_tracking_timer][:completed_at]
+      params[:time_tracking_timer][:completed_at].blank? ? nil : DateTime.current
+    end
     if @timer.update_attributes(timer_params)
       if params[:resource_id]
         redirect_to resource_timer_path(@resource,@timer)
@@ -231,6 +234,6 @@ class App::Time::TimersController < App::AppController
   private
 
   def timer_params
-    params.require(:time_tracking_timer).permit(:name,:description,:estimated_time,:owners_attributes => [:user_id,:global_owner,:id,:_destroy])
+    params.require(:time_tracking_timer).permit(:name,:description,:completed_at,:estimated_time,:owners_attributes => [:user_id,:global_owner,:id,:_destroy])
   end
 end

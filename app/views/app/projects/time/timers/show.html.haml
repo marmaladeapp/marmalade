@@ -86,7 +86,7 @@
     - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
       %h2.text-center
         = timer(@interval.started_at - @timer.elapsed_time.seconds)
-        - if @timer.assigned?(current_user)
+        - if @timer.assigned?(current_user) && !@timer.completed_at
           %div{:style => 'display:inline-block;'}
             = form_for interval_path_array, :url => stop_interval, :method => :patch do |f|
               = f.hidden_field :user_id, :value => current_user.id
@@ -98,13 +98,26 @@
       %h2.text-center
         = format("%02d:%02d:%02d", hours, minutes, seconds)
 
-        - if @timer.assigned?(current_user)
+        - if @timer.assigned?(current_user) && !@timer.completed_at
           %div{:style => 'display:inline-block;'}
             = form_for interval_path_array, :url => start_interval do |f|
               = f.hidden_field :user_id, :value => current_user.id
               %button.button.expanded.bg-blueberry Start
 
       %h3.text-center= "%.2f" % (BigDecimal.new(@timer.elapsed_time.to_i) / (60 * 60)) + " hours"
+      - if !@timer.completed_at && !@timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+        .text-center
+          = form_for modify_path_array, :url => modify_url do |f|
+            = f.hidden_field :completed_at, :value => DateTime.current
+            %button.button.bg-green
+              %i.fa.fa-check
+              Mark as complete
+      - elsif @timer.completed_at
+        .text-center
+          = form_for modify_path_array, :url => modify_url do |f|
+            = f.hidden_field :completed_at, :value => nil
+            %button.button.small.bg-ice-cream.burnt-toast
+              Reopen timer
     %hr
 
 
@@ -137,7 +150,7 @@
             %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
               %i.fa.fa-plus-circle.fa-lg
 
-  - if @timer.assigned?(current_user)
+  - if @timer.assigned?(current_user) && !@timer.intervals.where(:stopped_at => nil, :user => current_user).any? && !@timer.completed_at
     .grid-content.small-12.text-center
       %a.button.bg-green{:href => new_interval} Add new interval
 
