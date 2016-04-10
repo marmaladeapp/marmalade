@@ -12,12 +12,12 @@ plan.collaborator_limit = 1
 plan.wallet_limit = 2
 plan.project_limit = 1
 plan.business_limit = 0
-plan.household_limit = 0
+plan.household_limit = 1
 plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_light_monthly_gbp')
 plan.name = 'Light'
-plan.price = BigDecimal.new(5)
+plan.price = BigDecimal.new(3)
 plan.currency = 'GBP'
 plan.billing_frequency = 1
 plan.collaborator_limit = 3
@@ -29,7 +29,7 @@ plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_light_yearly_gbp')
 plan.name = 'Light'
-plan.price = BigDecimal.new(45)
+plan.price = BigDecimal.new(27)
 plan.currency = 'GBP'
 plan.billing_frequency = 12
 plan.collaborator_limit = 3
@@ -41,7 +41,7 @@ plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_pro_monthly_gbp')
 plan.name = 'Pro'
-plan.price = BigDecimal.new(15)
+plan.price = BigDecimal.new(9)
 plan.currency = 'GBP'
 plan.billing_frequency = 1
 plan.collaborator_limit = 10
@@ -53,7 +53,7 @@ plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_pro_yearly_gbp')
 plan.name = 'Pro'
-plan.price = BigDecimal.new(135)
+plan.price = BigDecimal.new(81)
 plan.currency = 'GBP'
 plan.billing_frequency = 12
 plan.collaborator_limit = 10
@@ -65,7 +65,7 @@ plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_plus_monthly_gbp')
 plan.name = 'Plus'
-plan.price = BigDecimal.new(25)
+plan.price = BigDecimal.new(15)
 plan.currency = 'GBP'
 plan.billing_frequency = 1
 plan.collaborator_limit = 25
@@ -77,7 +77,7 @@ plan.save!
 
 plan = Plan.find_or_initialize_by(slug: 'early_adopter_plus_yearly_gbp')
 plan.name = 'Plus'
-plan.price = BigDecimal.new(225)
+plan.price = BigDecimal.new(135)
 plan.currency = 'GBP'
 plan.billing_frequency = 12
 plan.collaborator_limit = 25
