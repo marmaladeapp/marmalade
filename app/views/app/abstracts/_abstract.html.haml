@@ -311,10 +311,14 @@
                 %em #{abstract.item.name}
             - when 'TimeTracking::Interval'
               - case abstract.action
-              - when 'create'
+              - when 'start'
                 started #{abstract.item.timer.name}
-              - when 'update'
+              - when 'stop'
                 stopped #{abstract.item.timer.name}
+              - when 'create'
+                updated #{abstract.item.timer.name}
+              - when 'update'
+                updated #{abstract.item.timer.name}
             - when 'Inventory::Container'
               - case abstract.action
               - when 'create'

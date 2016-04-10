@@ -14,15 +14,31 @@
   - when 'User', 'Business'
     - interval_path_array = [@context, @timer, @interval]
     - interval_url = resource_timer_intervals_path(@context, @timer)
+    - start_interval = start_resource_timer_intervals_path(@context, @timer)
+    - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+      - stop_interval = stop_resource_timer_interval_path(@context, @timer, @interval)
   - when 'Household'
     - interval_path_array = [@context, @timer, @interval]
     - interval_url = user_home_timer_intervals_path(@user, @timer)
+    - start_interval = start_user_home_timer_intervals_path(@user, @timer)
+    - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+      - stop_interval = stop_user_home_timer_interval_path(@user, @timer, @interval)
   - when 'Group'
     - interval_path_array = [@context, @timer, @interval]
     - interval_url = group_timer_intervals_path(@context, @timer)
+    - start_interval = start_group_timer_intervals_path(@context, @timer)
+    - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+      - stop_interval = stop_group_timer_interval_path(@context, @timer, @interval)
 - else
   - interval_path_array = [@timer, @interval]
   - interval_url = timer_intervals_path(@timer)
+  - start_interval = start_timer_intervals_path(@timer)
+  - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+    - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
+    - stop_interval = stop_timer_interval_path(@timer,@interval)
 
 - if @context
   - case @context.class.name
@@ -78,26 +94,11 @@
     %p= @timer.description
 
     - if @timer.intervals.where(:stopped_at => nil, :user => current_user).any?
-      - @interval = @timer.intervals.where(:stopped_at => nil, :user => current_user).first
       %h2.text-center
         = timer(@interval.started_at - @timer.elapsed_time.seconds)
         - if @timer.assigned?(current_user)
           %div{:style => 'display:inline-block;'}
-            - if @context
-              - case @context.class.name
-              - when 'User', 'Business'
-                - interval_path_array = [@context, @timer, @interval]
-                - interval_url = resource_timer_interval_path(@context, @timer,@interval)
-              - when 'Household'
-                - interval_path_array = [@context, @timer, @interval]
-                - interval_url = user_home_timer_interval_path(@user, @timer,@interval)
-              - when 'Group'
-                - interval_path_array = [@context, @timer, @interval]
-                - interval_url = group_timer_interval_path(@context, @timer,@interval)
-            - else
-              - interval_path_array = [@timer, @interval]
-              - interval_url = timer_interval_path(@timer,@interval)
-            = form_for interval_path_array, :url => interval_url do |f|
+            = form_for interval_path_array, :url => stop_interval, :method => :patch do |f|
               = f.hidden_field :user_id, :value => current_user.id
               %button.button.expanded.bg-strawberry-jam Stop
     - else
@@ -109,7 +110,7 @@
 
         - if @timer.assigned?(current_user)
           %div{:style => 'display:inline-block;'}
-            = form_for interval_path_array, :url => interval_url do |f|
+            = form_for interval_path_array, :url => start_interval do |f|
               = f.hidden_field :user_id, :value => current_user.id
               %button.button.expanded.bg-blueberry Start
 
@@ -139,26 +140,10 @@
               - else
                 %a.burnt-toast{:href => new_resource_timer_assignee_path(@context,@timer)}
                   %i.fa.fa-plus-circle.fa-lg
-    - if false
-      .grid-content.small-8
-        - if @timer.assigned?(current_user) && !@timer.intervals.where(:stopped_at => nil, :user => current_user).any?
-          %h4 Add an interval
-          = form_for interval_path_array, :url => interval_url do |f|
-            = f.hidden_field :user_id, :value => current_user.id
-            %section.block-list
-              %header Elapsed time
-              %ul
-                %li.with-dropdown.clearfix
-                  = select_hour nil, {:prompt => 'Hours'}, {:class => 'small-6 float-left'}
-                  = select_minute nil, {:prompt => 'Minutes'}, {:class => 'small-6 float-left'}
-            %section.block-list
-              %header Finishing at
-              %ul
-                %li.with-dropdown.clearfix
-                  = f.date_select :stopped_at, {}, {:class => 'small-4 large-2 float-left'}
-                  .show-for-large.float-left{:style => "width:16.666%;padding:1px;"}
-                  = f.time_select :stopped_at, {:time_separator => ''}, {:class => 'small-6 large-2 float-left'}
-            %button.button.expanded.bg-blueberry Save
+
+  - if @timer.assigned?(current_user)
+    .grid-content.small-12.text-center
+      %a.button.bg-green{:href => new_interval} Add new interval
 
   .grid-content.small-12
     - range = ['Active']

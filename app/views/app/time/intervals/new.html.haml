@@ -1,0 +1,38 @@
+- if @context
+  - case @context.class.name
+  - when 'User', 'Business'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = resource_timer_intervals_path(@context, @timer)
+  - when 'Household'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = user_home_timer_intervals_path(@user, @timer)
+  - when 'Group'
+    - interval_path_array = [@context, @timer, @interval]
+    - interval_url = group_timer_intervals_path(@context, @timer)
+- else
+  - interval_path_array = [@timer, @interval]
+  - interval_url = timer_intervals_path(@timer)
+
+
+.grid-container.small-12.medium-10
+  .grid-block.wrap.small-12
+    .grid-content.small-12
+      - if @timer.assigned?(current_user) && !@timer.intervals.where(:stopped_at => nil, :user => current_user).any?
+        %h4 Add an interval
+        = form_for interval_path_array, :url => interval_url do |f|
+          = f.hidden_field :user_id, :value => current_user.id
+          %section.block-list
+            %header Elapsed time
+            %ul
+              %li.with-dropdown.clearfix
+                = number_field_tag 'hours', {}, {:placeholder => 'Hours', :class => 'small-4 float-left'}
+                = number_field_tag 'minutes', {}, {:placeholder => 'Minutes', :class => 'small-4 float-left'}
+                = number_field_tag 'seconds', {}, {:placeholder => 'Seconds', :class => 'small-4 float-left'}
+          %section.block-list
+            %header Finishing at
+            %ul
+              %li.with-dropdown.clearfix
+                = f.date_select :stopped_at, {}, {:class => 'small-4 large-2 float-left'}
+                .show-for-large.float-left{:style => "width:16.666%;padding:1px;"}
+                = f.time_select :stopped_at, {:time_separator => ''}, {:class => 'small-6 large-2 float-left'}
+          %button.button.expanded.bg-blueberry Save

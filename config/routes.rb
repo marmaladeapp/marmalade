@@ -50,7 +50,14 @@ Rails.application.routes.draw do
         resources :timers, path: '/time/timers', except: [:index,:create] do
           get 'time-sheets', to: 'timers#time_sheets'
           resources :assignees
-          resources :intervals
+          resources :intervals do
+            collection do
+              post 'start', to: 'intervals#start'
+            end
+            member do
+              patch 'stop', to: 'intervals#stop'
+            end
+          end
         end
       end
       constraints(id: /(?!time-sheets$)[0-9a-z\-\_]+/i) do
@@ -123,7 +130,14 @@ Rails.application.routes.draw do
           resources :timers, path: '/time/timers', except: [:index,:create] do
             get 'time-sheets', to: 'timers#time_sheets'
             resources :assignees
-            resources :intervals
+            resources :intervals do
+              collection do
+                post 'start', to: 'intervals#start'
+              end
+              member do
+                patch 'stop', to: 'intervals#stop'
+              end
+            end
           end
         end
         scope module: 'finances' do

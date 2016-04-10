@@ -11,16 +11,16 @@
   - case @context.class.name
   - when 'User', 'Business'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = resource_project_timer_interval_path(@context,@project, @timer,@interval)
+    - interval_url = stop_resource_project_timer_interval_path(@context,@project, @timer,@interval)
   - when 'Household'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = user_home_project_timer_interval_path(@user,@project, @timer,@interval)
+    - interval_url = stop_user_home_project_timer_interval_path(@user,@project, @timer,@interval)
   - when 'Group'
     - interval_path_array = [@context, @timer, @interval]
-    - interval_url = group_project_timer_interval_path(@context,@project, @timer,@interval)
+    - interval_url = stop_group_project_timer_interval_path(@context,@project, @timer,@interval)
 - else
   - interval_path_array = [@timer, @interval]
-  - interval_url = timer_interval_path(@timer,@interval)
+  - interval_url = stop_timer_interval_path(@timer,@interval)
 
 .grid-container.small-12.medium-10
   = render 'app/projects/header'
