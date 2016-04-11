@@ -22,6 +22,10 @@ class Inventory::Item < ActiveRecord::Base
   accepts_nested_attributes_for :owners, reject_if: proc { |attributes| attributes['global_owner'].blank? }
   accepts_nested_attributes_for :categories, reject_if: proc { |attributes| attributes['global_category'].blank? }, allow_destroy: true
 
+  before_destroy do |item|
+    item.payments.update_all(:inventory_item_id => nil)
+  end
+
   def consumption
     nil
   end
