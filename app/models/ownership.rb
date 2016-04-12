@@ -116,7 +116,7 @@ class Ownership < ActiveRecord::Base
             @descendant = @ancestry
             ancestry.subtree.each do |descendant|
               if ancestry.is_root?
-                descendant.update_attributes(:ancestry => "#{@ancestry.id}" + (descendant.ancestry.blank? ? "" : "/" + descendant.ancestry), :ancestry_depth => descendant.ancestry_depth + 1)
+                descendant.update_attributes(:ancestry => "#{@ancestry.ancestry}" + "/#{@ancestry.id}" + (descendant.ancestry.blank? ? "" : "/" + descendant.ancestry), :ancestry_depth => descendant.ancestry_depth + @ancestry.ancestry_depth + 1)
               else
                 @descendant = @descendant.children.create(:ownership => descendant.ownership, :item_class => descendant.item_class)
               end
