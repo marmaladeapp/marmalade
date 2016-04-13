@@ -22,13 +22,13 @@
       - currency_symbol = Money::Currency.new(@wallet.currency).symbol
       - currency_format = "#{currency_symbol}#,##0.00;(#{currency_symbol}#,##0.00)" # for BTC for instance - 8 decimal places
       - if @payments.any?
-        - if @payments.first.created_at > 1.hour.ago
+        - if @payments.last.created_at > 1.hour.ago
           .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "minutely", :id => "wallet" + @wallet.id.to_s}
-        - elsif @payments.first.created_at > 1.week.ago
+        - elsif @payments.last.created_at > 1.week.ago
           .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "hourly", :id => "wallet" + @wallet.id.to_s}
-        - elsif @payments.first.created_at > 1.month.ago
+        - elsif @payments.last.created_at > 1.month.ago
           .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "daily", :id => "wallet" + @wallet.id.to_s}
-        - elsif @payments.first.created_at > 1.year.ago
+        - elsif @payments.last.created_at > 1.year.ago
           .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "weekly", :id => "wallet" + @wallet.id.to_s}
         - else
           .ct-chart.wallet-chart.ct-major-eleventh{'data-walletId' => @wallet.id.to_s, 'data-interval' => "monthly", :id => "wallet" + @wallet.id.to_s}
