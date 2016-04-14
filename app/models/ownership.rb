@@ -37,9 +37,14 @@ class Ownership < ActiveRecord::Base
     @capital_assets = capital_assets
     @inventory = inventory
 
+    Money.default_bank.update_rates_from_s($redis.get("exchange_rates"))
+
     self.ancestries.each do |ancestry| # ownership.object_ancestry
       @business_types = []
       ancestry.path.reverse.each do |ancestor| # object_ancestry.object_ancestries including self
+        if ancestor.multi_currency && ancestor.last_converted < Money.default_bank.rates_updated_at.to_datetime
+          ancestor.update_conversions
+        end
         ownership = ancestor.ownership
         if !@unique_owners.include?(ownership)
           item = ownership.item
@@ -93,7 +98,6 @@ class Ownership < ActiveRecord::Base
           end
           @unique_owners << ownership
         end
-        ancestor.update_attribute(:last_converted => DateTime.now)
       end
     end
   end
