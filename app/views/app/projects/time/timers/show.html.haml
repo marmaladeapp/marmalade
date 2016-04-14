@@ -152,7 +152,7 @@
 
   - if @timer.assigned?(current_user) && !@timer.intervals.where(:stopped_at => nil, :user => current_user).any? && !@timer.completed_at
     .grid-content.small-12.text-center
-      %a.button.bg-green{:href => new_interval} Add new interval
+      %a.button.bg-burnt-toast{:href => new_interval} Add new interval
 
   .grid-content.small-12
     - range = ['Active']
