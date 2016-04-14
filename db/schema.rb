@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160410023343) do
+ActiveRecord::Schema.define(version: 20160414082315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -331,6 +331,7 @@ ActiveRecord::Schema.define(version: 20160410023343) do
     t.decimal  "unit_ending_value",   default: 0.0
     t.integer  "total_quantity",      default: 0
     t.integer  "total_sold",          default: 0
+    t.boolean  "capital_asset"
   end
 
   add_index "inventory_items", ["context_type", "context_id"], name: "index_inventory_items_on_context_type_and_context_id", using: :btree
@@ -396,9 +397,11 @@ ActiveRecord::Schema.define(version: 20160410023343) do
     t.integer  "ownership_id"
     t.string   "ancestry"
     t.integer  "ancestry_depth", default: 0
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "item_class"
+    t.boolean  "multi_currency", default: false
+    t.datetime "last_converted"
   end
 
   add_index "ownership_ancestries", ["ancestry"], name: "index_ownership_ancestries_on_ancestry", using: :btree

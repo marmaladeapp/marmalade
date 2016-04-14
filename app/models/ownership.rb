@@ -93,6 +93,7 @@ class Ownership < ActiveRecord::Base
           end
           @unique_owners << ownership
         end
+        ancestor.update_attribute(:last_converted => DateTime.now)
       end
     end
   end
@@ -104,11 +105,11 @@ class Ownership < ActiveRecord::Base
       if owner.owners.any?
         owner.owners.each do |ownership|
           ownership.ancestries.each do |ancestry|
-            @ancestry = ancestry.children.create(:ownership => self, :item_class => owner.class.name)
+            @ancestry = ancestry.children.create(:ownership => self, :item_class => owner.class.name, :multi_currency => (owner.currency == item.currency ? false : true), :last_converted => DateTime.now)
           end
         end
       else
-        @ancestry = OwnershipAncestry.create(:ownership => self, :item_class => owner.class.name)
+        @ancestry = OwnershipAncestry.create(:ownership => self, :item_class => owner.class.name, :multi_currency => (owner.currency == item.currency ? false : true), :last_converted => DateTime.now)
       end
       if item.ownerships.any?
         item.ownerships.each do |ownership|
@@ -118,7 +119,7 @@ class Ownership < ActiveRecord::Base
               if ancestry.is_root?
                 descendant.update_attributes(:ancestry => "#{@ancestry.ancestry}" + "/#{@ancestry.id}" + (descendant.ancestry.blank? ? "" : "/" + descendant.ancestry), :ancestry_depth => descendant.ancestry_depth + @ancestry.ancestry_depth + 1)
               else
-                @descendant = @descendant.children.create(:ownership => descendant.ownership, :item_class => descendant.item_class)
+                @descendant = @descendant.children.create(:ownership => descendant.ownership, :item_class => descendant.item_class, :multi_currency => (descendant.ownership.owner.currency == descendant.ownership.item.currency ? false : true), :last_converted => DateTime.now)
               end
             end
           end
