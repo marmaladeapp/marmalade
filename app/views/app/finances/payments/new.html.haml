@@ -56,6 +56,7 @@
         %ul
           %li.with-dropdown
             = f.collection_select :wallet_id, (@resource.class.name != "Household" ? @resource.wallets.where(:currency => @ledger.currency) : ::Finances::Wallet.where(:context => @resource, :currency => @ledger.currency)), :id, :name, {:include_blank => true}
+            - # TODO: Handle currency conversions properly so we can do away with the currency restriction hereabove and on projects payments
       %section.block-list
         %header Payment
         %ul
