@@ -31,5 +31,5 @@
               %li.with-dropdown.clearfix
                 = f.date_select :stopped_at, {}, {:class => 'small-4 large-2 float-left'}
                 .show-for-large.float-left{:style => "width:16.666%;padding:1px;"}
-                = f.time_select :stopped_at, {:time_separator => ''}, {:class => 'small-6 large-2 float-left'}
+                = f.time_select :stopped_at, {:time_separator => '', :ignore_date => true}, {:class => 'small-6 large-2 float-left'}
           %button.button.expanded.bg-blueberry Save
