@@ -1,6 +1,6 @@
 class OwnershipAncestry < ActiveRecord::Base
   belongs_to :ownership
-  has_ancestry :cache_depth => true
+  has_ancestry :cache_depth => true, :orphan_strategy => :rootify
 
   def update_conversions
 
