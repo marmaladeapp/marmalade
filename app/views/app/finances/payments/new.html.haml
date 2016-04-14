@@ -55,7 +55,7 @@
         %header= @ledger.starting_value > 0 ? "Pay into" : "Pay from"
         %ul
           %li.with-dropdown
-            = f.collection_select :wallet_id, (@resource.class.name != "Household" ? @resource.wallets : ::Finances::Wallet.where(:context => @resource)), :id, :name, {:include_blank => true}
+            = f.collection_select :wallet_id, (@resource.class.name != "Household" ? @resource.wallets.where(:currency => @ledger.currency) : ::Finances::Wallet.where(:context => @resource, :currency => @ledger.currency)), :id, :name, {:include_blank => true}
       %section.block-list
         %header Payment
         %ul
