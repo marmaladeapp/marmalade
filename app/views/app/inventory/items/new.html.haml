@@ -68,7 +68,8 @@
         %header Pay out of
         %ul
           %li.with-dropdown
-            = select_tag :wallet_id, options_from_collection_for_select(@context.wallets, :id, :name_with_balance), {:prompt => "Select wallet"}
+            = select_tag :wallet_id, options_from_collection_for_select(@context.wallets.where(:currency => @resource.currency), :id, :name_with_balance), {:prompt => "Select wallet"}
+            - # TODO: fix conversions for payments such that currencies can be better handled and we do away with restriction
 
       %section.block-list
         %header Attributes

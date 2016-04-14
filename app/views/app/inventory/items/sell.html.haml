@@ -51,6 +51,6 @@
         %header Pay into
         %ul
           %li.with-dropdown
-            = select_tag :wallet_id, options_from_collection_for_select(@context.wallets, :id, :name_with_balance), {:prompt => "Select wallet"}
+            = select_tag :wallet_id, options_from_collection_for_select(@context.wallets.where(:currency => @resource.currency), :id, :name_with_balance), {:prompt => "Select wallet"}
 
       %button.button.expanded.bg-blueberry Sell
