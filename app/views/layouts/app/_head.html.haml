@@ -8,6 +8,8 @@
 %meta{:property => 'og:url', :content => 'TODO: URL'}
 /%meta{:property => 'og:image', :content => User.first.avatar.url}
 
+= render 'layouts/shared/favicons'
+
 = Gon::Base.render_data
 = stylesheet_link_tag 'app', media: 'all', 'data-turbolinks-track' => true
 = javascript_include_tag "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"
