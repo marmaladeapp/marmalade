@@ -47,13 +47,13 @@
     - modify_url = resource_timer_path(@context,@timer)
   - when 'Household'
     - modify_path_array = [@context, @timer]
-    - url = user_home_timer_path(@user,@timer)
+    - modify_url = user_home_timer_path(@user,@timer)
   - when 'Group'
     - modify_path_array = [@context, @timer]
-    - url = group_timer_path(@context,@timer)
+    - modify_url = group_timer_path(@context,@timer)
 - else
   - modify_path_array = @timer
-  - url = timer_path(@timer)
+  - modify_url = timer_path(@timer)
 
 
 .grid-container.small-12.medium-10
