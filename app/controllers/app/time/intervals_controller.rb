@@ -48,7 +48,6 @@ class App::Time::IntervalsController < App::AppController
   end
 
   def create
-    fuckup
     if params[:resource_id]
       @resource = VanityUrl.find(params[:resource_id]).owner
       @context = @resource
