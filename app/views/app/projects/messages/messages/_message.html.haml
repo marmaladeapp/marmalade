@@ -19,4 +19,4 @@
             %small= time_ago_in_words(message.created_at) + " ago"
         .clearfix
           %div.float-left.text-overflow{:style => 'width:5%;min-height:1px;padding:0;'}
-          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}= message.content
+          %div.float-left.text-overflow{:style => 'width:95%;padding:1px 1px 1px 10px;'}= auto_link(message.content, :html => { :target => '_blank' })
