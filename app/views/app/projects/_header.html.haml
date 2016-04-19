@@ -22,7 +22,7 @@
     %div{:style => 'margin-top:20px;margin-bottom:20px;'}
       %a{:href => project_canonical}
         %h3= @project.name
-      %p= @project.description
+      %p= auto_link(@project.description)
       - if current_user == @project.user
         %a{:href => edit_project} Edit project
   .grid-content.small-5

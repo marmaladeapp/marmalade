@@ -12,6 +12,8 @@ gem 'jbuilder', '~> 2.0'
 gem 'pg'
 gem 'redis'
 
+gem 'rails_autolink'
+
 gem "haml"
 gem 'nokogiri'
 gem 'premailer-rails'
