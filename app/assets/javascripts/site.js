@@ -9,9 +9,10 @@
 //
 //= require shared/flippable
 //
-//= require turbolinks
 
-Turbolinks.enableProgressBar();
+// require turbolinks
+
+//Turbolinks.enableProgressBar();
 $(function() {
   $(document).foundation();
 });
