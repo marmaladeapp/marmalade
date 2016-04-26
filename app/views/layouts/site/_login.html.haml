@@ -2,9 +2,9 @@
   %h3 Login
   .text-left
     = form_tag session_path(:user) do
-      = label_tag "Login"
+      = label_tag "Login", nil, :for => 'user_login'
       = text_field_tag 'user[login]'
-      = label_tag "Password"
+      = label_tag "Password", nil, :for => 'login_user_password'
       = password_field_tag 'user[password]', nil, :id => 'login_user_password'
       = check_box_tag 'user[remember_me]'
       = label_tag 'user[remember_me]', 'Remember me'
@@ -18,7 +18,7 @@
   %h3 Forgot your password?
   = form_for(:user, url: password_path(:user), html: { method: :post }) do |f|
     .field.text-left
-      = f.label :email
+      = f.label :email, nil, :for => 'forgot_password_user_email'
       = f.email_field :email, :id => 'forgot_password_user_email'
     .actions
       = f.submit "Send me reset password instructions", :class => 'button expanded bg-strawberry-jam'

@@ -37,7 +37,7 @@
       = f.label :username
       = f.text_field :username
     .field.text-left
-      = f.label :email
+      = f.label :email, nil, :for => 'sign_up_user_email'
       = f.email_field :email, :id => 'sign_up_user_email'
     .field.text-left
       = f.label :password
@@ -62,7 +62,7 @@
   %h3 Resend confirmation instructions
   = form_for(:user, url: confirmation_path(:user), html: { method: :post }) do |f|
     .field.text-left
-      = f.label :email
+      = f.label :email, nil, :for => 'resend_user_email'
       %br/
       = f.email_field :email, :id => 'resend_user_email'
     .actions
