@@ -5,7 +5,7 @@
       = label_tag "Login"
       = text_field_tag 'user[login]'
       = label_tag "Password"
-      = password_field_tag 'user[password]', :id => 'login_user_password'
+      = password_field_tag 'user[password]', nil, :id => 'login_user_password'
       = check_box_tag 'user[remember_me]'
       = label_tag 'user[remember_me]', 'Remember me'
       %button.button.expanded.bg-strawberry-jam Sign in
