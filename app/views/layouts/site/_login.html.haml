@@ -5,7 +5,7 @@
       = label_tag "Login"
       = text_field_tag 'user[login]'
       = label_tag "Password"
-      = password_field_tag 'user[password]'
+      = password_field_tag 'user[password]', :id => 'login_user_password'
       = check_box_tag 'user[remember_me]'
       = label_tag 'user[remember_me]', 'Remember me'
       %button.button.expanded.bg-strawberry-jam Sign in
@@ -19,7 +19,7 @@
   = form_for(:user, url: password_path(:user), html: { method: :post }) do |f|
     .field.text-left
       = f.label :email
-      = f.email_field :email
+      = f.email_field :email, :id => 'forgot_password_user_email'
     .actions
       = f.submit "Send me reset password instructions", :class => 'button expanded bg-strawberry-jam'
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}

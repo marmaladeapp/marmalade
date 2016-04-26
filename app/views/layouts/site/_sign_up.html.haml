@@ -38,13 +38,13 @@
       = f.text_field :username
     .field.text-left
       = f.label :email
-      = f.email_field :email
+      = f.email_field :email, :id => 'sign_up_user_email'
     .field.text-left
       = f.label :password
       - if @minimum_password_length
         %em
           (#{@minimum_password_length} characters minimum)
-      = f.password_field :password, autocomplete: "off"
+      = f.password_field :password, autocomplete: "off", :id => 'sign_up_user_password'
     .field.text-left
       = f.label :password_confirmation
       = f.password_field :password_confirmation, autocomplete: "off"
@@ -64,7 +64,7 @@
     .field.text-left
       = f.label :email
       %br/
-      = f.email_field :email
+      = f.email_field :email, :id => 'resend_user_email'
     .actions
       = f.submit "Resend confirmation instructions", :class => 'button expanded bg-strawberry-jam'
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
