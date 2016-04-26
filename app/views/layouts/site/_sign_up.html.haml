@@ -40,7 +40,7 @@
       = f.label :email, nil, :for => 'sign_up_user_email'
       = f.email_field :email, :id => 'sign_up_user_email'
     .field.text-left
-      = f.label :password
+      = f.label :password, nil, :for => 'sign_up_user_password'
       - if @minimum_password_length
         %em
           (#{@minimum_password_length} characters minimum)
