@@ -35,7 +35,7 @@
 
     .field.text-left
       = f.label :username
-      = f.text_field :username, autofocus: true
+      = f.text_field :username
     .field.text-left
       = f.label :email
       = f.email_field :email
@@ -64,7 +64,7 @@
     .field.text-left
       = f.label :email
       %br/
-      = f.email_field :email, autofocus: true
+      = f.email_field :email
     .actions
       = f.submit "Resend confirmation instructions", :class => 'button expanded bg-strawberry-jam'
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}

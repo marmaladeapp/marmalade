@@ -3,7 +3,7 @@
   .text-left
     = form_tag session_path(:user) do
       = label_tag "Login"
-      = text_field_tag 'user[login'
+      = text_field_tag 'user[login]'
       = label_tag "Password"
       = password_field_tag 'user[password]'
       = check_box_tag 'user[remember_me]'
@@ -19,7 +19,7 @@
   = form_for(:user, url: password_path(:user), html: { method: :post }) do |f|
     .field.text-left
       = f.label :email
-      = f.email_field :email, autofocus: true
+      = f.email_field :email
     .actions
       = f.submit "Send me reset password instructions", :class => 'button expanded bg-strawberry-jam'
   %button.close-button{'data-close' => true, 'aria-label' => 'Close modal', :type => "button"}
